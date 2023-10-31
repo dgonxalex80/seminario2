@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Conceptos básicos</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Introducción al control de calidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Conceptos básicos</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<p>La inferencia estadística permite generalizar lo hallado en una
+muestra a toda la población. Para realizar este proceso contamos con dos
+opciones: Estimación y las Pruebas de hipótesis. El fundamento de estos
+procesos está relacioando con varios conceptos</p>
+<p><img src="img/inferencia.png" width="40%" style="display: block; margin: auto;" /></p>
+<p><br/><br/></p>
+<div id="población" class="section level3">
+<h3><strong>Población</strong></h3>
+<p>En Estadística, se identifica el término población con el dominio de
+la variable aleatoria X, asociada a los objetos o individuos sobre los
+cuales se desarrolla un experimento y cuyo valor ocurre al azar. El
+estudio del conjunto de todas las mediciones de interés para un
+investigador se llama CENSO (Mendenhall (2008)).</p>
+<p>Como ejemplo podemos mencionar la población de habitantes de Colombia
+que se estudia a través del Censo de población que se debe realizar cada
+diez años.</p>
+<p><br/><br/></p>
+</div>
+<div id="muestra" class="section level3">
+<h3><strong>Muestra</strong></h3>
+<p>Un subconjunto extraido de los elementos que conforman la población
+se denomina MUESTRA. Una definición técnica de muestra está dada por:
+repetición <span class="math inline">\(n\)</span> veces, en idénticas
+condiciones de la experiencia aleatoria, se puede obtener <span
+class="math inline">\(n\)</span> valores independientes de una variable
+aleatoria <span class="math inline">\(X_{1}, X_{2},...,X_{n}\)</span> a
+la que se le denomina muestra de la variable <span
+class="math inline">\(X\)</span>.</p>
+<p><br/><br/></p>
+</div>
+<div id="parámetro" class="section level3">
+<h3><strong>Parámetro</strong></h3>
+<p>Es una caracterización numérica de la distribución de probabilidad de
+una variable aleatoria. Como ejemplo de parámetros tenemos a <span
+class="math inline">\(\mu\)</span>, <span
+class="math inline">\(\sigma^{2}\)</span> que determinan la función de
+probabilidad de una variable con distribución normal:</p>
+<p><span class="math display">\[f(x)=\frac{1}{\sqrt{2 \sigma^{2} \pi}}
+\exp{\Bigg(- \frac{1}{2 \sigma^{2}}\big(x-\mu\big)^{2}\Bigg)}\]</span>
+€n el caso que los valores correspondientes a estos parámetros son <span
+class="math inline">\(\mu=100\)</span> y <span
+class="math inline">\(\sigma^{2}=25\)</span> (<span
+class="math inline">\(\sigma=5\)</span>) respectivamente, entonces la
+función de distribución de probabilidad quedará determinada por :</p>
+<p><span class="math display">\[f(x)=\frac{1}{\sqrt{50 \pi}}
+\exp{\Bigg(- \frac{1}{50}\big(x-100\big)^{2}\Bigg)}\]</span></p>
+<p><br/><br/></p>
+</div>
+<div id="estimador" class="section level3">
+<h3><strong>Estimador</strong></h3>
+<p>Es una función de los valores obtenidos en una muestra aleatoria que
+da como resultado un valor que corresponde a una aproximación del
+parámetro objeto de estudio. Generalmente se representa como <span
+class="math inline">\(\widehat{\theta}\)</span>. Como algunos ejemplos
+podemos citar:</p>
+<p><span
+class="math display">\[\widehat{\mu}=\frac{1}{n}\sum_{i=1}^{n}x_{i}=\bar{x}
+\]</span></p>
+<p><br/><br/></p>
+</div>
+<div id="estimación" class="section level3">
+<h3><strong>Estimación</strong></h3>
+<p><br/></p>
+<p>Es la evaluación o generación del estimador para una muestra
+determinada.</p>
+<p>Como ejemplo podemos utilizar uno de los estimadores que estudiaremos
+: <span class="math inline">\(\widehat{\mu}= \bar{x}\)</span>, para una
+muestra dada</p>
+<p><br/></p>
+<p><span class="math display">\[ 630, 650, 710, 750, 790, 820, 860
+\text{ y } 910\]</span></p>
+<p><br/></p>
+<p><span class="math display">\[\widehat{\mu}=\frac{1}{n}\sum_{i=1}^{n}
+x_{i} =\frac{1}{8}(630+650+...+910)=765\]</span> El valor del estimador
+de <span class="math inline">\(\mu\)</span> para esta muestra es <span
+class="math display">\[\widehat{\mu}=\bar{x}= 765\]</span>.</p>
+<p><br/><br/></p>
+</div>
+<div id="diseños-muestrales" class="section level3">
+<h3><strong>Diseños Muestrales</strong></h3>
+<p><br/></p>
+<p>Un diseño muestral es una estrategia de selección de unidades
+muestrales, mediante un proceso de aleatorización definido previamente
+(plan de muestreo). De acuerdo con esta definición, son tres los
+elementos esenciales de un diseño muestral:</p>
+<p><br/><br/></p>
+<div id="unidad-muestral" class="section level4">
+<h4><strong>Unidad muestral</strong></h4>
+<p>Constituye la unidad básica a partir de la cual se obtiene la
+información, pudiendo por tanto, ser éstas personas, o individuos de
+cualquier tipo si , por ejemplo nuestro interés es estimar la talla
+promedio; casas, número promedio de habitaciones, o el consumo de
+energía; comunidades, si los que nos interesa es el número promedio de
+especies por comunidad, áreas o cuadrículas si deseamos estimar
+densidades medias o biomasa total, etc.</p>
+<p><br/><br/></p>
+</div>
+<div id="proceso-de-aleatorización" class="section level4">
+<h4><strong>Proceso de aleatorización</strong></h4>
+<p>Este proceso debe garantizar que cada individuo de la población debe
+tener las misma posibilidad de ser seleccionado como representante de la
+población (aleatoriedad). Adicionalmente, exigimos que la elección de un
+individuo, no esté condicionada a la selección de otro (independencia).
+Estas dos condiciones, en apariencia sencillas, pueden provocar algunas
+dificultades.</p>
+<p><br/><br/></p>
+</div>
+<div id="tamaño-muestral" class="section level4">
+<h4><strong>Tamaño muestral</strong></h4>
+<p>Una vez que las unidades muestrales han sido definidas y se ha
+acordado un proceso de aleatorización, debemos preguntarnos, cuántas
+unidades debemos seleccionar para tener una buena representación en la
+muestra.</p>
+<p>Dado que cualquiera sea el proceso de selección de una muestra existe
+un costo asociado, el que en la mayoría de los casos constituye una
+exigencia ineludible, nuestro objetivo principal, será obtener el máximo
+de información con el menor tamaño de muestra que nos sea posible.</p>
+<p>El tamaño de la muestra <span class="math inline">\(n\)</span> es
+función de tres elementos que son: la varianza, la confiabilidad y el
+error de muestreo. Los dos últimos a criterio del investigador.</p>
+<p><span class="math display">\[n=\dfrac{z^{2}_{_{\alpha/2}} \times
+\sigma^{2}}{e^{2}}\]</span> Donde:</p>
+<p><strong>Varianza</strong> (<span
+class="math inline">\(\sigma^{2}\)</span>): Caracteriza la variable a
+estimar. Entre mayor sea su valor, mayor deberá ser el tamaño de la
+muestra. En ocasiones es necesario realizar una prueba piloto que nos
+permita tener un valor para calcular <span
+class="math inline">\(n\)</span>. Otra alternativa puede ser el
+conocimiento empírico de expertos sobre el rango de la variable. Con
+este valor podemos estimar una aproximación de la desviación estándar
+como: <span class="math inline">\(\sigma =\)</span> rango/4.</p>
+<p><br/></p>
+<p><strong>Confiabilidad</strong> (<span
+class="math inline">\(z_{\alpha/2}\)</span> o percentil de la
+distribución normal estandar)b: Este concepto está relacionado con el
+grado de veracidad que tienen los resultados obtenidos. Si el estudio es
+repetido muchas veces, ¿ cuántas de estas coinciden con los resultados
+obtenidos?. Su valor está relacionado con el percentil de las
+distribución normal estándar, por ejemplo: una confiabilidad del 95%
+está relacionada con un valor de <span
+class="math inline">\(z=1.96\)</span>.</p>
+<p><br/></p>
+<p><strong>Error de muestreo</strong> (<span
+class="math inline">\(e\)</span>) : corresponde a la diferencia entre el
+valor de la característica en la población (parámetro) y el valor
+obtenido con la información de la muestra (estimador).Equivale al error
+que estamos en capacidad de tolerar en las unidades de la variable.</p>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="ejemplo" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>El tamaño de muestra apropiado para estimar una media bajo las
+siguientes condiciones :</p>
+<ul>
+<li>Confianza del 95%</li>
+<li>Error de muestreo de 0.2</li>
+<li>Varianza de 1.6</li>
+</ul>
+<p>La confianza del 95% implica que el restante 5% se distribuya a ambos
+lados en proporciones iguales. Cada cola de la distribución normal sea
+del 2.5%. Para este caso el correspondiente percentil será <span
+class="math inline">\(z = 1.96\)</span></p>
+<p><span class="math display">\[n=\dfrac{1.96^{2} \times
+1.6}{0.2^{2}}=153.6 \approxeq 154\]</span> En caso de poblaciones
+finitas, es necesario corregir el valor obtenido en caso que <span
+class="math inline">\(n/N &gt; 0.05\)</span></p>
+<p><span class="math display">\[n=\dfrac{n_{0} \times
+N}{n_{0}+N-1}\]</span> En caso de tener N=200 , <span
+class="math inline">\(154/20 &gt;0.05\)</span>. El tamaño de muestra
+deberá ser corregido:</p>
+<p><span class="math display">\[n= \dfrac{154 \times 200}{154 + 200 -1}
+=87.2 \approxeq 88 \]</span></p>
+<p><br/><br/></p>
+</div>
+<div id="ejemplo-1" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>En el caso de la estimación de una proporción el tamaño de muestra
+para su estimación está dado por :</p>
+<p><span class="math display">\[n=\dfrac{z^{2}_{_{\alpha/2}} \times
+pq}{e^{2}}\]</span> Donde :</p>
+<ul>
+<li><span class="math inline">\(z_{\alpha/2}\)</span> : corresponde al
+percintil de la distribución normal asociado a <span
+class="math inline">\(1-\alpha/2\)</span>.</li>
+<li><span class="math inline">\(pq\)</span> : la varianza de la
+proporción que debe ser estimada mediante prueba piloto, pero que
+tambien se puede reemplazar por su valor máximo (<span
+class="math inline">\(0.5 \times 0.5 = 0.25\)</span>)</li>
+<li><span class="math inline">\(e\)</span> : Error de muestreo, que
+corresponde a la diferencia entre el valor estimado y el parámetro a
+estimar <span class="math inline">\(|\widehat{p}- p| &lt;
+e\)</span>.</li>
+</ul>
+<p>El tamaño de muestra apropiado estimar una proporción bajo las
+siguienes condiciones :</p>
+<ul>
+<li>Confianza del 95%</li>
+<li>Varianza máxima</li>
+<li>Error de muestreo de 0.02</li>
+</ul>
+<p><span class="math display">\[n=\dfrac{1.96^{2} \times 0.25}{0.02^{2}}
+= 2401\]</span></p>
+<p><br/><br/></p>
+</div>
+<div id="tipos-de-muestreo" class="section level2">
+<h2><strong>Tipos de muestreo</strong></h2>
+<p><img src="img/muestreo.png" width="80%" style="display: block; margin: auto;" /></p>
+<p>Los <strong>métodos de muestreo probabilísticos</strong> son aquellos
+que se basan en el principio de equiprobabilidad. Es decir, aquellos en
+los que todos los individuos tienen la misma probabilidad de ser
+elegidos para formar parte de una muestra y, consiguientemente, todas
+las posibles muestras de tamaño n tienen la misma probabilidad de ser
+elegidas.</p>
+<p>Sólo estos métodos de muestreo probabilísticos nos aseguran la
+representatividad de la muestra extraída y son, por tanto, los más
+recomendables. Dentro de los métodos de muestreo probabilísticos
+encontramos los siguientes tipos: De acuerdo con las consideraciones
+anteriores, algunas de las estrategias de muestreo más conocidas
+son:</p>
+<ul>
+<li>muestreo aleatorio simple</li>
+<li>muestreo aleatorio sistemático</li>
+<li>muestreo aleatorio estratificado</li>
+<li>muestreo aleatorio por conglomerados</li>
+</ul>
+<p><br/><br/></p>
+<div id="muestreos-no-probabilísticos" class="section level3">
+<h3><strong>Muestreos no probabilísticos</strong></h3>
+<p><br/></p>
+<p>En el caso de no contar con los supuestos que puedan garantizar la
+selección de la muestra de una manera aleatoria (no contar con un
+listado de la población o el no poder identificar con anticipación los
+elementos que conforman la población) y requerir de información para
+realizar analisis exploratorios, podemos utilizar otro tipo de muestreos
+llamados no probabílisticos. A continuación se describen algunos de
+ellos:</p>
+<ul>
+<li>muestre por cuotas</li>
+<li>muestreo por conveniencia</li>
+<li>muestreo por juicio</li>
+<li>muestreo bola de nieve</li>
+</ul>
+<p><br/><br/><br/></p>
+</div>
+</div>
+<div id="propiedades-de-los-estimadores" class="section level2">
+<h2><strong>Propiedades de los estimadores</strong></h2>
+<p>Dentro de las principales propiedeades de los estimadores están:</p>
+<p><br/></p>
+<div id="insesgadez" class="section level3">
+<h3><strong>Insesgadez</strong></h3>
+<p>Un estimador <span class="math inline">\(\widehat{\theta}\)</span> se
+considera insesgado si <span class="math inline">\(E[\widehat{\theta}] =
+\theta\)</span></p>
+<p><br/></p>
+</div>
+<div id="eficiente" class="section level3">
+<h3><strong>Eficiente</strong></h3>
+<p>Un estimador <span
+class="math inline">\(\widehat{\theta_{1}}\)</span> se considera más
+eficiente que <span class="math inline">\(\widehat{\theta_{2}}\)</span>
+cuando:</p>
+<p><span class="math display">\[V[\widehat{\theta_{1}}] &lt;
+V[\widehat{\theta_{2}}]\]</span></p>
+</div>
+<div id="consistente" class="section level3">
+<h3><strong>Consistente</strong></h3>
+<p><br/></p>
+<p>Cuando un estimador siendo sesgado, se convierte en un estimador
+sesgado cuando se aumenta el tamaño de la muestra se dice que este
+estimador es consistente</p>
+<p><br/><br/></p>
+<p><img src="img/estimador.png" width="50%" style="display: block; margin: auto;" /></p>
+<p><br/><br/><br/></p>
+</div>
+<div id="ejemplo-2" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Para una variable con distribución uniforme <span
+class="math inline">\(unif(a=0, b=20)\)</span> se desea determinar las
+propiedades de los siguientes estimadores del parámetro <span
+class="math inline">\(b\)</span></p>
+<ul>
+<li><p><span class="math inline">\(\widehat{\theta_{1}} = 2
+\bar{x}\)</span></p></li>
+<li><p><span class="math inline">\(\widehat{\theta_{2}} =
+\max\{x\}\)</span></p></li>
+<li><p><span class="math inline">\(\widehat{\theta_{3}} =
+\dfrac{(n+1)}{n} \max\{x\}\)</span></p></li>
+</ul>
+<p><br/><br/></p>
+<!-- ```{r, warning=FALSE, message=FALSE} -->
+<!-- # uniforme -->
+<!-- library(ggplot2) -->
+<!-- x= c(0,20)  -->
+<!-- fx=c(1/20, 1/20)  -->
+<!-- dat=data.frame(x,fx) -->
+<!-- ggplot(data=dat,aes(x=x, y=fx))+  -->
+<!--   scale_y_continuous(limits=c(0,.05))+ -->
+<!--   geom_line(size = 1,colour = 'red')  -->
+<!-- ``` -->
+<p>Para ello se realiza una simulación, para posteriormente evaluar los
+estimadores propuestos y determinar sus propiedades.</p>
+<p><br/><br/></p>
+<pre class="r"><code>library(ggplot2)
+n=10
+m=1000*n
+Y=matrix(runif(m, min=0, max=20), ncol=n) # matriz de datos m x n
+Mx=apply(Y,1,mean)
+Max=apply(Y,1,max)
+T1=2*Mx
+T2=Max
+T3=((n+1)/n)*T2
+T123=data.frame(T1,T2,T3)
+
+boxplot(T123, las=1, main=&quot;Comparación estimadores con n=10&quot;)
+abline(h=20,  col=&quot;red&quot;)</code></pre>
+<p><img src="recurso331_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>apply(T123,2,mean)</code></pre>
+<pre><code>      T1       T2       T3 
+19.92273 18.13766 19.95143 </code></pre>
+<p><br/><br/></p>
+<p>Para un tamaño de muestra <span class="math inline">\(n=10\)</span>
+se observa que los mejores resultados se obtienen con <span
+class="math inline">\(T3\)</span>. Este estimador se puede clasificar
+como INSESGADO y EFICIENTE, pues ademas que su promedio está muy cerca
+de <span class="math inline">\(20\)</span>, tiene la menor varianza</p>
+<pre class="r"><code>n=100
+m=1000*n
+Y=matrix(runif(m, min=0, max=20), ncol=n) # matriz de datos m x n
+Mx=apply(Y,1,mean)
+Max=apply(Y,1,max)
+T1=2*Mx
+T2=Max
+T3=((n+1)/n)*T2
+T123=data.frame(T1,T2,T3)
+
+boxplot(T123, las=1, main=&quot;Comparación estimadores con n=100&quot;)
+abline(h=20,  col=&quot;red&quot;)</code></pre>
+<p><img src="recurso331_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>apply(T123,2,mean)</code></pre>
+<pre><code>      T1       T2       T3 
+19.99545 19.80471 20.00276 </code></pre>
+<p>Los resutados indican que el mejor estimador de <span
+class="math inline">\(b\)</span> corresponde a <span
+class="math inline">\(T3\)</span>. Sin embargo el estimador <span
+class="math inline">\(T2\)</span> que era insesgado al aumentar el
+tamaño de la muestra pasando de <span
+class="math inline">\(n=10\)</span> a <span
+class="math inline">\(n=100\)</span> se observa que su promedio se
+acerca mas a <span class="math inline">\(20\)</span> que corresponde al
+valor del parametro</p>
+<p><br/><br/></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

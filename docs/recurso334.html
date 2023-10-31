@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Pruebas de hipótesis - conceptos básicos</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Introducción al control de calidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Pruebas de hipótesis - conceptos
+básicos</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<p><img src="img/pruebas1.png" width="70%" style="display: block; margin: auto;" /></p>
+<p><br/><br/></p>
+<p>El origen de los estudios, relacionados con las pruebas de hipótesis
+estadísticas, se sitúa alrededor de 1738, cuando en un ensayo escrito
+por Daniel Bernoulli(1) aparece el cálculo una estadística de prueba
+para ensayar su hipótesis en el campo de la astronomía. Entre 1915 y
+1933 se desarrolla esta formulación gracias a los estudios realizados
+por tres grandes autores: Ronald Fisher(2), Jerzy Neyman(3) y Egon
+Pearson(4). Generandose así dos enfoques diferentes.</p>
+<p><br/><br/></p>
+<p><img src="img/prueba.jpg" width="30%" style="display: block; margin: auto;" />
+<br/><br/></p>
+<p>Una hipótesis estadística es una afirmación o conjetura acerca de los
+parámetros de la distribución de probabilidades de una población. Si la
+hipótesis estadística especifica completamente la distribución, entonces
+ella se llama <strong>Hipótesis Simple</strong>, de otra manera se llama
+Hipótesis Compuesta.</p>
+<p>Desde el punto de vista clásico, todas las pruebas de hipótesis
+trabajan en base a ciertos principios que consideran:</p>
+<ul>
+<li>Hipótesis nula (<strong>Ho</strong>)</li>
+<li>Hipótesis alterna (<strong>Ha</strong>)</li>
+<li>Estadístico de Prueba (<strong>EdeP</strong>)</li>
+<li>Región de Rechazo (<strong>RdeR</strong>)</li>
+<li>Regla de Decisión(<strong>RD</strong>)</li>
+</ul>
+<p><br/><br/></p>
+<div id="hipótesis-nula-ho" class="section level3">
+<h3><strong>Hipótesis Nula (Ho)</strong></h3>
+<p>Es la hipótesis a probar, ésta NO se rechaza si de la muestra no se
+obtiene suficiente evidencia para rechazarla.</p>
+<p><br/><br/></p>
+</div>
+<div id="hipótesis-alterna-ha" class="section level3">
+<h3><strong>Hipótesis Alterna (Ha)</strong></h3>
+<p>La hipótesis <code>Ho</code> se contrasta con la hipótesis Ha, y ésta
+última corresponde a valores alternativos del parámetro planteados en la
+hipótesis nula. La hipótesis <span class="math inline">\(Ha\)</span> se
+considera cierta si existe suficiente evidencia para rechazar la
+hipótesis nula.</p>
+<p><br/><br/></p>
+</div>
+<div id="estadístico-de-prueba" class="section level3">
+<h3><strong>Estadístico de Prueba</strong></h3>
+<p>Es una función de la muestra que contiene información sobre el
+parámetro de interés, la que nos permite decidir sobre el rechazo de la
+hipótesis nula, <code>Ho</code> . Es tambien una variable aleatoria que
+sigue una función de distribución conocida como por ejemplo:</p>
+<p>Para una muestra determinada se obtiene un valor del estadístico de
+prueba, a partir del cálculo y se determina el rechazo o no, de la
+hipótesis nula.</p>
+<p><br/><br/></p>
+</div>
+<div id="región-de-rechazo-rder" class="section level3">
+<h3><strong>Región de Rechazo (RdeR)</strong></h3>
+<p>También llamada región crítica (<code>RC</code>), define los valores
+del estadístico de prueba para los cuales la información muestral
+contradice la hipótesis nula. Estos valores nos permitirán adoptar una
+regla de decisión consistente. Una prueba de una hipótesis estadística
+es un procedimiento que permite, mediante el contraste entre la
+información muestral y lo propuesto en una hipótesis, decidir sobre su
+rechazo.</p>
+<p>Una prueba de una hipótesis estadística es un procedimiento que
+permite, mediante el contraste entre la información muestral y lo
+propuesto en una hipótesis, decidir sobre su rechazo.</p>
+<p><br/><br/></p>
+</div>
+<div id="regla-de-decisión-rd" class="section level3">
+<h3><strong>Regla de Decisión (RD)</strong></h3>
+<p>De esta manera, como una regla de decisión, si para una muestra
+particular el estadístico de prueba (valor calculado) cae dentro de la
+región crítica, rechazaremos la hipótesis nula <code>Ha</code> en favor
+de la hipótesis alternativa <code>Ha</code>. En cambio, si el valor
+calculado no cae dentro de la RC, no podremos rechazar la hipótesis nula
+y por tanto decimos que la información contenida en la muestra no ofrece
+suficiente evidencia estadística que nos permita
+rechazar<code></code>Ho`, ASUMIMOS que la hipótesis nula es cierta.</p>
+<p>Cuando se decide ya sea en favor o en contra de una determinada
+prueba de hipótesis, es posible estar en una de las cuatro situaciones
+descritas en la siguiente tabla:</p>
+<p><img src="img/errores.png" width="100%" style="display: block; margin: auto;" /></p>
+<p>Existen dos situaciones en las que se comenten errores después de
+tomar una decisión:</p>
+<p><br/><br/></p>
+</div>
+<div id="error-tipo-i" class="section level3">
+<h3><strong>Error tipo I</strong>:</h3>
+<p>Cuando se rechazamos una hipótesis nula que en realidad es verdadera.
+Tomando como simil la situación donde un médico desea determinar si un
+paciente está sano o enfermo (<code>Ho</code>: SANO vs <code>Ha</code>:
+ENFERMO), es posible que concluya que el paciente está enfermo (rechace
+<code>Ho</code>) cuando en verdad esta persona esta sana. En términos de
+probabilidad este error se debe de representar como:</p>
+<p><span class="math display">\[P(\text{Rechazar } Ho | Ho \text{ es
+verdadera})= \alpha\]</span></p>
+<p><br/><br/></p>
+</div>
+<div id="error-tipo-ii" class="section level3">
+<h3><strong>Error Tipo II</strong>:</h3>
+<p>Cuando no se rechaza una hipótesis nula que en realidad es falsa.
+Utilizando el ejemplo del médico, diríamos que cuando el medico indica
+que el paciente esta sano, cuando esta realmente enfermo, incurre en un
+error frecuente cuando algunos pacientes son asintomáticos y aunque
+tienen la enfermedad, sus exámenes médicos salen negativos. En este caso
+la probabilidad se representa como:</p>
+<p><span class="math display">\[P(\text{No rechazar} Ho | Ho \text{ es
+falsa}) \]</span> <br/><br/></p>
+</div>
+<div id="nivel-de-significancia-alpha" class="section level3">
+<h3><strong>Nivel de significancia (<span
+class="math inline">\(\alpha\)</span>)</strong></h3>
+<p>No es posible minimizar simultáneamente, las probabilidades de los
+errores tipo I y II, ya que en la medida que uno disminuye el otro
+aumenta, como se muestra en la figura siguiente, en la que claramente se
+ve que la reducción del área <span class="math inline">\(\alpha\)</span>
+(probabilidad de error tipo I), implica el aumento del área <span
+class="math inline">\(\beta\)</span> (probabilidad de error tipo
+II).</p>
+<p><br/><br/></p>
+</div>
+<div id="valor-p" class="section level3">
+<h3><strong>Valor-p</strong></h3>
+<p>El valor-p corresponde al área delimitada por el <code>EdeP</code> en
+el sentido que indica la <code>RdeR</code> de la prueba a contrastar. Es
+decir que corresponde a la probilidad máxima de cometer
+<code>error tipo I</code>.</p>
+<p><a href="https://www.redalyc.org/pdf/806/80634308.pdf">Gil, Jacky F.;
+Castañeda, Javier A (2005)</a> lo definen como :</p>
+<p><em>El resultado de la prueba de hipótesis se basa principalmente en
+el cálculo, en términos de probabilidad, de la fuerza de los hallazgos a
+favor de la hipótesis nula. Esta probabilidad recibe el nombre de
+valor-p, y se define como la probabilidad de cometer un falso positivo
+por efecto del azar, cuando la hipótesis nula es verdadera.</em></p>
+<p><br/><br/></p>
+</div>
+<div id="reglas-de-decisión" class="section level2">
+<h2><strong>Reglas de decisión</strong></h2>
+<p><br/><br/></p>
+<div id="regla-1" class="section level3">
+<h3><strong>Regla 1</strong> :</h3>
+<p>Si el <span class="math inline">\(EdeP\)</span> cae en la <span
+class="math inline">\(RdeR\)</span>, entonce se rechaza la <span
+class="math inline">\(Ho\)</span> y se <strong>ACEPTA</strong> <span
+class="math inline">\(Ha\)</span> como verdadera. Si por el contrario el
+<span class="math inline">\(EdeP\)</span> NO cae en la <span
+class="math inline">\(RdeR\)</span>, entonces NO SE RECHAZA <span
+class="math inline">\(Ho\)</span>, no existe suficiente evidencia para
+rechazarla, se <strong>ASUME</strong> que <span
+class="math inline">\(Ho\)</span> es verdad.</p>
+<p><br/><br/></p>
+</div>
+<div id="regla-2" class="section level3">
+<h3><strong>Regla 2</strong></h3>
+<p>Si <span class="math inline">\(\alpha &gt;\)</span>
+<strong>valor-p</strong> entonces se rechaza <span
+class="math inline">\(H_{0}\)</span>, se <strong>ACEPTA</strong> <span
+class="math inline">\(Ha\)</span> como verdadera. Si por el contrario
+<span class="math inline">\(\alpha &lt;\)</span> <span
+class="math inline">\(valor-p\)</span>, no rechazamos <span
+class="math inline">\(Ho\)</span>, se <strong>ASUME</strong> que <span
+class="math inline">\(Ho\)</span> es verdad.</p>
+<p><br/><br/></p>
+</div>
+<div id="regla-3" class="section level3">
+<h3><strong>Regla 3</strong></h3>
+<p>El <span class="math inline">\(valor-p\)</span> se interpreta como el
+error que puedo cometer al rechazar <span
+class="math inline">\(Ho\)</span>, siendo esta verdadera (cometer <span
+class="math inline">\(Error\)</span> <span
+class="math inline">\(tipo\)</span> <span
+class="math inline">\(I\)</span>). Si este valor es considerado como
+pequeño, se rechaza <span class="math inline">\(Ho\)</span>, se
+<strong>ACEPTA</strong> <span class="math inline">\(Ha\)</span>. Si por
+el contrario se considera este valor grande, entonce no rechazo <span
+class="math inline">\(Ho\)</span>, se <strong>ASUME</strong> que <span
+class="math inline">\(Ho\)</span> es verdad.</p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

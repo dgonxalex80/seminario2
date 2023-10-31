@@ -1,0 +1,67 @@
+---
+title : <span style="color:#034a94"> **SEMINARIO**</span>
+author: "Pontificia Universidad Javeriana Cali"
+css: style.css
+---
+
+
+<br/><br/>
+
+### **ANÁLISIS DE TENDENCIAS PARA MÉTODOS CUANTITATIVOS Y CUALITATIVOS**
+ 
+<br/>
+
+#### **VALIDA TUS DATOS**
+
+<br/>
+
+* Introducción a la calidad de la información
+* Fuentes de información.
+* Variables cualitativas y cuantitativas
+* Identificación de errores y sesgos en la información
+
+<br/><br/>
+
+#### **CONTROL INTERNO** 
+
+<br/>
+
+* Conceptos básicos: indicadores de posición, centro, dispersión y forma
+* La media muestral, la proporción muestral y la varianza muestral.
+* modelos binomiales, poisson y normal.  
+* Introducción al control de calidad
+* Gráficos e indicadores de control de calidad. 
+* Control interno.  Cartas de control, Reglas de control 
+* Análisis de Ensayos de Aptitud y Z-Score
+* Control interno y Seguimiento de Tendencias
+* Análisis de control binario y T2 de Hotelling
+
+<br/><br/>
+
+#### **GENERALIZA LOS RESULTADOS**
+
+<br/>
+
+* Estimación puntual y por intervalos de confianza
+* Pruebas de hipótesis: 
+  * Conceptos, 
+  * Error tipo I, 
+  * Error tipo II 
+  * Potencia de las pruebas de hipótesis. 
+* Pruebas paramétricas 
+* Pruebas de hipótesis no paramétricas
+* Evaluación de la significancia estadística
+
+<br/><br/>
+
+#### **INTERPRETA Y PRESENTA TUS RESULTADOS**
+
+<br/>
+
+* Análisis y discusión de resultados científicos
+* Aplicación de los Conceptos a Casos prácticos
+
+
+<br/><br/>
+
+ 

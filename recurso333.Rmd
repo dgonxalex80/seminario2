@@ -1,0 +1,136 @@
+---
+title:  "**Intervalos de confianza - no paramétricos**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+
+# Crear una función para simular BAC para una persona
+simulacion_bac <- function(cantidad_alcohol, 
+                           peso_corporal, 
+                           volumen_distribucion, 
+                           factor_eliminacion, 
+                           tiempo_desde_ultima_bebida){
+  bac <- (cantidad_alcohol / (peso_corporal * volumen_distribucion)) - (factor_eliminacion * tiempo_desde_ultima_bebida)
+  if (bac < 0) {
+    bac <- 0
+  }
+  return(bac)
+}
+
+# Crear vectores para almacenar los resultados de la simulación
+n <- 500
+sex <- numeric(n)
+edad <- numeric(n)
+alcohol <- numeric(n)
+peso <- numeric(n)
+tiempo <- numeric(n)
+bac <- numeric(n)
+
+# Generar datos simulados para 500 personas
+set.seed(123)  # Fijar una semilla para reproducibilidad
+for (i in 1:n) {
+  edad[i] <- rnorm(1,35,5)
+  sex[i] <-rbinom(1,1,0.55)
+  alcohol[i] <- runif(1, min = 10, max = 50)  # Cantidad de alcohol en gramos
+  peso[i] <- runif(1, min = 50, max = 100)  # Peso corporal en kg
+  tiempo[i] <- runif(1, min = 0, max = 12)  # Tiempo desde la última bebida en horas
+  bac[i] <- simulacion_bac(alcohol[i], 
+                           peso[i], 
+                           0.68, 0.015, 
+                           tiempo[i])
+}
+
+# Visualizar los resultados
+datos =data.frame(Sexo = sex,
+                  Edad = edad, 
+                  Alcohol = alcohol, 
+                  Peso = peso, 
+                  BAC = bac)
+
+# colores
+c0= "#b0394a"
+c1= "#ad6395"
+c2= "#a391c4"
+c3= "#8acfe6"
+c4= "#646420"
+c5= "#db524f" 
+```
+
+<br/><br/>
+
+
+Cuando se extrae una muestra de una población que no es normal y se requiere estimar un intervalo de confianza se pueden utilizar los métodos de estimación **bootstrap**. Existen varias versiones del método. Una presentación básica del método se describe a continuación.
+
+El artículo de In-use Emissions from Heavy Duty Dissel Vehicles (J.Yanowitz, 2001) presenta las mediciones de eficiencia de combustible en millas/galón de una muestra de siete camiones. Los datos obtenidos son los siguientes: 
+
+<br/>
+
+```{r}
+c(7.69, 4.97, 4.56, 6.49, 4.34, 6.24, 4.45)
+```
+
+<br/>
+
+Se supone que es una muestra aleatoria de camiones y que se desea construir un intervalo de confianza del 95 % para la media  de la eficiencia de combustible de esta población. No se tiene información de la distribución de los datos. El método bootstrap permite construir intervalos de confianza del 95 % - Para ilustrar el método suponga que coloca los valores de la muestra en una caja y extrae uno al azar. Este correspondería al primer valor de la muestra bootstrap $X^{∗}_{1}$. Después de anotado el valor se regresa $X^{∗}_{1}$  a la caja y se extrae el valor $X^{∗}_{2}$ , regresandolo nuevamente. Este procedimiento se repite hasta completar una muestra de tamaño $n$, $X^{∗}_{1}$,$X^{∗}_{2}$,$X^{∗}_{2}$,\cdot $X^{∗}_{n}$, conformando la muestra bootstrap.
+
+<br/><br/>
+
+Es necesario extraer un gran número de muestras (suponga k = 1000). Para cada una de las muestra bootstrap obtenidas se calcula la media $\bar{X^{∗}_{i}}$, obteniéndose un valor para cada muestra. El intervalo de confianza queda conformado por los percentiles $P_{2.5}$ y $P_{97.5}$. Existen dos métodos para estimarlo:
+
+<br/><br/>
+
+|        |                                              |
+|:-------|:---------------------------------------------|
+|Método 1| $(P_{2.5}; P_{97.5})$                        |
+|Método 2| $(2\bar{X} − P_{97.5}; 2\bar{X} − P_{2.5})$  |
+
+Construya el intervalo de confianza por los dos métodos y compare los resultados obtenidos.
+Tomado de Navidi(2006)
+
+<br/><br/>
+
+```{r}
+x=c( 7.69, 4.97, 4.56, 6.49, 4.34, 6.24, 4.45) # datos muestra
+boot=sample(x,7000,replace=TRUE)   # se extraen n x m muestras
+b=matrix(boot,nrow=1000,ncol=7)    # se construye matriz de n x m 
+mx=apply(b,1,mean)                 # se calculan m medias por fila
+```
+
+<br/><br/>
+
+**Método 1**
+
+```{r}
+ic1=quantile(mx, probs=c(0.025, 0.975)) # se calcula IC método 1
+ic1
+```
+
+<br/><br/>
+
+**Método 2**
+
+```{r}
+ic2=c(2*mean(mx)-ic1[2], 2*mean(mx)-ic1[1]) # se calcula IC método 2
+ic2
+```
+
+<br/><br/>
+
+
+
+```{r}
+hist(mx, las=1, main=" ", ylab = " ", xlab = " ", col=c3)
+abline(v=ic1, col="red")
+abline(v=ic2, col="blue")
+```
+
+
+
+

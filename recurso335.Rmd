@@ -1,0 +1,183 @@
+---
+title: "**Pruebas de hipótesis - paramétricas**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+
+# Crear una función para simular BAC para una persona
+simulacion_bac <- function(cantidad_alcohol, 
+                           peso_corporal, 
+                           volumen_distribucion, 
+                           factor_eliminacion, 
+                           tiempo_desde_ultima_bebida){
+  bac <- (cantidad_alcohol / (peso_corporal * volumen_distribucion)) - (factor_eliminacion * tiempo_desde_ultima_bebida)
+  if (bac < 0) {
+    bac <- 0
+  }
+  return(bac)
+}
+
+# Crear vectores para almacenar los resultados de la simulación
+n <- 500
+sex <- numeric(n)
+edad <- numeric(n)
+alcohol <- numeric(n)
+peso <- numeric(n)
+tiempo <- numeric(n)
+bac <- numeric(n)
+
+# Generar datos simulados para 500 personas
+set.seed(123)  # Fijar una semilla para reproducibilidad
+for (i in 1:n) {
+  edad[i] <- rnorm(1,35,5)
+  sex[i] <-rbinom(1,1,0.55)
+  alcohol[i] <- runif(1, min = 10, max = 50)  # Cantidad de alcohol en gramos
+  peso[i] <- runif(1, min = 50, max = 100)  # Peso corporal en kg
+  tiempo[i] <- runif(1, min = 0, max = 12)  # Tiempo desde la última bebida en horas
+  bac[i] <- simulacion_bac(alcohol[i], 
+                           peso[i], 
+                           0.68, 0.015, 
+                           tiempo[i])
+}
+
+# Visualizar los resultados
+datos =data.frame(Sexo = sex,
+                  Edad = edad, 
+                  Alcohol = alcohol, 
+                  Peso = peso, 
+                  BAC = bac)
+
+# colores
+c0= "#b0394a"
+c1= "#ad6395"
+c2= "#a391c4"
+c3= "#8acfe6"
+c4= "#646420"
+c5= "#db524f" 
+```
+
+<br/><br/>
+
+Al igual que los intervalos de confianza paramétricos, las pruebas de hipótesis paramétricas deben cumplir principalmente con el supuesto de normalidad, debido a que esta distribución origina las distribuciones chi-cuadrado, t-Student y la F, empleadas como modelos para los estadísticos de prueba asociados con la media, proporción y varianza en una y dos poblaciones.
+
+
+
+
+# **Una población**
+
+<br/><br/>
+
+
+## **Prueba de hipótesis para una media**
+
+Se requiere establecer si la media de las edades de las personas accidentadas durante el presenta año son menores de 35 años. Se plantea la siguienes hipotesis estadísticas relacionadas :
+
+$Ho : \mu \geq 35$
+
+$Ha : \mu < 35$
+
+
+Antes de proceder a realizar la prueba de hipótesis para la media, es necesario validar si la variables es normal o no. Para ello se aplica una prueba de Shapiro-Wilks
+
+```{r}
+shapiro.test(datos$Edad)
+```
+
+El resultado indica que se asume que los datos proceden de una distribución normal. Por tal razón se aplica una prueba paramétrica para una media. En este caso una prueba t-Studen debido a que no se conoce la varianza.
+
+
+
+
+```{r}
+t.test(datos$Edad, mu =35, alternative = "less")
+```
+
+
+
+<br/><br/>
+
+
+## **Prueba de hipótesis para una proporción**
+
+
+<br/><br/>
+
+
+## **Prueba de hipótesis para una varianza**
+
+<br/><br/>
+
+# **Dos poblaciones**
+
+<br/><br/>
+
+
+## **Prueba de hipótesis para diferencia de medias**
+
+<br/><br/>
+
+
+## **Prueba de hipótesis para diferencia de proporciones**
+
+
+<br/><br/>
+
+
+## **Prueba de hipótesis para razón de varianzas**
+
+<br/><br/>
+
+
+## **Prueba para mas de dos medias**
+
+ANÁLISIS DE VARIANZA - ANOVA
+
+$Ho: \mu_1 = \mu_2 = \mu_3$
+
+$Ha:$ alguna de las medias es diferente
+
+
+
+```{r}
+# Cargar los paquetes necesarios
+library(stats)
+library(agricolae)
+library(TukeyC)
+
+grupo1 <- c(0.08, 0.12, 0.10, 0.14, 0.09, 0.11, 0.13, 0.15, 0.10, 0.09, 0.11, 0.12, 0.13, 0.14, 0.08, 0.12, 0.10, 0.15, 0.11, 0.13)
+grupo2 <- c(0.05, 0.03, 0.04, 0.06, 0.03, 0.05, 0.04, 0.06, 0.04, 0.05, 0.03, 0.04, 0.05, 0.06, 0.04, 0.03, 0.05, 0.06, 0.04, 0.03)
+grupo3 <- c(0.07, 0.08, 0.09, 0.10, 0.08, 0.07, 0.11, 0.09, 0.10, 0.08, 0.09, 0.10, 0.11, 0.07, 0.08, 0.09, 0.10, 0.08, 0.07, 0.11)
+
+grupos = data.frame(grupo1, grupo2, grupo3)
+
+
+
+# Crear un data frame con los datos de los tres grupos
+data <- data.frame(
+  Grupo = factor(rep(1:3, each = 20)),
+  Niveles_Benzodiazepina = c(grupo1, grupo2, grupo3)
+)
+
+# Realizar un ANOVA
+modelo_anova <- aov(Niveles_Benzodiazepina ~ Grupo, data = data)
+
+# Mostrar los resultados del ANOVA
+summary(modelo_anova)
+
+# Realizar comparaciones múltiples con la prueba de Tukey
+comparaciones_tukey <- TukeyHSD(modelo_anova)
+
+# Mostrar los resultados de las comparaciones múltiples de Tukey
+print(comparaciones_tukey)
+
+
+```
+
+
+

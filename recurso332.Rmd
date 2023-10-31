@@ -1,0 +1,256 @@
+---
+title: "**Intervalos de confianza**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+
+library(tidyverse)
+
+# Crear una función para simular BAC para una persona
+simulacion_bac <- function(cantidad_alcohol, 
+                           peso_corporal, 
+                           volumen_distribucion, 
+                           factor_eliminacion, 
+                           tiempo_desde_ultima_bebida){
+  bac <- (cantidad_alcohol / (peso_corporal * volumen_distribucion)) - (factor_eliminacion * tiempo_desde_ultima_bebida)
+  if (bac < 0) {
+    bac <- 0
+  }
+  return(bac)
+}
+
+# Crear vectores para almacenar los resultados de la simulación
+n <- 100
+sex <- numeric(n)
+edad <- numeric(n)
+alcohol <- numeric(n)
+peso <- numeric(n)
+tiempo <- numeric(n)
+bac <- numeric(n)
+
+# Generar datos simulados para 500 personas
+set.seed(123)  # Fijar una semilla para reproducibilidad
+for (i in 1:n) {
+  edad[i] <- rnorm(1,35,5)
+  sex[i] <-rbinom(1,1,0.55)
+  alcohol[i] <- runif(1, min = 5, max = 20)  # Cantidad de alcohol en gramos
+  peso[i] <- runif(1, min = 50, max = 100)  # Peso corporal en kg
+  tiempo[i] <- runif(1, min = 0, max = 12)  # Tiempo desde la última bebida en horas
+  bac[i] <- simulacion_bac(alcohol[i], 
+                           peso[i], 
+                           0.68, 0.015, 
+                           tiempo[i])
+}
+
+
+# Visualizar los resultados
+datos =data.frame(Sexo = sex,
+                  Edad = round(edad,0), 
+                  Peso =round(peso,1), 
+                  BAC = round(bac,3))
+
+```
+
+<br/><br/>
+
+```{r, echo=FALSE, out.width="40%", fig.align = "center"}
+knitr::include_graphics("img/gic.png")
+```
+
+<br/>
+
+Un estimador por intervalo de confianza (IC) es una regla que especifica como usar las mediciones obtenidas en una muestra para calcular dos números que forman los extremos del intervalo que confiamos contenga al parámetro de interés $\theta$. Dependiendo del parámetro se utiliza en la construcción del IC las distribuciones muestrales:  $normal$ $estándar$ ($Z$), $t-Student$, $\chi^{2}$ o $F-Fisher$
+
+
+<br/><br/>
+
+Para ilustrar las estimaciones por intervalos de confianza se realiza una simulación de las caracteristicas de una muestra de 100 personas 
+
+* Sexo : 0 Femenino  , 1 Masculino
+* Edad en años
+* Peso en kilogramos
+* Resultado examen bac
+
+
+
+
+
+
+```{r}
+library(DT)
+datatable(head(datos))
+
+```
+<br/><br/>
+
+
+## **Una población**
+
+<br/><br/>
+
+### **Intervalo de confianza para una media**
+
+
+```{r}
+library(dplyr)
+t.test(datos$Peso)$conf.int
+```
+
+**Interpretación** 
+
+El peso de las personas examinadas está entre 72.4 y  78.3 kilogramos con una confianza del 95%
+
+<br/><br/>
+
+### **Intervalo de confianza para una proporcion**
+
+```{r}
+t = table(datos$Sexo)
+prop.test(t[1],100)$conf.int
+```
+
+**Interpretación** 
+
+La proporción de mujeres está entre 0.26 y 0.46  con una confianza del 95%
+
+<br/><br/>
+
+### **Intervalo de confianza para una varianza**
+
+```{r}
+library(paqueteDEG)
+intervalo.var(datos$BAC)
+```
+
+**Interpretación** 
+
+La varianza de los resultados del examen BAC está entre 0.1239 y 0.01261 con una confianza del 95%
+
+Si se requiere estimar un intervalo de confianza para la desviación estandar se toma raiz cuadrada a los límites del intervalo de confianza para la varianza
+
+```{r}
+sqrt(intervalo.var(datos$BAC))
+```
+
+<br/><br/>
+
+## **Dos población**
+
+
+<br/><br/>
+
+### **Intervalos de confianza para la diferencia de medias**
+
+```{r}
+t.test(BAC ~ Sexo, data = datos)$conf.int
+```
+
+**Interpretación**
+
+Con una confianza del 95% los resultados del examen BAC esta entre -0.092 y 0.003. Lo cual indica que es posible que los promedios hombre y mujeres sean iguales
+
+
+<br/><br/>
+
+### **Intervalo de confianza para la diferencia de proporciones**
+
+Se desea comparar las proporciones de las personas fallecidas en accidentes de transito y en accidentes laborales que dieron positivo ante una prueba de drogas. Una muestra obtenida de 200 personas fallecidas en accidentes de transito arrojó que 80 de ellas salió positiva ante una prueba de drogas, mientras  que 45 de 150 personas fallecidas en accidente laborales presentaron resultados positivos en una prueba de drogas.
+
+```{r}
+prop.test(c(80,45), c(200,150))$conf.int
+```
+
+Con una confianza del  95%, la diferencia entre las proporciones de personas con resultados positivo en examenes de drogas, fallecidas en accidente de transito, comparadas con las que fallecieron en accidentes laborales se encuentra entre -0.0057  y 0.2058. Esto indica que es posible que estas dos proporciones sean iguales
+
+<br/><br/>
+
+### **Intervalo de confianza para la razón de dos varianzas**
+
+```{r}
+datos0 <- subset(datos, datos$Sexo == 0)
+datos1 <- subset(datos, datos$Sexo == 1)
+var.test(datos0$BAC, datos1$BAC)$conf.int
+```
+
+**Interpretación**
+
+El intervalo de confianza para la comparación de varianzas para los resultados del examen BAC entre mujres y hombre se encuentra entre 0.7995847 y 2.6139550.  Como el resultado contiene la unidad, es posible que las varianzas sean iguales.
+
+
+
+<br/><br/>
+
+
+
+
+## **Resumen**
+
+<br/>
+
+# **Tamaño de muestra**                                                            
+
+<br/><br/>
+
+### $\mu$  
+
+$$n=\dfrac{z_{\alpha/2}^{2}\hspace{.3cm} \sigma^{2}}{e^{2}}$$                   
+Donde: 
+
+* $z_{\alpha/2}$ : Percentil($1-\alpha/2$) normal;
+
+* $\sigma^{2}$: varianza, que se puede obtener mediante prueba piloto, conocer de un estudio anterior, o estimar mediante consulta a un experto : $\widehat{\sigma}  \cong  (\max\{x\}-\min\{x\})/4$ y 
+
+* $e$ : error de muestreo $(|\bar{x}-\mu|< e)$.    
+
+<br/><br/>
+
+### $p$
+
+$$n=\dfrac{z_{\alpha/2}^{2}\hspace{.3cm} pq }{e^{2}}$$
+
+
+
+Donde: 
+
+* $z_{\alpha/2}$ : Percentil($1-\alpha/2$) normal; 
+
+* $pq$: varianza, que se puede obtener mediante prueba piloto, conocer de un estudio anterior, o se puede asumir como varianza máxima $pq=0.5(1-0.5)=0.25$ 
+
+* $e$ : error de muestreo $(|\widehat{p}-p|< e)$.     
+
+<br/><br/><br/>
+
+En todos los casos si n/N>0.05, debes de corregir por un factor de población finita
+
+$$n = \dfrac{N n_{0}}{N+n_{0}-1}$$
+
+<br/><br/><br/><br/>
+
+
+
+
+
+| parámetro        | código R                                                |
+|:----------------:|:--------------------------------------------------------|
+|$\mu$             | `t.test(x, coef.level= 1−a)$conf.int`                   |
+|$p$               | `prop.test(x,n, conf.level=0.95)$conf.int`              |
+|$\mu_{1}-\mu_{2}$ | `t.test(datos1,datos2, paired=T)$conf.int`              |
+|                  | `t.test(datos1 datos2, var.equal=T)$conf.int`           |
+|                  | `t.test(datos1 datos2, var.equal=F)$conf.int`           |
+|$p_{1} − p_{2}$   | `prop.test(c(x1,x2), c(n1,n2))$conf.int`                |
+|$\dfrac{\sigma^{2_{1}}}{\sigma^{2}_{2}}$|`var.test(datos1 datos2)$conf.int` |
+|                  | `install.packages("devtools")`                          |
+|                  | `devtools::install_github("dgonzalez80/paquetepye")`    |
+|                  |  `library(paqueteDEG)`                                  |
+|                  | `paqueteDEG::sizemu(1.96,345,2)     # sizemu(z,sigma2,error)`|
+|                  | `paqueteDEG::sizep(1.96,0.5,0.05)   # sizep(z,prob,error)`   |
+|                  | `paqueteDEG::adjusted_size(385,2000) # adjusted_size(n,N)`   |
+
+
+

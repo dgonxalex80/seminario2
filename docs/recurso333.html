@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Intervalos de confianza - no paramétricos</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Introducción al control de calidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Intervalos de confianza - no
+paramétricos</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<p>Cuando se extrae una muestra de una población que no es normal y se
+requiere estimar un intervalo de confianza se pueden utilizar los
+métodos de estimación <strong>bootstrap</strong>. Existen varias
+versiones del método. Una presentación básica del método se describe a
+continuación.</p>
+<p>El artículo de In-use Emissions from Heavy Duty Dissel Vehicles
+(J.Yanowitz, 2001) presenta las mediciones de eficiencia de combustible
+en millas/galón de una muestra de siete camiones. Los datos obtenidos
+son los siguientes:</p>
+<p><br/></p>
+<pre class="r"><code>c(7.69, 4.97, 4.56, 6.49, 4.34, 6.24, 4.45)</code></pre>
+<pre><code>[1] 7.69 4.97 4.56 6.49 4.34 6.24 4.45</code></pre>
+<p><br/></p>
+<p>Se supone que es una muestra aleatoria de camiones y que se desea
+construir un intervalo de confianza del 95 % para la media de la
+eficiencia de combustible de esta población. No se tiene información de
+la distribución de los datos. El método bootstrap permite construir
+intervalos de confianza del 95 % - Para ilustrar el método suponga que
+coloca los valores de la muestra en una caja y extrae uno al azar. Este
+correspondería al primer valor de la muestra bootstrap <span
+class="math inline">\(X^{∗}_{1}\)</span>. Después de anotado el valor se
+regresa <span class="math inline">\(X^{∗}_{1}\)</span> a la caja y se
+extrae el valor <span class="math inline">\(X^{∗}_{2}\)</span> ,
+regresandolo nuevamente. Este procedimiento se repite hasta completar
+una muestra de tamaño <span class="math inline">\(n\)</span>, <span
+class="math inline">\(X^{∗}_{1}\)</span>,<span
+class="math inline">\(X^{∗}_{2}\)</span>,<span
+class="math inline">\(X^{∗}_{2}\)</span>,<span
+class="math inline">\(X^{∗}_{n}\)</span>, conformando la muestra
+bootstrap.</p>
+<p><br/><br/></p>
+<p>Es necesario extraer un gran número de muestras (suponga k = 1000).
+Para cada una de las muestra bootstrap obtenidas se calcula la media
+<span class="math inline">\(\bar{X^{∗}_{i}}\)</span>, obteniéndose un
+valor para cada muestra. El intervalo de confianza queda conformado por
+los percentiles <span class="math inline">\(P_{2.5}\)</span> y <span
+class="math inline">\(P_{97.5}\)</span>. Existen dos métodos para
+estimarlo:</p>
+<p><br/><br/></p>
+<table>
+<tbody>
+<tr class="odd">
+<td align="left">Método 1</td>
+<td align="left"><span class="math inline">\((P_{2.5};
+P_{97.5})\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Método 2</td>
+<td align="left"><span class="math inline">\((2\bar{X} − P_{97.5};
+2\bar{X} − P_{2.5})\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>Construya el intervalo de confianza por los dos métodos y compare los
+resultados obtenidos. Tomado de Navidi(2006)</p>
+<p><br/><br/></p>
+<pre class="r"><code>x=c( 7.69, 4.97, 4.56, 6.49, 4.34, 6.24, 4.45) # datos muestra
+boot=sample(x,7000,replace=TRUE)   # se extraen n x m muestras
+b=matrix(boot,nrow=1000,ncol=7)    # se construye matriz de n x m 
+mx=apply(b,1,mean)                 # se calculan m medias por fila</code></pre>
+<p><br/><br/></p>
+<p><strong>Método 1</strong></p>
+<pre class="r"><code>ic1=quantile(mx, probs=c(0.025, 0.975)) # se calcula IC método 1
+ic1</code></pre>
+<pre><code>    2.5%    97.5% 
+4.689964 6.424536 </code></pre>
+<p><br/><br/></p>
+<p><strong>Método 2</strong></p>
+<pre class="r"><code>ic2=c(2*mean(mx)-ic1[2], 2*mean(mx)-ic1[1]) # se calcula IC método 2
+ic2</code></pre>
+<pre><code>   97.5%     2.5% 
+4.632424 6.366996 </code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>hist(mx, las=1, main=&quot; &quot;, ylab = &quot; &quot;, xlab = &quot; &quot;, col=c3)
+abline(v=ic1, col=&quot;red&quot;)
+abline(v=ic2, col=&quot;blue&quot;)</code></pre>
+<p><img src="recurso333_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

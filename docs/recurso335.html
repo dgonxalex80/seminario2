@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Pruebas de hipótesis - paramétricas</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Introducción al control de calidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Pruebas de hipótesis -
+paramétricas</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<p>Al igual que los intervalos de confianza paramétricos, las pruebas de
+hipótesis paramétricas deben cumplir principalmente con el supuesto de
+normalidad, debido a que esta distribución origina las distribuciones
+chi-cuadrado, t-Student y la F, empleadas como modelos para los
+estadísticos de prueba asociados con la media, proporción y varianza en
+una y dos poblaciones.</p>
+<div id="una-población" class="section level1">
+<h1><strong>Una población</strong></h1>
+<p><br/><br/></p>
+<div id="prueba-de-hipótesis-para-una-media" class="section level2">
+<h2><strong>Prueba de hipótesis para una media</strong></h2>
+<p>Se requiere establecer si la media de las edades de las personas
+accidentadas durante el presenta año son menores de 35 años. Se plantea
+la siguienes hipotesis estadísticas relacionadas :</p>
+<p><span class="math inline">\(Ho : \mu \geq 35\)</span></p>
+<p><span class="math inline">\(Ha : \mu &lt; 35\)</span></p>
+<p>Antes de proceder a realizar la prueba de hipótesis para la media, es
+necesario validar si la variables es normal o no. Para ello se aplica
+una prueba de Shapiro-Wilks</p>
+<pre class="r"><code>shapiro.test(datos$Edad)</code></pre>
+<pre><code>
+    Shapiro-Wilk normality test
+
+data:  datos$Edad
+W = 0.99671, p-value = 0.4032</code></pre>
+<p>El resultado indica que se asume que los datos proceden de una
+distribución normal. Por tal razón se aplica una prueba paramétrica para
+una media. En este caso una prueba t-Studen debido a que no se conoce la
+varianza.</p>
+<pre class="r"><code>t.test(datos$Edad, mu =35, alternative = &quot;less&quot;)</code></pre>
+<pre><code>
+    One Sample t-test
+
+data:  datos$Edad
+t = 0.50014, df = 499, p-value = 0.6914
+alternative hypothesis: true mean is less than 35
+95 percent confidence interval:
+     -Inf 35.45955
+sample estimates:
+mean of x 
+   35.107 </code></pre>
+<p><br/><br/></p>
+</div>
+<div id="prueba-de-hipótesis-para-una-proporción"
+class="section level2">
+<h2><strong>Prueba de hipótesis para una proporción</strong></h2>
+<p><br/><br/></p>
+</div>
+<div id="prueba-de-hipótesis-para-una-varianza" class="section level2">
+<h2><strong>Prueba de hipótesis para una varianza</strong></h2>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="dos-poblaciones" class="section level1">
+<h1><strong>Dos poblaciones</strong></h1>
+<p><br/><br/></p>
+<div id="prueba-de-hipótesis-para-diferencia-de-medias"
+class="section level2">
+<h2><strong>Prueba de hipótesis para diferencia de medias</strong></h2>
+<p><br/><br/></p>
+</div>
+<div id="prueba-de-hipótesis-para-diferencia-de-proporciones"
+class="section level2">
+<h2><strong>Prueba de hipótesis para diferencia de
+proporciones</strong></h2>
+<p><br/><br/></p>
+</div>
+<div id="prueba-de-hipótesis-para-razón-de-varianzas"
+class="section level2">
+<h2><strong>Prueba de hipótesis para razón de varianzas</strong></h2>
+<p><br/><br/></p>
+</div>
+<div id="prueba-para-mas-de-dos-medias" class="section level2">
+<h2><strong>Prueba para mas de dos medias</strong></h2>
+<p>ANÁLISIS DE VARIANZA - ANOVA</p>
+<p><span class="math inline">\(Ho: \mu_1 = \mu_2 = \mu_3\)</span></p>
+<p><span class="math inline">\(Ha:\)</span> alguna de las medias es
+diferente</p>
+<pre class="r"><code># Cargar los paquetes necesarios
+library(stats)
+library(agricolae)
+library(TukeyC)
+
+grupo1 &lt;- c(0.08, 0.12, 0.10, 0.14, 0.09, 0.11, 0.13, 0.15, 0.10, 0.09, 0.11, 0.12, 0.13, 0.14, 0.08, 0.12, 0.10, 0.15, 0.11, 0.13)
+grupo2 &lt;- c(0.05, 0.03, 0.04, 0.06, 0.03, 0.05, 0.04, 0.06, 0.04, 0.05, 0.03, 0.04, 0.05, 0.06, 0.04, 0.03, 0.05, 0.06, 0.04, 0.03)
+grupo3 &lt;- c(0.07, 0.08, 0.09, 0.10, 0.08, 0.07, 0.11, 0.09, 0.10, 0.08, 0.09, 0.10, 0.11, 0.07, 0.08, 0.09, 0.10, 0.08, 0.07, 0.11)
+
+grupos = data.frame(grupo1, grupo2, grupo3)
+
+
+
+# Crear un data frame con los datos de los tres grupos
+data &lt;- data.frame(
+  Grupo = factor(rep(1:3, each = 20)),
+  Niveles_Benzodiazepina = c(grupo1, grupo2, grupo3)
+)
+
+# Realizar un ANOVA
+modelo_anova &lt;- aov(Niveles_Benzodiazepina ~ Grupo, data = data)
+
+# Mostrar los resultados del ANOVA
+summary(modelo_anova)</code></pre>
+<pre><code>            Df  Sum Sq Mean Sq F value Pr(&gt;F)    
+Grupo        2 0.05149 0.02575   98.92 &lt;2e-16 ***
+Residuals   57 0.01484 0.00026                   
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
+<pre class="r"><code># Realizar comparaciones múltiples con la prueba de Tukey
+comparaciones_tukey &lt;- TukeyHSD(modelo_anova)
+
+# Mostrar los resultados de las comparaciones múltiples de Tukey
+print(comparaciones_tukey)</code></pre>
+<pre><code>  Tukey multiple comparisons of means
+    95% family-wise confidence level
+
+Fit: aov(formula = Niveles_Benzodiazepina ~ Grupo, data = data)
+
+$Grupo
+       diff         lwr         upr   p adj
+2-1 -0.0710 -0.08327658 -0.05872342 0.0e+00
+3-1 -0.0265 -0.03877658 -0.01422342 8.5e-06
+3-2  0.0445  0.03222342  0.05677658 0.0e+00</code></pre>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

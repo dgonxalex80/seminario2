@@ -1,0 +1,55 @@
+name: " "
+output_dir: "docs"
+navbar:
+  title: "Seminario "
+  left:
+    - text: "Unidad1" 
+      menu:
+        - text: "Introducción a la calidad de la información"
+          href: recurso000.html
+        - text: "Fuentes de información"
+          href: recurso000.html
+        - text: "Variables cualitativas y cuantitativas"
+          href: recurso000.html
+        - text: "Identificación de errores"
+          href: recurso000.html         
+    - text: "Unidad 2"
+      menu:
+        - text: "Conceptos básicos indicadores estadísticos"
+          href: recurso000.html
+        - text: "Modelos de probabilidad"
+          href: recurso000.html
+        - text: "Introducción al control de calidad"
+          href: recurso000.html
+        - text: "Análisis de ensayos"
+          href: recurso000.html
+        - text: "Control interno"
+          href: recurso000.html
+        - text: "Análisis de control binario"
+          href: recurso000.html
+    - text: "Unidad 3"
+      menu: 
+        - text: "Estimación -conceptos básicos "
+          href: recurso331.html
+        - text: "Intervalos de confianza - paramétricos"
+          href: recurso332.html   
+        - text: "Intervalos de confianza - no paramétricos"
+          href: recurso333.html             
+        - text: "Pruebas de hipótesis - conceptos básicos"
+          href: recurso334.html
+        - text: "Pruebas de hipótesis - paramétricas"
+          href: recurso335.html         
+        - text: "Pruebas de hipótesis - no paramétricas"
+          href: recurso336.html              
+        - text: "La significancia estadística"
+          href: recurso337.html
+    - text: "Unidad 4"
+      menu: 
+        - text: "Análisis de resultados científicos"
+          href: recurso000.html
+        - text: "Aplicacón de los conceptos"
+          href: recurso000.html 
+output:
+  html_document:
+    theme: flatly
+    css: style.css

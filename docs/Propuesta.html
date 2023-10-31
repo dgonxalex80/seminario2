@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Daniel Gonzalez" />
+
+<meta name="date" content="2023-08-24" />
+
+<title>Propuesta</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Introducción al control de calidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Propuesta</h1>
+<h4 class="author">Daniel Gonzalez</h4>
+<h4 class="date">2023-08-24</h4>
+
+</div>
+
+
+<p></br></br></p>
+<div
+id="seminario-análisis-de-tendencias-para-métodos-cuantitativos-y-cualitativos"
+class="section level2">
+<h2><strong>SEMINARIO : ANÁLISIS DE TENDENCIAS PARA MÉTODOS
+CUANTITATIVOS Y CUALITATIVOS</strong></h2>
+<p></br></p>
+<div id="valida-tus-datos-6-horas" class="section level3">
+<h3>VALIDA TUS DATOS (6 horas)</h3>
+<pre><code>• Introducción a la calidad de la información
+• Fuentes de información.
+• Variables cualitativas y cuantitativas
+• Identificación de errores y sesgos en la información</code></pre>
+</div>
+<div id="control-interno-18-horas" class="section level3">
+<h3>CONTROL INTERNO (18 horas)</h3>
+<pre><code>• Conceptos básicos: indicadores de posición, centro, dispersión y forma
+• La media muestral, la proporción muestral y la varianza muestral.
+•  modelos binomiales, poisson y normal.  
+• Introducción al control de calidad
+• Gráficos e indicadores de control de calidad. 
+• Control interno.  Cartas de control, Reglas de control 
+• Análisis de Ensayos de Aptitud y Z-Score
+• Control interno y Seguimiento de Tendencias
+• Análisis de control binario y T2 de Hotelling</code></pre>
+</div>
+<div id="generaliza-los-resultados-14-horas" class="section level3">
+<h3>GENERALIZA LOS RESULTADOS (14 horas)</h3>
+<pre><code>• Estimación puntual y por intervalos de confianza
+•  Pruebas de hipótesis. Conceptos, error tipo I, tipo II y potencia de las pruebas de hipótesis. Pruebas paramétricas y no paramétricas. 
+• Evaluación de la significancia estadística</code></pre>
+</div>
+<div id="interpreta-y-presenta-tus-resultados-6-horas"
+class="section level3">
+<h3>INTERPRETA Y PRESENTA TUS RESULTADOS (6 horas)</h3>
+<pre><code>• Análisis y discusión de resultados científicos
+• Aplicación de los Conceptos a Casos prácticos</code></pre>
+<p>total 44 horas</p>
+<p></br></br></br></p>
+</div>
+</div>
+<div id="introducción" class="section level2">
+<h2><strong>Introducción</strong></h2>
+<p>El mundo actual está inmerso en una era de información y datos. La
+toma de decisiones informada se ha convertido en un pilar esencial en
+diversos campos, desde la investigación científica hasta la gestión
+empresarial. En este contexto, el análisis de tendencias utilizando
+métodos cuantitativos y cualitativos se ha vuelto fundamental para
+comprender patrones, identificar oportunidades y enfrentar desafíos.</p>
+<p>El seminario “Análisis de Tendencias para Métodos Cuantitativos y
+Cualitativos” se presenta como una oportunidad para explorar en
+profundidad las herramientas y técnicas que permiten extraer información
+valiosa de los datos, tanto cuantitativos como cualitativos. A lo largo
+de este seminario, los participantes serán guiados a través de los
+procesos de validación de datos, control interno, generalización de
+resultados y la interpretación efectiva de los mismos. Cada módulo está
+diseñado para equipar a los asistentes con las habilidades necesarias
+para tomar decisiones basadas en evidencia sólida y llevar a cabo
+análisis significativos.</p>
+<p></br></p>
+<div id="distribución-en-sesiones-de-dos-horas" class="section level3">
+<h3><strong>Distribución en Sesiones de Dos Horas:</strong></h3>
+<p></br></p>
+<div id="día-1-2-validación-de-datos-6-horas" class="section level4">
+<h4><strong>Día 1-2: Validación de Datos (6 horas)</strong></h4>
+<ul>
+<li>Introducción a la calidad de la información (1 hora)</li>
+<li>Fuentes de información y su relevancia (1 hora)</li>
+<li>Diferenciación entre variables cualitativas y cuantitativas (1
+hora)</li>
+<li>Identificación de errores y sesgos en la información (1 hora)</li>
+<li>Ejercicios prácticos de validación de datos (2 horas)</li>
+</ul>
+<p></br></p>
+</div>
+<div id="día-3-6-control-interno-18-horas" class="section level4">
+<h4><strong>Día 3-6: Control Interno (18 horas)</strong></h4>
+<ul>
+<li>Conceptos básicos de estadísticas descriptivas (2 horas)</li>
+<li>Medidas de posición, centro, dispersión y forma (2 horas)</li>
+<li>Media muestral, proporción muestral y varianza muestral (2
+horas)</li>
+<li>Modelos binomiales, Poisson y normal (2 horas)</li>
+<li>Introducción al control de calidad (1 hora)</li>
+<li>Gráficos e indicadores de control de calidad (2 horas)</li>
+<li>Cartas de control y Reglas de control (2 horas)</li>
+<li>Análisis de Ensayos de Aptitud y Z-Score (2 horas)</li>
+<li>Control interno y Seguimiento de Tendencias (2 horas)</li>
+<li>Análisis de control binario y T2 de Hotelling (3 horas)</li>
+</ul>
+<p></br></p>
+</div>
+<div id="día-7-9-generalización-de-resultados-14-horas"
+class="section level4">
+<h4><strong>Día 7-9: Generalización de Resultados (14
+horas)</strong></h4>
+<ul>
+<li>Estimación puntual y por intervalos de confianza (3 horas)</li>
+<li>Pruebas de hipótesis: conceptos y tipos de errores (2 horas)</li>
+<li>Pruebas paramétricas y no paramétricas (2 horas)</li>
+<li>Evaluación de la significancia estadística (2 horas)</li>
+<li>Ejercicios y ejemplos de aplicaciones (5 horas)</li>
+</ul>
+<p></br></p>
+</div>
+<div id="día-10-11-interpretación-y-presentación-de-resultados-6-horas"
+class="section level4">
+<h4><strong>Día 10-11: Interpretación y Presentación de Resultados (6
+horas)</strong></h4>
+<ul>
+<li>Análisis y discusión de resultados científicos (3 horas)</li>
+<li>Aplicación de conceptos a casos prácticos (3 horas)</li>
+</ul>
+<p></br></p>
+<p><strong>Nota</strong>: La distribución en sesiones es sugerida y
+puede ajustarse según las necesidades de los participantes y el ritmo de
+aprendizaje del grupo. Además, se recomienda incluir pausas cortas
+durante las sesiones para mantener la atención y la participación activa
+de los asistentes.</p>
+<p></br></br></br></p>
+</div>
+</div>
+</div>
+<div id="introducción-a-la-calidad-de-la-información"
+class="section level2">
+<h2><strong>Introducción a la Calidad de la Información:</strong></h2>
+<p>La calidad de la información se refiere a la exactitud, confiabilidad
+y pertinencia de los datos utilizados en un análisis o investigación. En
+el contexto de la medicina legal, la calidad de la información es
+esencial para garantizar resultados justos y precisos en los casos
+judiciales. Los datos deben ser recopilados, registrados y almacenados
+de manera adecuada, evitando errores de entrada y asegurando su
+integridad. Además, es fundamental considerar la procedencia de la
+información y su relevancia para el caso en cuestión. La identificación
+y corrección de datos inexactos o incompletos son pasos cruciales para
+garantizar la confiabilidad y la validez de los resultados.</p>
+<p></br></p>
+<div id="fuentes-de-información" class="section level3">
+<h3><strong>Fuentes de Información:</strong></h3>
+<p>Las fuentes de información en medicina legal pueden ser diversas,
+como registros médicos, informes forenses, testimonios de expertos,
+estudios científicos y más. La selección de fuentes confiables es
+esencial para evitar la introducción de información sesgada o incorrecta
+en un caso. Los participantes deben aprender a evaluar la credibilidad
+de las fuentes, considerando factores como la reputación del proveedor
+de información, el método de recopilación de datos y la relevancia para
+el caso. La habilidad para identificar y utilizar fuentes confiables
+contribuye a la solidez y la validez de las conclusiones
+médico-legales.</p>
+<p></br></p>
+</div>
+<div id="variables-cualitativas-y-cuantitativas" class="section level3">
+<h3><strong>Variables Cualitativas y Cuantitativas:</strong></h3>
+<p>Las variables cualitativas y cuantitativas son dos tipos diferentes
+de datos utilizados en análisis médico-legales. Las variables
+cualitativas describen características o cualidades que no pueden ser
+medidas numéricamente, como el tipo de lesión o la causa de un
+incidente. Por otro lado, las variables cuantitativas representan
+cantidades numéricas, como la edad de una persona o las mediciones
+biométricas. La elección de qué tipo de variable utilizar depende del
+contexto y el objetivo del análisis. Comprender la distinción entre
+estas dos categorías es fundamental para garantizar que los datos se
+analicen y presenten de manera adecuada.</p>
+<p></br></p>
+</div>
+<div id="identificación-de-errores-y-sesgos-en-la-información"
+class="section level3">
+<h3><strong>Identificación de Errores y Sesgos en la
+Información:</strong></h3>
+<p>Los errores y sesgos en la información pueden surgir debido a
+diversos factores, como errores humanos en la entrada de datos,
+problemas en la recolección de información o incluso sesgos
+inconscientes en la interpretación de los resultados. Identificar y
+corregir estos problemas es esencial para mantener la integridad de los
+análisis médico-legales. Los participantes deben aprender a examinar los
+datos en busca de patrones inusuales, valores atípicos y discrepancias,
+así como a considerar cómo los sesgos podrían afectar los resultados y
+las conclusiones. Minimizar estos errores y sesgos mejora la precisión y
+la validez de los hallazgos presentados en un caso judicial.</p>
+<p></br></br></br></p>
+</div>
+</div>
+<div id="control-interno-en-medicina-legal" class="section level2">
+<h2><strong>Control Interno en Medicina Legal:</strong></h2>
+<p></br></p>
+<div id="conceptos-básicos-de-estadísticas-descriptivas-2-horas"
+class="section level3">
+<h3><strong>Conceptos Básicos de Estadísticas Descriptivas (2
+horas):</strong></h3>
+<p>En esta sección, se introducirán conceptos fundamentales de
+estadísticas descriptivas que son esenciales para comprender y resumir
+datos en medicina legal. Los participantes aprenderán acerca de medidas
+como la media, la mediana y la moda, que ofrecen información sobre la
+tendencia central de un conjunto de datos. Además, se explorarán
+conceptos como la desviación estándar y el rango intercuartílico, que
+indican la dispersión o variabilidad de los datos.</p>
+<p></br></p>
+</div>
+<div id="medidas-de-posición-centro-dispersión-y-forma-2-horas"
+class="section level3">
+<h3><strong>Medidas de Posición, Centro, Dispersión y Forma (2
+horas):</strong></h3>
+<p>Este tema profundizará en las medidas de posición, como los
+percentiles y cuartiles, que ayudan a entender la distribución de los
+datos y a identificar valores atípicos. También se explorarán medidas de
+dispersión, como el rango y la varianza, que cuantifican cómo se
+extienden los datos alrededor de la media. Además, se abordará la
+simetría y asimetría en la distribución de datos.</p>
+<p></br></p>
+</div>
+<div id="media-muestral-proporción-muestral-y-varianza-muestral-2-horas"
+class="section level3">
+<h3><strong>Media Muestral, Proporción Muestral y Varianza Muestral (2
+horas):</strong></h3>
+<p>Los participantes aprenderán cómo calcular y aplicar la media
+muestral, que proporciona una estimación de la media poblacional basada
+en una muestra. La proporción muestral es esencial para estimar la
+proporción de ciertas características en una población. Además, se
+explorará la varianza muestral, que mide la variabilidad de los datos en
+relación con la media muestral.</p>
+<p></br></p>
+</div>
+<div id="modelos-binomiales-poisson-y-normal-2-horas"
+class="section level3">
+<h3><strong>Modelos Binomiales, Poisson y Normal (2
+horas):</strong></h3>
+<p>Se presentarán y explicarán los conceptos de tres modelos de
+distribución estadística comunes en medicina legal. El modelo binomial
+se aplica a situaciones con resultados dicotómicos, el modelo de Poisson
+se utiliza para eventos raros y el modelo normal (o gaussiano) describe
+muchas distribuciones en la naturaleza. Los participantes comprenderán
+cómo estos modelos se aplican en análisis de datos forenses y
+judiciales.</p>
+<p></br></p>
+</div>
+<div id="introducción-al-control-de-calidad-1-hora"
+class="section level3">
+<h3><strong>Introducción al Control de Calidad (1 hora):</strong></h3>
+<p>Este tema brindará una introducción a los fundamentos del control de
+calidad en el contexto médico-legal. Se discutirán los objetivos y las
+ventajas del control de calidad, destacando su importancia en la
+obtención de resultados confiables y consistentes en análisis
+forenses.</p>
+<p></br></p>
+</div>
+<div id="gráficos-e-indicadores-de-control-de-calidad-2-horas"
+class="section level3">
+<h3><strong>Gráficos e Indicadores de Control de Calidad (2
+horas):</strong></h3>
+<p>Los participantes aprenderán a utilizar gráficos de control para
+monitorear la calidad de los procesos y detectar posibles desviaciones o
+problemas en la recolección y análisis de datos médico-legales. Se
+discutirán los tipos de gráficos más apropiados para diferentes tipos de
+datos y cómo interpretar los patrones y tendencias que aparecen en
+ellos.</p>
+<p></br></p>
+</div>
+<div id="cartas-de-control-y-reglas-de-control-2-horas"
+class="section level3">
+<h3><strong>Cartas de Control y Reglas de Control (2
+horas):</strong></h3>
+<p>Las cartas de control son herramientas visuales utilizadas para
+evaluar la estabilidad y el control de un proceso a lo largo del tiempo.
+Los asistentes aprenderán cómo construir y analizar estas cartas, y se
+familiarizarán con las reglas de control que permiten detectar señales
+de variabilidad anormal en los datos.</p>
+<p></br></p>
+</div>
+<div id="análisis-de-ensayos-de-aptitud-y-z-score-2-horas"
+class="section level3">
+<h3><strong>Análisis de Ensayos de Aptitud y Z-Score (2
+horas):</strong></h3>
+<p>En este tema, se explorará cómo realizar ensayos de aptitud para
+evaluar la competencia y la precisión de los métodos de medición en el
+contexto médico-legal. Se discutirá cómo calcular y aplicar el Z-Score,
+una medida que compara los resultados individuales con la media y la
+desviación estándar de una población de referencia.</p>
+<p></br></p>
+</div>
+<div id="control-interno-y-seguimiento-de-tendencias-2-horas"
+class="section level3">
+<h3><strong>Control Interno y Seguimiento de Tendencias (2
+horas):</strong></h3>
+<p>Los participantes aprenderán cómo el control interno de calidad puede
+ayudar a detectar tendencias a lo largo del tiempo y a evaluar si los
+resultados de las pruebas médicas están en línea con los estándares
+establecidos. Se discutirán las mejores prácticas para llevar a cabo un
+seguimiento continuo y asegurar resultados consistentes y
+confiables.</p>
+<p></br></p>
+</div>
+<div id="análisis-de-control-binario-y-t2-de-hotelling-3-horas"
+class="section level3">
+<h3><strong>Análisis de Control Binario y T2 de Hotelling (3
+horas):</strong></h3>
+<p>En esta sección, se abordará el análisis de control binario, que se
+utiliza para evaluar la consistencia de pruebas cualitativas o
+dicotómicas en el tiempo. Además, se presentará el T2 de Hotelling, una
+técnica multivariante que permite comparar múltiples variables al mismo
+tiempo, lo que puede ser relevante en el análisis médico-legal para
+evaluar conjuntamente varios aspectos de un caso.</p>
+<p></br></br></br></p>
+</div>
+</div>
+<div id="generalización-de-resultados-en-medicina-legal"
+class="section level2">
+<h2><strong>Generalización de Resultados en Medicina
+Legal:</strong></h2>
+<p></br></p>
+<div id="estimación-puntual-y-por-intervalos-de-confianza-3-horas"
+class="section level3">
+<h3><strong>Estimación Puntual y por Intervalos de Confianza (3
+horas):</strong></h3>
+<p>En esta sección, los participantes explorarán cómo estimar parámetros
+poblacionales desconocidos utilizando estadísticas muestrales. Se
+discutirá cómo calcular estimaciones puntuales, como la media y la
+proporción, y cómo interpretarlas. Además, se abordará la construcción
+de intervalos de confianza, que proporcionan un rango de valores dentro
+del cual es probable que se encuentre el parámetro poblacional.</p>
+<p></br></p>
+</div>
+<div id="pruebas-de-hipótesis-conceptos-y-tipos-de-errores-2-horas"
+class="section level3">
+<h3><strong>Pruebas de Hipótesis: Conceptos y Tipos de Errores (2
+horas):</strong></h3>
+<p>Los conceptos de las pruebas de hipótesis se presentarán
+detalladamente. Los participantes entenderán cómo formular una hipótesis
+nula y una hipótesis alternativa, así como el proceso de realizar una
+prueba de hipótesis. Se discutirán los tipos de errores que pueden
+ocurrir: el error tipo I (rechazar incorrectamente una hipótesis nula
+verdadera) y el error tipo II (no rechazar una hipótesis nula
+falsa).</p>
+<p></br></p>
+</div>
+<div id="pruebas-paramétricas-y-no-paramétricas-2-horas"
+class="section level3">
+<h3><strong>Pruebas Paramétricas y No Paramétricas (2
+horas):</strong></h3>
+<p>Se explorará la diferencia entre pruebas paramétricas y no
+paramétricas en el contexto médico-legal. Los participantes comprenderán
+cuándo es apropiado utilizar pruebas paramétricas, que asumen ciertas
+características de la población, y cuándo recurrir a pruebas no
+paramétricas, que son menos restrictivas en sus suposiciones. Ejemplos
+de pruebas en ambas categorías serán discutidos.</p>
+<p></br></p>
+</div>
+<div id="evaluación-de-la-significancia-estadística-2-horas"
+class="section level3">
+<h3><strong>Evaluación de la Significancia Estadística (2
+horas):</strong></h3>
+<p>En esta sección, se profundizará en la evaluación de la significancia
+estadística de los resultados obtenidos en análisis médico-legales. Los
+participantes aprenderán a interpretar los valores p y a establecer
+criterios para determinar si un resultado es estadísticamente
+significativo. Se discutirán los conceptos de nivel de significancia y
+p-valor, y cómo se relacionan con la toma de decisiones.</p>
+<p></br></p>
+</div>
+<div id="ejercicios-y-ejemplos-de-aplicaciones-5-horas"
+class="section level3">
+<h3><strong>Ejercicios y Ejemplos de Aplicaciones (5
+horas):</strong></h3>
+<p>En esta parte práctica del módulo, se presentarán ejercicios y casos
+de aplicación que permitirán a los participantes poner en práctica los
+conceptos aprendidos. Los ejemplos pueden incluir análisis de datos
+médicos reales, donde los asistentes deberán aplicar técnicas de
+estimación, pruebas de hipótesis y análisis de significancia. Esto
+fortalecerá su comprensión y habilidades para aplicar estas herramientas
+en situaciones médico-legales reales.</p>
+<p></br></br></br></p>
+</div>
+</div>
+<div id="interpreta-y-presenta-tus-resultados-en-medicina-legal"
+class="section level2">
+<h2><strong>Interpreta y Presenta tus Resultados en Medicina
+Legal:</strong></h2>
+<p></br></p>
+<div id="análisis-y-discusión-de-resultados-científicos"
+class="section level3">
+<h3><strong>Análisis y Discusión de Resultados
+Científicos:</strong></h3>
+<p>En esta sección, los participantes aprenderán cómo analizar y
+discutir los resultados obtenidos en análisis médico-legales de manera
+crítica y fundamentada. Se explorarán métodos para interpretar los
+hallazgos estadísticos y cómo relacionarlos con las preguntas planteadas
+en el caso. Los participantes adquirirán la habilidad de identificar
+patrones, tendencias y relaciones relevantes en los datos y de comunicar
+estos resultados de manera clara y objetiva.</p>
+<p></br></p>
+</div>
+<div id="aplicación-de-los-conceptos-a-casos-prácticos"
+class="section level3">
+<h3><strong>Aplicación de los Conceptos a Casos Prácticos:</strong></h3>
+<p>En esta parte del seminario, los conceptos aprendidos a lo largo del
+programa se aplicarán a casos prácticos específicos en el campo de la
+medicina legal. Los participantes trabajarán en grupos o de manera
+individual en escenarios reales o simulados, donde deberán utilizar las
+herramientas estadísticas y de análisis cualitativo aprendidas para
+abordar situaciones médico-legales complejas. Esto permitirá a los
+asistentes integrar sus conocimientos y habilidades en un contexto
+práctico y mejorar su capacidad para tomar decisiones informadas.</p>
+<p>Esta última etapa del seminario es crucial para garantizar que los
+participantes puedan traducir los conceptos y métodos aprendidos en el
+programa en aplicaciones concretas en la medicina legal. El enfoque en
+la interpretación y presentación adecuada de los resultados asegura que
+los profesionales sean capaces de comunicar eficazmente sus análisis a
+colegas, abogados, jueces y otros actores relevantes en el sistema de
+justicia.</p>
+<p></br></br></br></br></p>
+</div>
+</div>
+<div id="preguntas" class="section level2">
+<h2><strong>Preguntas</strong></h2>
+<p></br></p>
+<p>En el contexto del seminario “Análisis de Tendencias para Métodos
+Cuantitativos y Cualitativos en Medicina Legal”, las siguientes
+preguntas podrían ser relevantes para los participantes, ya que les
+ayudarán a comprender mejor los conceptos y aplicaciones abordados en
+cada módulo:</p>
+<p></br></br></p>
+<div id="unidad-1-validación-de-datos-y-calidad-de-la-información"
+class="section level4">
+<h4><strong>Unidad 1: Validación de Datos y Calidad de la
+Información:</strong></h4>
+<ul>
+<li>¿Cómo puedo identificar y corregir errores en los datos médicos y
+legales?</li>
+<li>¿Cuál es la importancia de utilizar fuentes confiables en la
+medicina legal?</li>
+<li>¿Cómo diferenciar entre variables cualitativas y cuantitativas en un
+caso médico-legal?</li>
+<li>¿Cuáles son algunos ejemplos de sesgos que podrían afectar los
+resultados en la medicina legal?</li>
+</ul>
+<p></br></br></p>
+</div>
+<div id="unidad-2-control-interno" class="section level4">
+<h4><strong>Unidad 2: Control Interno:</strong></h4>
+<ul>
+<li>¿Cuáles son los conceptos básicos que debemos entender sobre
+estadísticas descriptivas?</li>
+<li>¿Cómo se utilizan las medidas de posición y dispersión en el
+análisis de datos médico-legales?</li>
+<li>¿Qué significan la media muestral, proporción muestral y varianza
+muestral en el contexto de la medicina legal?</li>
+<li>¿Cómo se aplican los modelos binomiales, Poisson y normal en casos
+forenses?</li>
+<li>¿Cómo se establecen las cartas de control y qué reglas se utilizan
+para identificar problemas en el proceso de control?</li>
+</ul>
+<p></br></br></p>
+</div>
+<div id="unidad-3-generalización-de-resultados" class="section level4">
+<h4><strong>Unidad 3: Generalización de Resultados:</strong></h4>
+<ul>
+<li>¿Cómo se calculan las estimaciones puntuales y por intervalos de
+confianza?</li>
+<li>¿Cuál es la diferencia entre el error tipo I y el error tipo II en
+pruebas de hipótesis?</li>
+<li>¿En qué situaciones debería utilizar pruebas paramétricas y cuáles
+son las alternativas no paramétricas?</li>
+<li>¿Cómo se evalúa la significancia estadística y qué importancia tiene
+en la medicina legal?</li>
+<li>¿Puedes proporcionar ejemplos de cómo aplicar estos conceptos en
+casos prácticos reales?</li>
+</ul>
+<p></br></br></p>
+</div>
+<div id="unidad-4-interpretación-y-presentación-de-resultados"
+class="section level4">
+<h4><strong>Unidad 4: Interpretación y Presentación de
+Resultados:</strong></h4>
+<ul>
+<li>¿Cómo puedo analizar y discutir los resultados científicos de manera
+efectiva?</li>
+<li>¿Cuál es la importancia de relacionar los hallazgos con las
+preguntas planteadas en el caso?</li>
+<li>¿Cómo se aplican los conceptos y métodos aprendidos en casos
+prácticos en medicina legal?</li>
+<li>¿Cómo puedo comunicar de manera clara y objetiva los resultados de
+un análisis a diferentes audiencias, incluidos abogados y jueces?</li>
+</ul>
+<p></br></br></p>
+<p>Estas preguntas brindarán a los participantes la oportunidad de
+explorar a fondo los temas del seminario y profundizar en su comprensión
+de cómo aplicar los métodos cuantitativos y cualitativos en el campo de
+la medicina legal.</p>
+<p></br></br></br></p>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
