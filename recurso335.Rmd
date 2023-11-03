@@ -164,6 +164,10 @@ data <- data.frame(
   Niveles_Benzodiazepina = c(grupo1, grupo2, grupo3)
 )
 
+boxplot(grupos)
+
+
+
 # Realizar un ANOVA
 modelo_anova <- aov(Niveles_Benzodiazepina ~ Grupo, data = data)
 
@@ -177,6 +181,9 @@ comparaciones_tukey <- TukeyHSD(modelo_anova)
 print(comparaciones_tukey)
 
 
+```
+```{r}
+apply(grupos, 2, mean)
 ```
 
 

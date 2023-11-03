@@ -466,7 +466,9 @@ data &lt;- data.frame(
   Niveles_Benzodiazepina = c(grupo1, grupo2, grupo3)
 )
 
-# Realizar un ANOVA
+boxplot(grupos)</code></pre>
+<p><img src="recurso335_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># Realizar un ANOVA
 modelo_anova &lt;- aov(Niveles_Benzodiazepina ~ Grupo, data = data)
 
 # Mostrar los resultados del ANOVA
@@ -491,6 +493,9 @@ $Grupo
 2-1 -0.0710 -0.08327658 -0.05872342 0.0e+00
 3-1 -0.0265 -0.03877658 -0.01422342 8.5e-06
 3-2  0.0445  0.03222342  0.05677658 0.0e+00</code></pre>
+<pre class="r"><code>apply(grupos, 2, mean)</code></pre>
+<pre><code>grupo1 grupo2 grupo3 
+0.1150 0.0440 0.0885 </code></pre>
 </div>
 </div>
 

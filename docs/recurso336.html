@@ -367,7 +367,139 @@ $(document).ready(function () {
 </div>
 
 
+<div id="prueba-de-signos" class="section level1">
+<h1><strong>Prueba de signos</strong></h1>
+<pre class="r"><code># install.packages(&quot;BSDA&quot;)
+library(BSDA)
 
+# Ho: Me &lt;= 15  
+# Ha: Me &gt;  15
+x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
+#   +       -   +    +   -   +  -    +   +  +    +   -  +    +  +    +   +
+SIGN.test(x, md = 15,alternative = &quot;greater&quot;)</code></pre>
+<pre><code>
+    One-sample Sign-Test
+
+data:  x
+s = 13, p-value = 0.02452
+alternative hypothesis: true median is greater than 15
+95 percent confidence interval:
+  16 Inf
+sample estimates:
+median of x 
+         16 
+
+Achieved and Interpolated Confidence Intervals: 
+
+                  Conf.Level L.E.pt U.E.pt
+Lower Achieved CI     0.8811     16    Inf
+Interpolated CI       0.9500     16    Inf
+Upper Achieved CI     0.9519     16    Inf</code></pre>
+</div>
+<div id="prueba-de-rachas" class="section level1">
+<h1>Prueba de rachas</h1>
+<p>Ho : muestra aleatorio Ha: muestra no aleratoria</p>
+<pre class="r"><code>library(&quot;randtests&quot;)
+
+x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
+runs.test(x)</code></pre>
+<pre><code>
+    Runs Test
+
+data:  x
+statistic = -0.29161, runs = 6, n1 = 6, n2 = 5, n = 11, p-value =
+0.7706
+alternative hypothesis: nonrandomness</code></pre>
+<p>Como el valor-p &gt; alpha (0.05), entonces no rechazamos Ho.
+Asumimos que la muestra es aleatoria.</p>
+</div>
+<div id="prueba-chicuadrado-de-independencia" class="section level1">
+<h1><strong>Prueba chicuadrado de independencia</strong></h1>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Urbano</th>
+<th align="right">Rural</th>
+<th align="right">Total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Calificación</td>
+<td align="right"></td>
+<td align="right"></td>
+<td align="right"></td>
+</tr>
+<tr class="even">
+<td align="left">Bueno</td>
+<td align="right">20</td>
+<td align="right">11</td>
+<td align="right">31</td>
+</tr>
+<tr class="odd">
+<td align="left">Regular</td>
+<td align="right">40</td>
+<td align="right">8</td>
+<td align="right">18</td>
+</tr>
+<tr class="even">
+<td align="left">Malo</td>
+<td align="right">15</td>
+<td align="right">6</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="left">Total</td>
+<td align="right">75</td>
+<td align="right">25</td>
+<td align="right">100</td>
+</tr>
+</tbody>
+</table>
+<p>Ho : Lugar de residencia es independiente de la calificación Ha : las
+variables no son independientes</p>
+<pre class="r"><code>m=c(20,40,15,11,8,6)
+m=as.table(matrix(m,nrow=3))
+rownames(m)=c(&quot;Bueno&quot;, &quot;Regular&quot;, &quot;Malo&quot;)
+colnames(m)=c(&quot;Urbano&quot;, &quot;Rural&quot;)
+m</code></pre>
+<pre><code>        Urbano Rural
+Bueno       20    11
+Regular     40     8
+Malo        15     6</code></pre>
+<pre class="r"><code>chisq.test(m)</code></pre>
+<pre><code>
+    Pearson&#39;s Chi-squared test
+
+data:  m
+X-squared = 3.7378, df = 2, p-value = 0.1543</code></pre>
+<p><span class="math inline">\(\alpha = 0.05\)</span></p>
+<p>Como valor-p = 0.1543 &gt; 0.05 = a , entonces no se rechaza Ho.</p>
+<p>Asumimos que las variables residencia y calificación son
+independientes</p>
+</div>
+<div id="prueba-chi-cuadrado-de-bondad-de-ajuste"
+class="section level1">
+<h1><strong>Prueba chi-cuadrado de bondad de ajuste</strong></h1>
+<p>Ho: X sigue una determinadas distribución (Ej. uniforme) Ha: X no
+sigue el modelo seleccionado</p>
+<pre class="r"><code>obs=c(33,22,21,24)
+sum(obs)</code></pre>
+<pre><code>[1] 100</code></pre>
+<pre class="r"><code>esp=c(0.25,0.25,0.25,0.25)
+chisq.test(x=obs, p=esp)</code></pre>
+<pre><code>
+    Chi-squared test for given probabilities
+
+data:  obs
+X-squared = 3.6, df = 3, p-value = 0.308</code></pre>
+</div>
+<div id="prueba-kruskal-walis" class="section level1">
+<h1><strong>Prueba Kruskal Walis</strong></h1>
+<p>p-value = 0.308 , indica que no se rechaza Ho, es decir que la
+distribución en el uso de los porta-objetos es uniforme</p>
+</div>
 
 
 

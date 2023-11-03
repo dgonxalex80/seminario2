@@ -1,5 +1,6 @@
 ---
 title : <span style="color:#034a94"> **SEMINARIO**</span>
+subtitle: <span style="color:#4C626A"> **ANÁLISIS DE TENDENCIAS PARA MÉTODOS CUANTITATIVOS Y CUALITATIVOS**</span>
 author: "Pontificia Universidad Javeriana Cali"
 css: style.css
 ---
@@ -7,11 +8,11 @@ css: style.css
 
 <br/><br/>
 
-### **ANÁLISIS DE TENDENCIAS PARA MÉTODOS CUANTITATIVOS Y CUALITATIVOS**
+### 
  
 <br/>
 
-#### **VALIDA TUS DATOS**
+#### **UNIDAD 1 :VALIDA TUS DATOS**
 
 <br/>
 
@@ -22,7 +23,7 @@ css: style.css
 
 <br/><br/>
 
-#### **CONTROL INTERNO** 
+#### **UNIDAD 2: CONTROL INTERNO** 
 
 <br/>
 
@@ -38,7 +39,7 @@ css: style.css
 
 <br/><br/>
 
-#### **GENERALIZA LOS RESULTADOS**
+#### **UNIDAD 3: GENERALIZA LOS RESULTADOS**
 
 <br/>
 
@@ -54,7 +55,7 @@ css: style.css
 
 <br/><br/>
 
-#### **INTERPRETA Y PRESENTA TUS RESULTADOS**
+#### **UNIDAD 4: INTERPRETA Y PRESENTA TUS RESULTADOS**
 
 <br/>
 

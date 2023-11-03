@@ -8,8 +8,99 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
+
+
+
+# **Prueba de signos**
+
+
+
+```{r, message=FALSE}
+# install.packages("BSDA")
+library(BSDA)
+
+# Ho: Me <= 15  
+# Ha: Me >  15
+x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
+#   +       -   +    +   -   +  -    +   +  +    +   -  +    +  +    +   +
+SIGN.test(x, md = 15,alternative = "greater")
+
+```
+
+# Prueba de rachas
+
+Ho : muestra aleatorio 
+Ha:  muestra no aleratoria
+
+```{r}
+library("randtests")
+
+x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
+runs.test(x)
+
+```
+
+Como el valor-p > alpha (0.05), entonces no rechazamos Ho. Asumimos que la muestra es aleatoria.
+
+
+# **Prueba chicuadrado de independencia** 
+
+|                |Urbano    |Rural   | Total |
+|:--------------|----------:|-------:|------:|
+|Calificación   |           |        |       |
+|Bueno          |20         |11      |31     |
+|Regular        |40         | 8      |18     |
+|Malo           |15         | 6      |21     |
+|Total          |75         |25      |100    | 
+
+Ho : Lugar de residencia es independiente de la calificación
+Ha : las variables no son independientes
+
+```{r}
+m=c(20,40,15,11,8,6)
+m=as.table(matrix(m,nrow=3))
+rownames(m)=c("Bueno", "Regular", "Malo")
+colnames(m)=c("Urbano", "Rural")
+m
+
+chisq.test(m)
+```
+
+
+$\alpha = 0.05$
+
+Como valor-p = 0.1543 > 0.05 = a , entonces  no se rechaza Ho. 
+
+Asumimos que las variables residencia y calificación son independientes
+
+
+# **Prueba chi-cuadrado de bondad de ajuste**
+
+Ho: X sigue una determinadas distribución (Ej. uniforme)
+Ha: X no sigue el modelo seleccionado 
+
+```{r}
+obs=c(33,22,21,24)
+sum(obs)
+esp=c(0.25,0.25,0.25,0.25)
+chisq.test(x=obs, p=esp)
+
+```
+
+
+
+# **Prueba Kruskal Walis**
+
+
+
+
+p-value = 0.308 , indica que no se rechaza Ho, es decir que la distribución en el uso de los porta-objetos es uniforme
+
+
+
+
 
 
 
