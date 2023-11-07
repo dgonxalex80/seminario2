@@ -6,7 +6,7 @@ navbar:
     - text: "Unidad1" 
       menu:
         - text: "Introducción a la calidad de la información"
-          href: recurso000.html
+          href: recurso111.html
         - text: "Fuentes de información"
           href: recurso000.html
         - text: "Variables cualitativas y cuantitativas"
