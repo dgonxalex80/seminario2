@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Modelo de regresión y curvas de calibración</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Introducción al control de calidad</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Modelo de regresión y curvas de
+calibración</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<div id="modelo-de-regresión-lineal" class="section level1">
+<h1><strong>Modelo de Regresión lineal</strong></h1>
+<p><br/></p>
+<div id="introducción" class="section level2">
+<h2><strong>Introducción</strong></h2>
+<p>La primera forma de regresión lineal documentada fue el método de los
+mínimos cuadrados que fue publicada por Legendre en 1805, Gauss publicó
+un trabajo en donde desarrollaba de manera más profunda el método de los
+mínimos cuadrados y en dónde se incluía una versión del teorema de
+Gauss-Márkov. El término regresión se utilizó por primera vez en el
+estudio de variables antropométricas de Francis Galton: al comparar la
+estatura de padres e hijos, donde resultó que los hijos cuyos padres
+tenían una estatura muy superior al valor medio, tendían a igualarse a
+este, mientras que aquellos cuyos padres eran muy bajos tendían a
+reducir su diferencia respecto a la estatura media; es decir,
+“regresaban” al promedio. La constatación empírica de esta propiedad se
+vio reforzada más tarde con la justificación teórica de ese
+fenómeno.*</p>
+<p><br/></p>
+<p>El término lineal se emplea para distinguirlo del resto de técnicas
+de regresión, que emplean modelos basados en cualquier clase de función
+matemática. Los modelos lineales son una explicación simplificada de la
+realidad, mucho más ágiles y con un soporte teórico mucho más extenso
+por parte de la matemática y la estadística.</p>
+<p><br/></p>
+<p>El modelo de regresión lineal simple tiene la siguiente forma:</p>
+<p><span class="math display">\[y_{i} = \beta_{0} + \beta_{1} x_{i} +
+u_{i} \hspace{1cm} \text{para} \hspace{.5cm}i= 1,2,3,4, \cdots ,
+n\]</span> <br/></p>
+<p>Donde :</p>
+<p><span class="math inline">\(Y\)</span> : variable dependiente o
+respuesta <br/> <span class="math inline">\(X\)</span> : varialbe
+independiente o regresora <br/> <span
+class="math inline">\(\beta_{0}\)</span> : intercepto <br/> <span
+class="math inline">\(\beta_{1}\)</span> : pendiente <br/> <span
+class="math inline">\(u\)</span> : error</p>
+<p><br/><br/></p>
+<pre class="r"><code># # Crear datos de ejemplo
+# set.seed(123)
+# x &lt;- 1:10
+# y &lt;- 2 * x + rnorm(10)
+# 
+# # Realizar una regresión lineal simple
+# modelo &lt;- lm(y ~ x)
+# 
+# # Crear un dataframe con los datos y las predicciones del modelo
+# df &lt;- data.frame(x = x, y = y, Prediccion = predict(modelo))
+
+# Crear un gráfico de dispersión y la línea de regresión
+grafico &lt;- ggplot(data = df, aes(x = x, y = y)) +
+    geom_line(aes(y = yhat), color = &quot;#FF7F00&quot;) +  # Línea de regresión
+    geom_point() +  # Gráfico de dispersión
+    labs(title = &quot;Regresión Lineal Simple&quot;,
+       x = &quot;Variable independiente (x)&quot;,
+       y = &quot;Variable dependiente (y)&quot;)
+
+grafico</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><br/><br/></p>
+</div>
+<div id="correlación" class="section level2">
+<h2><strong>Correlación</strong></h2>
+<p><br/></p>
+<p>El grado de ajuste de los puntos con la recta, se mide a través de un
+coeficiente que presenta valores entre -1 y 1.</p>
+<p>Los siguientes gráficos iluistran las relaciones simuladas para
+correlaciones de 1, 0.99, 0.95, 0.90, 0.75, 0.50, 0.30 y 0.00.</p>
+<p><br/><br/></p>
+<pre class="r"><code>par(mfrow = c(1, 2),
+    mar = c(5, 4, 4, 2) + 0.1,
+                cex.lab=.7,  # tamaño de etiqueta ejes
+                cex.axis=.7, # tamaño escalas de los ejes 
+                cex.main=1, # tamaño del titulo
+                cex.sub=.5)
+
+muestra&lt;-gen.corr.data(1,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho= 1.0&quot;, las=1)
+grid()
+
+muestra&lt;-gen.corr.data(0.99,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho= 0.99&quot;, las=1)
+grid()</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-2-1.png" width="768" /></p>
+<pre class="r"><code>muestra&lt;-gen.corr.data(0.95,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho= 0.95&quot;, las=1)
+grid()
+
+muestra&lt;-gen.corr.data(0.90,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho=-0.90&quot;, las=1)
+grid()</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-2-2.png" width="768" /></p>
+<pre class="r"><code>muestra&lt;-gen.corr.data(0.75,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho=0.75&quot;, las=1)
+grid()
+
+muestra&lt;-gen.corr.data(0.50,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho= 0.50&quot;, las=1)
+grid()</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-2-3.png" width="768" /></p>
+<pre class="r"><code>muestra&lt;-gen.corr.data(0.30,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho= 0.30&quot;, las=1)
+grid()
+
+
+muestra&lt;-gen.corr.data(0.10,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho=0.10&quot;, las=1)
+grid()</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-2-4.png" width="768" /></p>
+<pre class="r"><code>muestra&lt;-gen.corr.data(0,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho=0.00&quot;, las=1)
+grid()</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-2-5.png" width="768" /></p>
+<p><br/><br/></p>
+<p>Tambien puede ser una relación negativa lineal</p>
+<pre class="r"><code>par(mfrow = c(1, 2),
+    mar = c(5, 4, 4, 2) + 0.1,
+                cex.lab=.5,  # tamaño de etiqueta ejes
+                cex.axis=.5, # tamaño escalas de los ejes 
+                cex.main=1, # tamaño del titulo
+                cex.sub=.5)
+
+muestra&lt;-gen.corr.data(-1,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho= -1.00&quot;, las=1)
+grid()
+
+muestra&lt;-gen.corr.data(-0.95,20)
+x=muestra[,2]+100
+y=muestra[,1]+100
+plot(x,y, pch=19,main=&quot;Correlación Rho= -0.95&quot;, las=1)
+grid()</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-3-1.png" width="768" /></p>
+<p><br/></p>
+<p>Valores positivos, significa que a medida que la variable X aumenta,
+la variable Y también tiende a aumentar. Un valor cercano a 1 indica una
+fuerte correlación positiva.</p>
+<p>Valores de correlación negativos, significa que a medida que la
+variable X aumenta, la variable Y tiende a disminuir. Un valor cercano a
+-1 indica una fuerte correlación.</p>
+<p><br/><br/></p>
+<div id="nota" class="section level3">
+<h3><strong>Nota</strong></h3>
+<p>El coeficiente de correlación empleado para el caso de dos variables
+numéricas corresponde al coeficiente de correlación de Pearson. Este
+coeficiente mide especificamente relaciones lineales. En caso de que la
+relación no sea una linea recta y por ejemplo sea una relación
+cuadrática, el coeficiente indicará un valor bajo.</p>
+<p>El que existea un alto grado de correlación no implica caudalida, es
+decir que si dos valibles tiene un indicador alto de correlación, esto
+no implica que una variable cause a la otra.</p>
+<p><br/><br/></p>
+</div>
+</div>
+</div>
+<div id="métodos-de-mínimos-cuadrados-ordinarios"
+class="section level1">
+<h1><strong>Métodos de Mínimos Cuadrados Ordinarios</strong></h1>
+<p>El método Mínimos Cuadrados Ordinarios (<strong>MCO</strong>) se basa
+en la minimizar la suma de cuadrados de los errores (<span
+class="math inline">\(u\)</span>), a través de la información contenida
+en una muestra</p>
+<p>De la ecuación del modelo estimado <span
+class="math inline">\(\widehat{y_{i}} = \widehat{\beta_{0}} +
+\widehat{\beta_{1}} + \widehat{u}\)</span> se pueden despejar los
+residuales . Como los errores son variables no observables, el método
+hace uso de sus respectivos estimadores llamados residuales:</p>
+<p><span class="math display">\[\begin{equation*}
+    \widehat{u}_{i} = (y - \widehat{y_{i}}) = \big(y -
+\widehat{\beta_{0}} + \widehat{\beta_{1}} x_{i} \big)
+    \end{equation*}\]</span></p>
+<p><br/><br/></p>
+<p>El método encuentra el valor de los parámetros <span
+class="math inline">\(\beta_{0}\)</span> y <span
+class="math inline">\(\beta_{1}\)</span> que minimzan la suma de
+cuadrados de los erroes <span class="math inline">\(SCRes\)</span></p>
+<p><span class="math display">\[SCRes=\sum_{i=1}^{n} \widehat{u_{i}}^{2}
+= \big(y - \widehat{\beta_{0}} + \widehat{\beta_{1}} \hspace{.2cm}x_{i}
+\big)^{2} \]</span></p>
+<p>Para ello deriva la función anterior con respecto a <span
+class="math inline">\(\beta_{0}\)</span> y <span
+class="math inline">\(\beta_{1}\)</span></p>
+<p><span class="math display">\[\dfrac{\partial
+SCRes}{\partial\beta_{0}} = -2 \sum_{i=1}^{n} \big(y -
+\widehat{\beta_{0}} + \widehat{\beta_{1}} \hspace{.2cm}x_{i} \big)  =
+0\]</span> <span class="math display">\[\dfrac{\partial
+SCRes}{\partial\beta_{1}}  = -2 \sum_{i=1}^{n} \big(y -
+\widehat{\beta_{0}} + \widehat{\beta_{1}} \hspace{.2cm}x_{i}
+\big)\hspace{.2cm} x_{i}  = 0\]</span></p>
+<p>Estas dos igualdades constituten las ecuaciones normales de las que
+se da solución al sistema <span class="math inline">\(2 \times
+2\)</span>.</p>
+<p><br/><br/></p>
+<p><strong>Solución</strong>:</p>
+<p><span class="math display">\[b_1 = \dfrac{n
+\displaystyle\sum_{i=1}^{n} x_{i}y_{i} -
+\Bigg(\displaystyle\sum_{i=1}^{n} x_{i} \displaystyle\sum_{i=1}^{n}
+y_{i}\Bigg) }{n \displaystyle\sum_{i=1}^{n} x_{i}^{2} -
+\Bigg(\displaystyle\sum_{i=1}^{n} x_{i}\Bigg)^{2}}  \]</span></p>
+<p><span class="math display">\[b_{0} = \bar{y} - b_{1} \hspace {.1cm}
+\bar{x} \]</span> <br/><br/></p>
+<p>Estos los coeficientes estimados del intercepto y de la pendiente de
+la recta <span class="math inline">\(\widehat{y} = b_{0} + b_{1}
+x\)</span></p>
+<p>Como los vales de <span class="math inline">\(b_{0}\)</span> y <span
+class="math inline">\(b_{1}\)</span> son variables aleatorias, dado que
+sus valores cambian al cambiar la muestra que los origina, poseen
+entonce una función de distribución, un valor esperado o media y una
+varianza.</p>
+<p>Los supuestos asociados al modelo con fines de inferencia estadistica
+se pueden resumir en :</p>
+<ul>
+<li>Los errores tienen media cero</li>
+<li>Los errores tienen varianza constante</li>
+<li>Los errores son normales</li>
+<li>Los errores son independientes</li>
+</ul>
+<p>La verificación de estos supuesto se puede realizar mediante la
+realización de pruebas de hipotesis complementadas con gráficos</p>
+<pre class="r"><code>modelo1 = lm(y ~ x)
+
+summary(modelo1)</code></pre>
+<pre><code>
+Call:
+lm(formula = y ~ x)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-0.6359 -0.2512  0.0948  0.2190  0.4527 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 194.19794    6.76064   28.73  &lt; 2e-16 ***
+x            -0.94261    0.06749  -13.97 4.23e-11 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.3319 on 18 degrees of freedom
+Multiple R-squared:  0.9155,    Adjusted R-squared:  0.9108 
+F-statistic: 195.1 on 1 and 18 DF,  p-value: 4.225e-11</code></pre>
+<p>Ecuación estimada del modelo por el método de mínimos cuadrados
+ordinarios es:</p>
+<p><span class="math display">\[ \widehat{y_{i}} = 0.5255 + 1.9180
+\hspace{.2cm} x_{i} \]</span> La salida tambien contiene además de los
+valores obtenidos:</p>
+<ul>
+<li>Pruebas de hipotesis individuales
+<ul>
+<li><span class="math inline">\(Ho : \beta_{0} = 0\)</span> vs <span
+class="math inline">\(Ha: \beta_{0} \neq 0\)</span></li>
+<li><span class="math inline">\(Ho : \beta_{1} = 0\)</span> vs <span
+class="math inline">\(Ha: \beta_{1} \neq 0\)</span></li>
+</ul></li>
+</ul>
+<p>En este caso no se rechaza la hipótesis : <span
+class="math inline">\(Ho : \beta_{0} = 0\)</span>, se asume que es
+verdadera por lo que se puede asumir que el intercepto es cero.</p>
+<p>En cuanto a la pendiente el valor-p = 0.0000, indica que se rechaza
+la hipótesis : <span class="math inline">\(Ho : \beta_{1} = 0\)</span>,
+se acepta que <span class="math inline">\(\beta_{1} \neq 0\)</span>, por
+tal razón existe un modelo lineal que relaciona a las variables.</p>
+<ul>
+<li><span class="math inline">\(R^{2}\)</span> (R-squarred) : que indica
+el porcentaje de la variable Y explicada por el modelo. En este caso el
+resultado indica que el modelo explica en un 97.55% la variación o
+comportamiento de la variable Y.</li>
+</ul>
+<p>No te que al exigir al modelo que no tenga intercepto, la pendiente
+cambia</p>
+<pre class="r"><code>modelo2 = lm(y ~ x -1)
+
+summary(modelo2)</code></pre>
+<pre><code>
+Call:
+lm(formula = y ~ x - 1)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-4.1073 -0.8966  0.1815  1.2608  5.2272 
+
+Coefficients:
+  Estimate Std. Error t value Pr(&gt;|t|)    
+x 0.995794   0.004936   201.8   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 2.211 on 19 degrees of freedom
+Multiple R-squared:  0.9995,    Adjusted R-squared:  0.9995 
+F-statistic: 4.07e+04 on 1 and 19 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p>Se recomienda que aunque la prueba de hipótesis correspondiente al
+intercepto de no significativa (se asuma que es cero), se conserve el
+modelo con intercepto, pues de lo contrario se puede generar sesgos
+sobre la estimación de la pendiente.</p>
+<p><br/><br/></p>
+<div id="curvas-de-calibración" class="section level2">
+<h2><strong>Curvas de calibración</strong></h2>
+<p>Una curva de calibración es una representación gráfica de la relación
+entre la respuesta instrumental y la concentración de un analito en una
+serie de soluciones estándar. Las curvas de calibración se utilizan en
+química analítica para determinar la concentración de un analito en una
+muestra desconocida.</p>
+<p>El principio de funcionamiento de las curvas de calibración se basa
+en la relación proporcional entre la respuesta instrumental y la
+concentración del analito. La respuesta instrumental es una medida de la
+cantidad de analito que se ha detectado por el instrumento. La
+concentración del analito es la cantidad de analito que se encuentra en
+una unidad de volumen de la muestra.</p>
+<p>Existen dos tipos principales de curvas de calibración:</p>
+<p><br/><br/></p>
+<div id="curvas-de-calibración-lineales" class="section level3">
+<h3><strong>Curvas de calibración lineales</strong>:</h3>
+<p>Estas curvas son las más comunes. La respuesta instrumental es
+directamente proporcional a la concentración del analito.</p>
+<p><br/><br/></p>
+</div>
+<div id="curvas-de-calibración-no-lineales" class="section level3">
+<h3><strong>Curvas de calibración no lineales</strong>:</h3>
+<p>Estas curvas no son directamente proporcionales a la concentración
+del analito. En este caso, la curva de calibración se ajusta a una
+ecuación matemática para determinar la concentración del analito.</p>
+<p><br/><br/></p>
+</div>
+<div id="procedimiento" class="section level3">
+<h3><strong>Procedimiento</strong></h3>
+<p>Se toma una serie de materiales - normalmente al menos tres o cuatro
+- de los que se conoce la concentración del analito.</p>
+<p>Estos patrones de calibración son medidos en el instrumento analítico
+bajo las mismas condiciones para las empleadas para el material de
+ensayo</p>
+<p>Con los resulados obtenidos se construye la gráfica de calibrado con
+el fin de obtener la concentración de analito por interpolación.</p>
+<p>Este procedimiento plantea una serie de interrogantes como:</p>
+<ul>
+<li>Es lineal o no la línea o curva de calibración?</li>
+<li>Cuál es la mejor recta o curva que pasa por estos puntos?</li>
+<li>Suponiendo que es lineal, cúales son los errores y límites de
+confianza para la pendiente y el intercepto?</li>
+<li>Cuáles son los errors y límites de confianza de la concentración
+determinada?</li>
+<li>Cuál la menor concentración de analito que puede detectarser con un
+nivel de confianza?</li>
+</ul>
+<p><br/><br/></p>
+</div>
+<div id="ejemplo" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se miden 4 nivels de concentración (40, 100, 150, 300), cada uno de
+ellos es replicado 5 veces, obteniendo los siguientes valores:</p>
+<pre class="r"><code>library(ggplot2)
+
+# Crear datos de absorbancia y concentración
+absorbancia &lt;- c(0.125, 0.135, 0.120, 0.130, 0.128, 0.315, 0.325, 0.310, 0.320, 0.312, 0.472, 0.481, 0.468, 0.475, 0.470, 0.948, 0.965, 0.940, 0.955, 0.952)
+concentracion &lt;- c(40, 40, 40, 40, 40, 100, 100, 100, 100, 100, 150, 150, 150, 150, 150, 300, 300, 300, 300, 300)
+
+tabla = matrix(absorbancia,  ncol = 5, byrow = TRUE )
+rownames(tabla) = c(40, 100, 150,300)
+colnames(tabla) = c(&quot;R1&quot;, &quot;R2&quot;, &quot;R3&quot;, &quot;R4&quot;, &quot;R5&quot;)
+tabla</code></pre>
+<pre><code>       R1    R2    R3    R4    R5
+40  0.125 0.135 0.120 0.130 0.128
+100 0.315 0.325 0.310 0.320 0.312
+150 0.472 0.481 0.468 0.475 0.470
+300 0.948 0.965 0.940 0.955 0.952</code></pre>
+<p><br/><br/></p>
+<p>Estimación de la recta por MCO</p>
+<pre class="r"><code># Crear un dataframe con los datos
+datos &lt;- data.frame(Concentracion = concentracion, Absorbancia = absorbancia)
+
+ # Crear un dataframe con los datos
+datos &lt;- data.frame(Concentracion = concentracion, Absorbancia = absorbancia)
+
+modelo = lm(absorbancia ~ concentracion, data = datos)
+
+summary(modelo)</code></pre>
+<pre><code>
+Call:
+lm(formula = absorbancia ~ concentracion, data = datos)
+
+Residuals:
+       Min         1Q     Median         3Q        Max 
+-0.0110921 -0.0047657 -0.0007486  0.0037773  0.0139079 
+
+Coefficients:
+                Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   -6.301e-04  2.639e-03  -0.239    0.814    
+concentracion  3.172e-03  1.498e-05 211.734   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 0.006451 on 18 degrees of freedom
+Multiple R-squared:  0.9996,    Adjusted R-squared:  0.9996 
+F-statistic: 4.483e+04 on 1 and 18 DF,  p-value: &lt; 2.2e-16</code></pre>
+<p><br/><br/></p>
+</div>
+<div id="curva-de-calibración" class="section level3">
+<h3><strong>Curva de calibración</strong></h3>
+<pre class="r"><code># Crear la gráfica con ggplot2
+ggplot(datos, aes(x = Concentracion, y = Absorbancia)) +
+  geom_point(size = 1, color = &quot;blue&quot;) +  # Tamaño de punto pequeño
+  geom_smooth(method = &quot;lm&quot;, color = &quot;red&quot;) +
+  labs(x = &quot;Concentración (mg/100 ml)&quot;, y = &quot;Absorbancia&quot;) +
+  theme_minimal()</code></pre>
+<pre><code>`geom_smooth()` using formula
+= &#39;y ~ x&#39;</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><br/><br/></p>
+<p>Estimación de la concentración para una abserbancia de 0.200 se
+requiere estimar el nivel de concentración correspondiente:</p>
+<pre class="r"><code>beta = coef(modelo)
+new_y = 0.200
+
+xhat &lt;- (new_y - beta[1]) / beta[2]
+names(xhat) = c(&quot;concentración&quot;) 
+xhat</code></pre>
+<pre><code>concentración 
+     63.24222 </code></pre>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="curvas-no-lineales" class="section level2">
+<h2><strong>Curvas no lineales</strong></h2>
+<p><span class="math display">\[y = a \hspace{.2cm}exp\{b
+x\}\]</span></p>
+<pre class="r"><code>library(ggplot2)
+library(nls2)</code></pre>
+<pre><code>Loading required package: proto</code></pre>
+<pre class="r"><code># Datos de concentración conocida y propiedad medida
+concentracion &lt;- c(1, 2, 3, 4, 5)
+propiedad_medida &lt;- c(10, 20, 30, 40, 50)
+
+# Realizar un ajuste no lineal a una función exponencial
+ajuste_no_lineal &lt;- nls(propiedad_medida ~ a * exp(b * concentracion), start = list(a = 1, b = 1))
+
+# Obtener los parámetros ajustados
+parametros &lt;- coef(ajuste_no_lineal)
+
+# Prueba de hipótesis para los parámetros
+summary(ajuste_no_lineal)</code></pre>
+<pre><code>
+Formula: propiedad_medida ~ a * exp(b * concentracion)
+
+Parameters:
+  Estimate Std. Error t value Pr(&gt;|t|)   
+a  10.3841     1.8411   5.640  0.01103 * 
+b   0.3222     0.0417   7.725  0.00451 **
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3.44 on 3 degrees of freedom
+
+Number of iterations to convergence: 7 
+Achieved convergence tolerance: 4.561e-06</code></pre>
+<pre class="r"><code># Intervalos de confianza para los parámetros
+confint(ajuste_no_lineal)</code></pre>
+<pre><code>Waiting for profiling to be done...</code></pre>
+<pre><code>       2.5%      97.5%
+a 5.5546988 16.8552351
+b 0.2028528  0.4628193</code></pre>
+<pre class="r"><code># Gráfico de datos y curva de calibración
+df &lt;- data.frame(Concentracion = concentracion, Medida = propiedad_medida)
+df$Curva_Calibracion &lt;- parametros[&quot;a&quot;] * exp(parametros[&quot;b&quot;] * df$Concentracion)
+
+grafico &lt;- ggplot(data = df, aes(x = Concentracion, y = Medida)) +
+  geom_point() +  # Puntos de datos
+  geom_line(aes(x = Concentracion, y = Curva_Calibracion), color = &quot;red&quot;) +  # Curva de calibración
+  labs(title = &quot;Curva de Calibración (Ajuste No Lineal)&quot;,
+       x = &quot;Concentración&quot;,
+       y = &quot;Propiedad Medida&quot;)
+
+print(grafico)</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<pre class="r"><code># Validación cruzada simple
+set.seed(123)  # Establece una semilla para la reproducibilidad
+indices &lt;- sample(1:5)  # Genera índices aleatorios para división de datos
+datos_entrenamiento &lt;- df[indices != 5, ]
+datos_prueba &lt;- df[indices == 5, ]
+
+ajuste_validacion &lt;- nls(Medida ~ a * exp(b * Concentracion), 
+                         data = datos_entrenamiento, 
+                         start = list(a = 1, b = 1))
+
+parametros_validacion &lt;- coef(ajuste_validacion)
+
+# Predicción en datos de prueba
+predicciones &lt;- predict(ajuste_validacion, newdata = datos_prueba)
+
+# Evaluación de la capacidad de predicción
+error_cuadratico_medio &lt;- sqrt(mean((datos_prueba$Medida - predicciones)^2))
+cat(&quot;Error cuadrático medio en datos de prueba:&quot;, error_cuadratico_medio, &quot;\n&quot;)</code></pre>
+<pre><code>Error cuadrático medio en datos de prueba: 3.665001 </code></pre>
+<p><br/><br/></p>
+<div id="transformación-log-log" class="section level3">
+<h3><strong>Transformación log-log</strong></h3>
+<pre class="r"><code>data2 = data.frame(
+           lmedida = log(df$Medida),
+           lconcentracion = log(df$Concentracion))
+
+modelo3 = lm(lmedida ~ lconcentracion, data = data2)
+summary(modelo3)</code></pre>
+<pre><code>Warning in summary.lm(modelo3): essentially perfect fit: summary may be
+unreliable</code></pre>
+<pre><code>
+Call:
+lm(formula = lmedida ~ lconcentracion, data = data2)
+
+Residuals:
+         1          2          3          4          5 
+ 2.832e-16 -4.721e-16 -4.472e-17 -1.792e-18  2.354e-16 
+
+Coefficients:
+                Estimate Std. Error   t value Pr(&gt;|t|)    
+(Intercept)    2.303e+00  3.037e-16 7.582e+15   &lt;2e-16 ***
+lconcentracion 1.000e+00  2.727e-16 3.666e+15   &lt;2e-16 ***
+---
+Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+
+Residual standard error: 3.467e-16 on 3 degrees of freedom
+Multiple R-squared:      1, Adjusted R-squared:      1 
+F-statistic: 1.344e+31 on 1 and 3 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>plot(data2$lmedida, data2$lconcentracion )
+abline(modelo3)</code></pre>
+<p><img src="recurso338_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

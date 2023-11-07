@@ -1,6 +1,6 @@
 ---
-title : <span style="color:#034a94"> **SEMINARIO**</span>
-subtitle: <span style="color:#4C626A"> **ANÁLISIS DE TENDENCIAS PARA MÉTODOS CUANTITATIVOS Y CUALITATIVOS**</span>
+title : <span style="color:#034A94"> **SEMINARIO**</span>
+subtitle: <span style="color:#034A94"> **ANÁLISIS DE TENDENCIAS PARA MÉTODOS CUANTITATIVOS Y CUALITATIVOS**</span>
 author: "Pontificia Universidad Javeriana Cali"
 css: style.css
 ---
@@ -12,7 +12,7 @@ css: style.css
  
 <br/>
 
-#### **UNIDAD 1 :VALIDA TUS DATOS**
+#### <span style="color:#034A94">**UNIDAD 1 :VALIDA TUS DATOS**</span>
 
 <br/>
 
@@ -23,7 +23,7 @@ css: style.css
 
 <br/><br/>
 
-#### **UNIDAD 2: CONTROL INTERNO** 
+#### <span style="color:#034A94">**UNIDAD 2: CONTROL INTERNO**</span>
 
 <br/>
 
@@ -39,7 +39,7 @@ css: style.css
 
 <br/><br/>
 
-#### **UNIDAD 3: GENERALIZA LOS RESULTADOS**
+#### <span style="color:#034A94">**UNIDAD 3: GENERALIZA LOS RESULTADOS**</span>
 
 <br/>
 
@@ -52,10 +52,11 @@ css: style.css
 * Pruebas paramétricas 
 * Pruebas de hipótesis no paramétricas
 * Evaluación de la significancia estadística
+* Modelo de regresión y curvas de calibración
 
 <br/><br/>
 
-#### **UNIDAD 4: INTERPRETA Y PRESENTA TUS RESULTADOS**
+#### <span style="color:#034A94">**UNIDAD 4: INTERPRETA Y PRESENTA TUS RESULTADOS**</span>
 
 <br/>
 

@@ -81,7 +81,7 @@ Cuando se decide ya sea en favor o en contra de una determinada prueba de hipót
 
 
 
-```{r, echo=FALSE, out.width="100%", fig.align = "center"}
+```{r, echo=FALSE, out.width="70%", fig.align = "center"}
 knitr::include_graphics("img/errores.png")
 ```
 

@@ -76,28 +76,29 @@ Al igual que los intervalos de confianza paramétricos, las pruebas de hipótesi
 
 ## **Prueba de hipótesis para una media**
 
-Se requiere establecer si la media de las edades de las personas accidentadas durante el presenta año son menores de 35 años. Se plantea la siguienes hipotesis estadísticas relacionadas :
+### **Ejemplo**
 
-$Ho : \mu \geq 35$
+Se está investigando el nivel de contaminación de plomo en el agua de una fuente en una zona industrial y se desea probar si el nivel promedio de plomo supera el límite de seguridad de $10$ microgramos por litro (µg/L). Por investigaciones anteriores se sabe que esta variables tiene una distribución aproximadamente normal
 
-$Ha : \mu < 35$
+$$Ho : \mu \leq 10$$
 
-
-Antes de proceder a realizar la prueba de hipótesis para la media, es necesario validar si la variables es normal o no. Para ello se aplica una prueba de Shapiro-Wilks
-
-```{r}
-shapiro.test(datos$Edad)
-```
-
-El resultado indica que se asume que los datos proceden de una distribución normal. Por tal razón se aplica una prueba paramétrica para una media. En este caso una prueba t-Studen debido a que no se conoce la varianza.
+$$Ha : \mu > 10$$
 
 
 
 
 ```{r}
-t.test(datos$Edad, mu =35, alternative = "less")
+x <- c(11.2, 9.8, 10.5, 10.1, 11.5, 12.0, 9.6, 9.9, 10.3, 10.7)
+
+t.test(x,
+       alternative = "greater",
+       mu = 10, 
+       # paired = FALSE, 
+       # var.equal = FALSE,
+       conf.level = 0.95)
 ```
 
+El resultado indica que se rechaza la hipótesis nula, se acepta la hipotesis alterna.  Por tal razón se puede afirmar que el contenido promedio de plomo supera los límites de seguridad establecidos en $10$ microgramos por litro (µg/L) 
 
 
 <br/><br/>
@@ -105,11 +106,61 @@ t.test(datos$Edad, mu =35, alternative = "less")
 
 ## **Prueba de hipótesis para una proporción**
 
+### **Ejemplo**
+
+Se estudia si la proporción de muertes por accidentes de transito causadas embriagez de conductores de autos supera 30% de las causas principales en la ciudad
+
+Para validar esta hipótesis se realizó una busqueda de la inforamación contenida en los medios de comunicación durante los últimos 30 dias, arrojando la siguiente información:
+
+$$Ho: p \leq 0.30$$
+$$p > 0.30$$
+
+
+```{r, echo=FALSE}
+x = 52   # número de accidentes con resultados nefastos -muerte del conductor
+n = 135  # numéro de accidentes ocurridos último mes
+
+cat("numéro de accidentes ocurridos último mes    :", n, "\n")
+cat("número de accidentes con resultados nefastos :", x, "\n")
+```
+
+$Ho: p \leq 0.30$
+
+$Ha: p > 0.30$
+
+
+```{r}
+prop.test(x,n, p=0.30, alternative = "greater")
+```
+
+Como el valor-p arrojado por la prueba es menor al nivel de significancia del 5%, se rechaza la hipótesis nula, se acepta la hipótesis alterna como verdad. Se puede afirmar que la proporción de accidentes de transito en donde muere el conductor supera el 30% de los casos de accidentes de transito en la ciudad.
 
 <br/><br/>
 
 
 ## **Prueba de hipótesis para una varianza**
+
+## **Ejemplo**
+
+Supongamos que estás calibrando un espectrofotómetro en un laboratorio y deseas probar si la varianza de las mediciones realizadas por el espectrofotómetro cumple con las especificaciones del fabricante, que establecen que la varianza no debe superar 0.01 absorbancia.
+
+Ho: La varianza de las mediciones del espectrofotómetro es igual o mayor a 0.01.  <br/>
+Ha: La varianza de las mediciones del espectrofotómetro es menor 0.01.
+
+```{r}
+# Requiere la instalcion del paqute stests contenido en el repositorio fgernanb
+# if (!require('devtools')) install.packages('devtools')
+#devtools::install_github('fhernanb/stests', force=TRUE)
+
+x <- c(0.02, 0.03, 0.02, 0.01, 0.03, 0.02, 0.01, 0.02, 0.03, 0.02)
+
+stests::var.test(x, alternative='less',
+                 null.value=0.01, conf.level=0.95)
+```
+
+
+Como el valor-p (1.056e-09) es pequeño, se rechaza la hipótesis nula, se acepta la hipótesis alterna como verdadera. Se concluye que la varianza es menor a 0.01
+
 
 <br/><br/>
 
@@ -118,12 +169,52 @@ t.test(datos$Edad, mu =35, alternative = "less")
 <br/><br/>
 
 
-## **Prueba de hipótesis para diferencia de medias**
+## **Prueba de hipótesis para diferencia de medias - gupos pareados**
 
+### **Ejemplo**
+
+Se requiere determinar si exisne diferencias en los contenidos obtenidos por dos métodos diferentes. Se procesaron 8 muestras bajo los dos métodos. Los resultados obtenidos son:
+
+```{r}
+Metodo1 = c(7.2, 6.1, 5.2, 5.9, 9.0, 8.5, 6.6, 4.4)
+Metodo2 = c(7.6, 6.8, 4.6, 5.7, 9.7, 8.7, 7.0, 4.7)
+
+cat("Método1 :Valoración con AEDT               ", Metodo1, "\n")
+cat("Método2: Valoración Esoectrometría atómica ", Metodo2, "\n")
+```
+
+$$Ho: \mu_1 = \mu_2$$ 
+$$Ha: \mu_1 \neq \mu_2$$
+
+
+```{r}
+t.test(Metodo1, Metodo2, alternative = "two.sided", mu =0, paired = TRUE)
+```
+
+El resultado arroja un valor-p (0.1739) grande, lo que indica que no se rechaza la hipótesis nula de que las medias son iguales
 <br/><br/>
 
 
 ## **Prueba de hipótesis para diferencia de proporciones**
+
+### **Ejemplo**
+
+Se estudia si existen diferencias en la proporción de muertes por accidentes de transito causadas embriagez de conductores de autos y la proporción de muertes causados por accidentes en las que se involucran conductores de motocicletas en estado de embriaguez.
+
+Para validar esta hipótesis se realizó una busqueda de la inforamación contenida en los medios de comunicación durante los últimos 30 dias, arrojando la siguiente información:
+
+* Conductores de autos en estado de embriaguez: 15 muertes
+* Conductores de motocicletas en estado de embriaguez: 8 muertes
+* Conductores sobrios de autos: 320 muertes
+* Conductores sobrios de motocicletas: 100 muertes
+
+
+$$Ho: p_1 = p_2$$    
+$$Ha: p_1 \neq p_2$$
+
+```{r}
+prop.test(c(15,8), c(320,100))
+```
 
 
 <br/><br/>
@@ -131,16 +222,50 @@ t.test(datos$Edad, mu =35, alternative = "less")
 
 ## **Prueba de hipótesis para razón de varianzas**
 
+### **Ejemplo**
+
+Se desea validar si el contenido de alcohol en una  marcas de cerveza con 4.0 º alcohol, de acuerdo con su etiquete, presenta un coeficiente de variación inferior al 10%. Para se recoge una muestra de n=  botellas y mide la densidad para luego transformarla en porcentaje de alcohol.
+
+Sabemos que $CV = s/ \bar{x} =0.10$, con esta igualdad podemos encontrar el limite de la desviación estandar o su valor máximo.
+
+$s = 0.1 \times 4.0 = 0.40$
+
+En este caso se deben constrastar las hipótesis:
+
+$Ho: \sigma^{2} \geq 0.4$
+
+$Ha: \sigma^{2} < 0.4$
+
+Los resultados obtendidos con .
+```{r}
+set.seed(123)
+mx  <- 4.0  
+sx <- 0.2  
+x <- round(rnorm(20, mean = mx, sd = sx),1)
+x
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+
 <br/><br/>
 
 
 ## **Prueba para mas de dos medias**
 
+### **Ejemplo**
+
 ANÁLISIS DE VARIANZA - ANOVA
 
-$Ho: \mu_1 = \mu_2 = \mu_3$
-
-$Ha:$ alguna de las medias es diferente
+$$Ho: \mu_1 = \mu_2 = \mu_3$$
+$$Ha: \text{alguna de las medias es diferente}$$
 
 
 

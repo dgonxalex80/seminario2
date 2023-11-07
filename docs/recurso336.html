@@ -31,7 +31,6 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
-<script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
 
@@ -219,9 +218,6 @@ $(document).ready(function () {
 </style>
 
 <!-- code folding -->
-<style type="text/css">
-.code-folding-btn { margin-bottom: 4px; }
-</style>
 
 
 
@@ -324,6 +320,9 @@ $(document).ready(function () {
     <li>
       <a href="recurso337.html">La significancia estadística</a>
     </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -351,14 +350,6 @@ $(document).ready(function () {
 
 <div id="header">
 
-<div class="btn-group pull-right float-right">
-<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
-<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
-<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
-<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
-</ul>
-</div>
-
 
 
 <h1 class="title toc-ignore">Pruebas de hipótesis - no paramétricas</h1>
@@ -367,54 +358,178 @@ $(document).ready(function () {
 </div>
 
 
+<p><br/><br/></p>
+<p>Las pruebas no paramétricas se emplean :</p>
+<p><br/></p>
+<ul>
+<li>Cuando no se cumplen los supuestos como Normalidad</li>
+<li>Tamaños mínimos de muestra</li>
+<li>Número igual de elementos en cada muestra</li>
+<li>Homogeneidad de varianza, etc</li>
+</ul>
+<p><br/></p>
+<ul>
+<li>Cuando se usan tamaños de muestra pequeños</li>
+<li>Menores a 30 que no permiten comprobar supuestos sobre la
+población.</li>
+</ul>
+<p><br/></p>
+<ul>
+<li>Cuando se convierten datos cualitativas (escalas nominales u
+ordinales ) a información útil para la toma de decisiones (escala de
+intervalo). Utilizado en estudios mercadeo para medir variables como
+gustos, satisfacción, nivel de necesidad etc.</li>
+</ul>
+<p><br/><br/></p>
+<div id="ventajas-de-utilizar-pruebas-no-paramétricas"
+class="section level3">
+<h3><strong>Ventajas de utilizar pruebas no paramétricas</strong></h3>
+<ul>
+<li>Son fáciles de usar (aunque dada la facilidad de los códigos en R
+ambas se corren con una línea)</li>
+<li>No se requieren comprobar supuestos</li>
+<li>Se pueden usar con muestras pequeñas</li>
+<li>Se pueden usar con variables cualitativas</li>
+</ul>
+<p><br/><br/></p>
+</div>
+<div id="desventajas" class="section level3">
+<h3><strong>Desventajas</strong></h3>
+<ul>
+<li>Ignoran información</li>
+<li>No son tan eficientes como las pruebas paramétricas, tienen menor
+potencia.</li>
+<li>Llevan a una mayor probabilidad de cometer error tipo II ( no
+rechazar Ho falsa)</li>
+</ul>
+<p><br/><br/></p>
+<p>Entre las principales pruebas no paramétricas están :</p>
+<ul>
+<li>Prueba Chi-Cuadrado de Independencia</li>
+<li>Prueba Chi-Cuadrado de Bondad de Ajuste</li>
+<li>Prueba de Signos</li>
+<li>Prueba de Rachas</li>
+<li>Prueba Wilcoxon</li>
+<li>Prueba de Mann-Whitney</li>
+<li>Prueba de Kruskal-Wallis</li>
+<li>Correlación de Rangos de Sperarman</li>
+</ul>
+<p>A continuación se presentan algunas de ellas:</p>
+<p><br/><br/></p>
+</div>
 <div id="prueba-de-signos" class="section level1">
 <h1><strong>Prueba de signos</strong></h1>
+<div id="objetivo" class="section level3">
+<h3><strong>Objetivo</strong></h3>
+<p>Esta prueba puede ser utilizada para determinar si la diferencia
+entre el numero de veces que los datos caen a un lado de la media
+verdadera es significativamente diferente al número de veces que cae en
+el otro lado . Determinar si la diferencia entre el numero de veces en
+que el valor de una variable es mayor que el de la otra y el numero de
+veces que es menor es estadísticamente significativa. Versión no
+paramétrica de la prueba t para una muestra o de la prueba t para
+muestras pareadas. Esta prueba se realiza sobre la mediana de los datos
+<span class="math inline">\(Me\)</span>.</p>
+<p><br/><br/></p>
+</div>
+<div id="ejemplo" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se requiere establecer si un grupo conformado por 20 personas
+presenta altos niveles de ansiedad. Para verificarlo los investigadores
+aplican un test MMPI (Minnesota Multiphasic Personality Inventory) el
+cual establece que puntajes mayores iguales a 70 corresponden a un nivel
+de ansiedad alto.</p>
+<p>Dado que se trata de una variable latente (que no se puede medir
+directamente) recogida a través de un test, es necesario aplicar una
+prueba no paramétrica en este caso una prueba de signos.</p>
 <pre class="r"><code># install.packages(&quot;BSDA&quot;)
 library(BSDA)
 
-# Ho: Me &lt;= 15  
-# Ha: Me &gt;  15
-x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
-#   +       -   +    +   -   +  -    +   +  +    +   -  +    +  +    +   +
-SIGN.test(x, md = 15,alternative = &quot;greater&quot;)</code></pre>
+# Ho: Me &lt;= 70  
+# Ha: Me &gt;  70
+x=c(59, 63, 81, 66, 66, 82, 70, 52, 58, 61, 77, 69, 69, 66, 59, 83, 70, 45, 72, 60)
+sort(x)</code></pre>
+<pre><code> [1] 45 52 58 59 59 60 61 63 66 66 66 69 69 70 70 72 77 81 82 83</code></pre>
+<pre class="r"><code>#   45   52   58   59   59   60   61   63   66   66    66   69   69   70   70   72   77   81   82   83
+#   -    -    -    -    -    -    -    -    -    -     -    -    -              +    +    +    +    +
+SIGN.test(x, md = 70,alternative = &quot;greater&quot;)</code></pre>
 <pre><code>
     One-sample Sign-Test
 
 data:  x
-s = 13, p-value = 0.02452
-alternative hypothesis: true median is greater than 15
+s = 5, p-value = 0.9846
+alternative hypothesis: true median is greater than 70
 95 percent confidence interval:
-  16 Inf
+ 60.7928     Inf
 sample estimates:
 median of x 
-         16 
+         66 
 
 Achieved and Interpolated Confidence Intervals: 
 
-                  Conf.Level L.E.pt U.E.pt
-Lower Achieved CI     0.8811     16    Inf
-Interpolated CI       0.9500     16    Inf
-Upper Achieved CI     0.9519     16    Inf</code></pre>
+                  Conf.Level  L.E.pt U.E.pt
+Lower Achieved CI     0.9423 61.0000    Inf
+Interpolated CI       0.9500 60.7928    Inf
+Upper Achieved CI     0.9793 60.0000    Inf</code></pre>
+<p>Como el valor-p obtenido es mayor a un posible valor de significancia
+del 5%, no se rechaza la hipótesis nula, se asume que los valores estana
+por debajo de 70. Es decir que los niveles de ansiedad no son altos.</p>
+<p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-de-rachas" class="section level1">
-<h1>Prueba de rachas</h1>
-<p>Ho : muestra aleatorio Ha: muestra no aleratoria</p>
+<h1><strong>Prueba de rachas</strong></h1>
+<div id="objetivo-1" class="section level3">
+<h3><strong>Objetivo</strong></h3>
+<p>Se utiliza para evaluar la aleatoriedad o la no aleatoriedad en una
+secuencia de datos y puede ser útil en una variedad de aplicaciones,
+como control de calidad, análisis de series temporales, epidemiología y
+otras áreas de la estadística y la investigación científica. La prueba
+ayuda a identificar si los datos siguen algún patrón o tendencia que
+podría ser significativo desde un punto de vista estadístico.</p>
+<p><br/><br/></p>
+<p>Ho : muestra es aleatorio Ha: muestra no es aleatoria</p>
 <pre class="r"><code>library(&quot;randtests&quot;)
 
-x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
-runs.test(x)</code></pre>
+# Crear datos ficticios de concentración
+set.seed(123)  # Establecer una semilla para la reproducibilidad
+concentracion &lt;- round(runif(20,13,17),1) # muestra simulada
+concentracion</code></pre>
+<pre><code> [1] 14.2 16.2 14.6 16.5 16.8 13.2 15.1 16.6 15.2 14.8 16.8 14.8 15.7 15.3 13.4
+[16] 16.6 14.0 13.2 14.3 16.8</code></pre>
+<pre class="r"><code># concentracion &lt;- c(15.2, 17.3, 16.8, 14.9, 14.7, 16.5, 17.1, 15.8, 15.3, 17.2)
+runs.test(concentracion)</code></pre>
 <pre><code>
     Runs Test
 
-data:  x
-statistic = -0.29161, runs = 6, n1 = 6, n2 = 5, n = 11, p-value =
-0.7706
+data:  concentracion
+statistic = 1.3784, runs = 14, n1 = 10, n2 = 10, n = 20, p-value =
+0.1681
 alternative hypothesis: nonrandomness</code></pre>
 <p>Como el valor-p &gt; alpha (0.05), entonces no rechazamos Ho.
 Asumimos que la muestra es aleatoria.</p>
+<p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-chicuadrado-de-independencia" class="section level1">
 <h1><strong>Prueba chicuadrado de independencia</strong></h1>
+<div id="objetivo-2" class="section level3">
+<h3><strong>Objetivo</strong></h3>
+<p>Determinar si existe una asociación o relación significativa entre
+dos variables categóricas en un conjunto de datos. Específicamente, esta
+prueba se utiliza para evaluar si las dos variables son independientes o
+si hay una dependencia o relación significativa entre ellas. Es decir
+poder responder a si los valores de una variable categórica están
+relacionados de alguna manera con los valores de otra variable
+categórica.</p>
+<p><br/><br/></p>
+</div>
+<div id="ejemplo-1" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se desea establecer si existe relación entre la calidad de la
+atención médica brindada por un centro en relación al lugar de
+residencia del paciente. Con este fin se recoge información de 100
+pacientes del centro, la cual arroja los siguientes resultados:</p>
 <table>
 <thead>
 <tr class="header">
@@ -478,12 +593,27 @@ X-squared = 3.7378, df = 2, p-value = 0.1543</code></pre>
 <p>Como valor-p = 0.1543 &gt; 0.05 = a , entonces no se rechaza Ho.</p>
 <p>Asumimos que las variables residencia y calificación son
 independientes</p>
+<p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-chi-cuadrado-de-bondad-de-ajuste"
 class="section level1">
 <h1><strong>Prueba chi-cuadrado de bondad de ajuste</strong></h1>
-<p>Ho: X sigue una determinadas distribución (Ej. uniforme) Ha: X no
-sigue el modelo seleccionado</p>
+<div id="objetivo-3" class="section level3">
+<h3><strong>Objetivo</strong></h3>
+<p>Determinar si la diferencia entre las frecuencias de cada uno de los
+valores de la variable y unas determinadas frecuencias teóricas son
+estadísticamente significativas. Utilizada para comprobar el supuesto de
+normalidad, o de otras distribuciones.</p>
+<p><br/><br/></p>
+</div>
+<div id="ejemplo-2" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se desea establecer si el consumo de porta objetos, realizado por
+cuatro laboratorios presenta una demanda uniforme o no. Esto ayudará a
+establecer políticas de compras de este artículo.</p>
+<p>Ho: X sigue una determinadas distribución (Ej. uniforme) <br/> Ha: X
+no sigue el modelo seleccionado</p>
 <pre class="r"><code>obs=c(33,22,21,24)
 sum(obs)</code></pre>
 <pre><code>[1] 100</code></pre>
@@ -494,11 +624,92 @@ chisq.test(x=obs, p=esp)</code></pre>
 
 data:  obs
 X-squared = 3.6, df = 3, p-value = 0.308</code></pre>
+<p>Como el valor-p (0.308) es mayor que el nivel de significancia, no se
+rechaza la hipótesis nula, se asume que es verdadera. Podemos asumir que
+la demanda de porta objetos es uniforme para los cuatro laboratorios y
+ordenar la misma cantidad para cada uno en el próximo presupuesto a
+elaborar.</p>
+<p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-kruskal-walis" class="section level1">
 <h1><strong>Prueba Kruskal Walis</strong></h1>
-<p>p-value = 0.308 , indica que no se rechaza Ho, es decir que la
-distribución en el uso de los porta-objetos es uniforme</p>
+<div id="objetivo-4" class="section level3">
+<h3><strong>Objetivo</strong></h3>
+<p>Determinar si las diferencias entre las medias de los rangos
+(asignados a las observaciones ordenadas) en los k grupos son
+estadísticamente significativas. Versión no paramétrica del ANOVA.</p>
+<p><br/><br/></p>
+</div>
+<div id="ejemplo-3" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Supongamos que estás estudiando el efecto de tres diferentes
+tratamientos (A, B y C) en la concentración de una sustancia tóxica en
+muestras de tejido hepático de ratones. Tienes los siguientes datos:</p>
+<pre class="r"><code># Datos ficticios de concentración de sustancia tóxica en tres grupos
+grupo_A &lt;- c(10.2, 9.8, 11.5, 12.3, 10.6)
+grupo_B &lt;- c(14.2, 14.7, 13.5, 12.8, 15.2)
+grupo_C &lt;- c(9.2, 9.5, 8.8, 9.0, 8.5)
+
+datos =data.frame(grupo_A, grupo_B, grupo_C)
+datos</code></pre>
+<pre><code>  grupo_A grupo_B grupo_C
+1    10.2    14.2     9.2
+2     9.8    14.7     9.5
+3    11.5    13.5     8.8
+4    12.3    12.8     9.0
+5    10.6    15.2     8.5</code></pre>
+<pre class="r"><code>apply(datos, 2,mean)</code></pre>
+<pre><code>grupo_A grupo_B grupo_C 
+  10.88   14.08    9.00 </code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>datos &lt;- c(grupo_A, grupo_B, grupo_C)
+grupos &lt;- factor(rep(c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;), each = 5))
+
+kruskal.test(datos, grupos)</code></pre>
+<pre><code>
+    Kruskal-Wallis rank sum test
+
+data:  datos and grupos
+Kruskal-Wallis chi-squared = 12.5, df = 2, p-value = 0.00193</code></pre>
+<p><br/><br/></p>
+<p>Como el valor obtenido es pequeño, se rechaza la hipótesis nula, se
+acepta como verdadera la hipótesis alterna, es decir, existe por lo
+menos una media diferente.</p>
+<p>En este caso es necesario realizar las pruebas de comparaciones
+múltiples que permita establecer cual o cuales son las medias
+diferentes</p>
+<p>En este caso se utiliza la prueba de Dumm</p>
+<pre class="r"><code>library(dunn.test)
+posthoc &lt;- dunn.test(datos, grupos, method = &quot;bonferroni&quot;)</code></pre>
+<pre><code>  Kruskal-Wallis rank sum test
+
+data: datos and grupos
+Kruskal-Wallis chi-squared = 12.5, df = 2, p-value = 0
+
+                         Comparison of datos by grupos                         
+                                 (Bonferroni)                                  
+Col Mean-|
+Row Mean |          A          B
+---------+----------------------
+       B |  -1.767766
+         |     0.1156
+         |
+       C |   1.767766   3.535533
+         |     0.1156    0.0006*
+
+alpha = 0.05
+Reject Ho if p &lt;= alpha/2</code></pre>
+<pre>
+grupo_C      grupo_A      grupo_B 
+9.00         10.88        14.08     
+--------------------
+---------------------
+--------                 --------   
+</pre>
+<p>Este diagrama indica que existen diferencias solo entre los grupos B
+y C</p>
+</div>
 </div>
 
 
@@ -534,11 +745,6 @@ $(document).ready(function () {
 </script>
 
 <!-- code folding -->
-<script>
-$(document).ready(function () {
-  window.initializeCodeFolding("hide" === "show");
-});
-</script>
 
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

@@ -324,6 +324,9 @@ $(document).ready(function () {
     <li>
       <a href="recurso337.html">La significancia estadística</a>
     </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -361,13 +364,180 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">La significancia estadística</h1>
+<h1 class="title toc-ignore"><strong>La significancia
+estadística</strong></h1>
 <h4 class="author">Seminario</h4>
 
 </div>
 
 
+<p><br/><br/></p>
+<p>La significancia estadística es un concepto clave en inferencia
+estadística que se utiliza para determinar si los resultados de un
+análisis de datos son lo suficientemente distintos de lo que se
+esperaría por pura casualidad. En otras palabras, se refiere a la
+probabilidad de que los resultados observados sean consistentes con una
+hipótesis nula, que generalmente postula que no hay diferencia o
+efecto.</p>
+<p>Cuando realizas una prueba de hipótesis en estadística, calculas un
+valor-p que está relacionado con la significancia estadística.</p>
+<p>Una regla de desición que permite establecer si se rechaza o no una
+prueba de hipótesis nula en favor de una prueba alterna puede
+relacionarse con un valor que puede ser 0.05 o en algunos casos 0.01.
+Este valor indica el límite que establecemos para indicar que las
+diferencias estadísticas son significativas.</p>
+<p><img src="img/errores.png" width="70%" style="display: block; margin: auto;" /></p>
+<p>Es importante tambien establecer que este valor esta asociado con la
+probabilidad de cometar error tipo I, que consiste en rechazar una
+hipótesis nula verdadera ( falsos positivos). Que a su vez esta
+relacionado con el valor de <span class="math inline">\(\beta\)</span>
+que corresponde a la probabilidad de cometer error tipo II.</p>
+<p>Un menor valor de <span class="math inline">\(\alpha\)</span>,
+implica un mayor valor de <span class="math inline">\(\beta\)</span>,
+que afecta el valor de la potencia de la prueba (<span
+class="math inline">\(1-\beta\)</span>)</p>
+<p><br/><br/></p>
+<p>El siguiente grupo de gráficos ilustra el efecto que se genera al
+cambiar el valor de <span class="math inline">\(\alpha\)</span>
+(probabilidad de cometer error tipo I), sobre los valores de <span
+class="math inline">\(\beta\)</span> (probabilidaad de cometer error
+tipo II) y de <span class="math inline">\(1-\beta\)</span> (potencia o
+poder de la prueba), para el caso de una prueba z de cola superior <span
+class="math display">\[Ho: \mu \leq \mu_o\]</span> <span
+class="math display">\[Ha : \mu &gt; \mu_o\]</span></p>
+<p>Para valores de <span class="math inline">\(\alpha\)</span> iguales a
+: 0.20, 0.10, 0.05 y 0.01</p>
+<p><br/><br/></p>
+<pre class="r"><code># Cargar la biblioteca necesaria
+library(formattable)
 
+# Crear un data frame con los valores de alpha, beta y 1 - beta
+data &lt;- data.frame(
+  alpha = c(0.20, 0.10, 0.05, 0.01),
+  beta = c(0.13, 0.25, 0.38, 0.87)
+)
+
+# Calcular 1 - beta
+data$potencia &lt;- 1 - data$beta
+
+# Crear la tabla formateada con barras de longitud
+formatted_table &lt;- formattable(data, list(
+  alpha = color_bar(&quot;#FC8500&quot;),
+  beta = color_bar(&quot;#FFB701&quot;),
+  potencia = color_bar(&quot;#209EBB&quot;)
+))
+
+# Imprimir la tabla formateada
+formatted_table</code></pre>
+<table class="table table-condensed">
+<thead>
+<tr>
+<th style="text-align:right;">
+alpha
+</th>
+<th style="text-align:right;">
+beta
+</th>
+<th style="text-align:right;">
+potencia
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FC8500; width: 100.00%">0.20</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FFB701; width: 14.94%">0.13</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #209EBB; width: 100.00%">0.87</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FC8500; width: 50.00%">0.10</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FFB701; width: 28.74%">0.25</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #209EBB; width: 86.21%">0.75</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FC8500; width: 25.00%">0.05</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FFB701; width: 43.68%">0.38</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #209EBB; width: 71.26%">0.62</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FC8500; width: 5.00%">0.01</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #FFB701; width: 100.00%">0.87</span>
+</td>
+<td style="text-align:right;">
+<span
+style="display: inline-block; direction: rtl; unicode-bidi: plaintext; border-radius: 4px; padding-right: 2px; background-color: #209EBB; width: 14.94%">0.13</span>
+</td>
+</tr>
+</tbody>
+</table>
+<p><br/><br/></p>
+<pre class="r"><code># https://cran.r-project.org/web/packages/pwrss/vignettes/examples.html
+library(pwrss)
+power.z.test(ncp = 1.96, alpha = 0.40,alternative = &quot;greater&quot;, plot = TRUE, verbose = FALSE)</code></pre>
+<p><img src="recurso337_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code># https://cran.r-project.org/web/packages/pwrss/vignettes/examples.html
+library(pwrss)
+power.z.test(ncp = 1.96, alpha = 0.20,alternative = &quot;greater&quot;, plot = TRUE, verbose = FALSE)</code></pre>
+<p><img src="recurso337_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code># https://cran.r-project.org/web/packages/pwrss/vignettes/examples.html
+library(pwrss)
+power.z.test(ncp = 1.96, alpha = 0.10,alternative = &quot;greater&quot;, plot = TRUE, verbose = FALSE)</code></pre>
+<p><img src="recurso337_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code># https://cran.r-project.org/web/packages/pwrss/vignettes/examples.html
+library(pwrss)
+power.z.test(ncp = 1.96, alpha = 0.05,alternative = &quot;greater&quot;, plot = TRUE, verbose = FALSE)</code></pre>
+<p><img src="recurso337_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code># https://cran.r-project.org/web/packages/pwrss/vignettes/examples.html
+library(pwrss)
+power.z.test(ncp = 1.96, alpha = 0.001,alternative = &quot;greater&quot;, plot = TRUE, verbose = FALSE)</code></pre>
+<p><img src="recurso337_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><br/><br/></p>
+<p>En resumen cuando se disminuye el valor de <span
+class="math inline">\(\alpha\)</span>, aumenta el valor de <span
+class="math inline">\(\beta\)</span> y por tanto disminuye el valor de
+la potencia de la prueba <span class="math inline">\(1-
+\beta\)</span></p>
+<p><br/><br/></p>
+<p>Solo atraves del aumento de la muestra se logra la disminución de
+<span class="math inline">\(\alpha\)</span> y <span
+class="math inline">\(\beta\)</span> sin afectar la potencia de la
+prueba.</p>
 
 
 

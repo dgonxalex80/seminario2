@@ -3,17 +3,83 @@ title: "Pruebas de hipótesis - no paramétricas"
 author: "Seminario"
 date: " "
 output: 
-  html_document:
-    code_folding: hide
+html_document:
+code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, comment = NA)
 ```
 
+<br/><br/>
 
+Las pruebas no paramétricas se emplean :
+
+<br/>
+
++ Cuando no se cumplen los supuestos como Normalidad
++ Tamaños mínimos de muestra
++ Número igual de elementos  en cada muestra
++ Homogeneidad de varianza, etc
+
+<br/>
+
++ Cuando se usan tamaños de muestra pequeños
++ Menores a 30 que no permiten comprobar supuestos sobre la población.
+
+<br/>
+
++ Cuando se convierten datos cualitativas (escalas nominales u ordinales ) a información útil para la toma de decisiones (escala de intervalo). Utilizado en estudios mercadeo para medir variables como gustos, satisfacción, nivel de necesidad etc.
+
+<br/><br/>
+
+### **Ventajas de utilizar pruebas no paramétricas**
+
+
++ Son fáciles de usar (aunque dada la facilidad de los códigos en R ambas se corren con una línea)
++ No se requieren comprobar supuestos
++ Se pueden usar con muestras  pequeñas
++ Se pueden usar con variables  cualitativas
+
+<br/><br/>
+
+### **Desventajas** 
+
++ Ignoran información
++ No son tan eficientes como las pruebas paramétricas, tienen menor potencia.
++ Llevan a una mayor probabilidad de cometer error tipo II ( no rechazar Ho falsa)
+
+
+<br/><br/>
+
+Entre las principales pruebas no paramétricas están :
+
++ Prueba Chi-Cuadrado de Independencia
++ Prueba Chi-Cuadrado de Bondad de Ajuste
++ Prueba de Signos 
++ Prueba de Rachas
++ Prueba Wilcoxon
++ Prueba de Mann-Whitney
++ Prueba de Kruskal-Wallis
++ Correlación de Rangos de Sperarman
+
+A continuación se presentan algunas de ellas:
+
+<br/><br/>
 
 # **Prueba de signos**
+
+### **Objetivo**
+
+Esta prueba puede ser utilizada para determinar si la diferencia entre el numero de veces que los datos caen a un lado de la media verdadera es significativamente diferente al número de veces que cae en el otro lado . Determinar si la diferencia entre el numero de veces en que el valor de una variable es mayor que el de la otra y el numero de veces que es menor es estadísticamente significativa. Versión no paramétrica de la prueba t para una muestra o de la prueba  t para muestras pareadas. Esta prueba se realiza sobre la mediana de los datos $Me$. 
+
+<br/><br/>
+
+### **Ejemplo**
+
+Se requiere establecer si un grupo conformado por 20 personas presenta altos niveles de ansiedad. Para verificarlo los investigadores aplican un test MMPI (Minnesota Multiphasic Personality Inventory) el cual establece que puntajes mayores iguales a 70 corresponden a un nivel de ansiedad alto.
+
+Dado que se trata de una variable latente (que no se puede medir directamente) recogida a través de un test, es necesario aplicar una prueba no paramétrica en este caso una prueba de signos.
 
 
 
@@ -21,31 +87,62 @@ knitr::opts_chunk$set(echo = TRUE, comment = NA)
 # install.packages("BSDA")
 library(BSDA)
 
-# Ho: Me <= 15  
-# Ha: Me >  15
-x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
-#   +       -   +    +   -   +  -    +   +  +    +   -  +    +  +    +   +
-SIGN.test(x, md = 15,alternative = "greater")
+# Ho: Me <= 70  
+# Ha: Me >  70
+x=c(59, 63, 81, 66, 66, 82, 70, 52, 58, 61, 77, 69, 69, 66, 59, 83, 70, 45, 72, 60)
+sort(x)
+#   45   52   58   59   59   60   61   63   66   66    66   69   69   70   70   72   77   81   82   83
+#   -    -    -    -    -    -    -    -    -    -     -    -    -              +    +    +    +    +
+SIGN.test(x, md = 70,alternative = "greater")
 
 ```
 
-# Prueba de rachas
+Como el valor-p obtenido es mayor a un posible valor de significancia del 5%, no se rechaza la hipótesis nula, se asume que los valores estana por debajo de 70. Es decir que los niveles de ansiedad no son altos.
 
-Ho : muestra aleatorio 
-Ha:  muestra no aleratoria
+<br/><br/>
+
+# **Prueba de rachas**
+
+### **Objetivo**
+
+Se utiliza para evaluar la aleatoriedad o la no aleatoriedad en una secuencia de datos y puede ser útil en una variedad de aplicaciones, como control de calidad, análisis de series temporales, epidemiología y otras áreas de la estadística y la investigación científica. La prueba ayuda a identificar si los datos siguen algún patrón o tendencia que podría ser significativo desde un punto de vista estadístico.
+
+
+
+<br/><br/>
+
+Ho : muestra es aleatorio 
+Ha:  muestra no es aleatoria
 
 ```{r}
 library("randtests")
 
-x=c(16, 15, 12, 17, 18, 14, 16, 14, 16, 17, 19, 16, 14, 21, 20, 16, 16, 16)
-runs.test(x)
-
+# Crear datos ficticios de concentración
+set.seed(123)  # Establecer una semilla para la reproducibilidad
+concentracion <- round(runif(20,13,17),1) # muestra simulada
+concentracion
+# concentracion <- c(15.2, 17.3, 16.8, 14.9, 14.7, 16.5, 17.1, 15.8, 15.3, 17.2)
+runs.test(concentracion)
 ```
 
 Como el valor-p > alpha (0.05), entonces no rechazamos Ho. Asumimos que la muestra es aleatoria.
 
 
+<br/><br/>
+
 # **Prueba chicuadrado de independencia** 
+
+### **Objetivo**
+
+Determinar si existe una asociación o relación significativa entre dos variables categóricas en un conjunto de datos. Específicamente, esta prueba se utiliza para evaluar si las dos variables son independientes o si hay una dependencia o relación significativa entre ellas. Es decir poder responder a si los valores de una variable categórica están relacionados de alguna manera con los valores de otra variable categórica.
+
+
+<br/><br/>
+
+### **Ejemplo**
+
+Se desea establecer si existe relación entre la calidad de la atención médica brindada por un centro en relación al lugar de residencia del paciente. Con este fin se recoge información de 100 pacientes del centro, la cual arroja los siguientes resultados:
+
 
 |                |Urbano    |Rural   | Total |
 |:--------------|----------:|-------:|------:|
@@ -75,10 +172,21 @@ Como valor-p = 0.1543 > 0.05 = a , entonces  no se rechaza Ho.
 
 Asumimos que las variables residencia y calificación son independientes
 
+<br/><br/>
 
 # **Prueba chi-cuadrado de bondad de ajuste**
 
-Ho: X sigue una determinadas distribución (Ej. uniforme)
+### **Objetivo**
+
+Determinar si la diferencia entre las frecuencias de cada uno de los valores de la variable y unas determinadas frecuencias teóricas son estadísticamente significativas.  Utilizada para comprobar el supuesto de normalidad, o de otras distribuciones. 
+
+<br/><br/>
+
+### **Ejemplo**
+
+Se desea establecer si el consumo de porta objetos, realizado por cuatro laboratorios presenta una demanda uniforme o no. Esto ayudará a establecer políticas de compras de este artículo. 
+
+Ho: X sigue una determinadas distribución (Ej. uniforme) <br/>
 Ha: X no sigue el modelo seleccionado 
 
 ```{r}
@@ -89,19 +197,66 @@ chisq.test(x=obs, p=esp)
 
 ```
 
+Como el valor-p (0.308) es mayor que el nivel de significancia, no se rechaza la hipótesis nula, se asume que es verdadera. Podemos asumir que la demanda de porta objetos es uniforme para los cuatro laboratorios y ordenar la misma cantidad para cada uno en el próximo presupuesto a elaborar.
 
+
+<br/><br/>
 
 # **Prueba Kruskal Walis**
 
+### **Objetivo**
+
+Determinar si las diferencias entre las medias de los rangos (asignados a las observaciones ordenadas) en los k grupos son estadísticamente significativas. Versión no paramétrica del ANOVA. 
+
+<br/><br/>
+
+### **Ejemplo**
+
+Supongamos que estás estudiando el efecto de tres diferentes tratamientos (A, B y C) en la concentración de una sustancia tóxica en muestras de tejido hepático de ratones. Tienes los siguientes datos:
+
+```{r}
+# Datos ficticios de concentración de sustancia tóxica en tres grupos
+grupo_A <- c(10.2, 9.8, 11.5, 12.3, 10.6)
+grupo_B <- c(14.2, 14.7, 13.5, 12.8, 15.2)
+grupo_C <- c(9.2, 9.5, 8.8, 9.0, 8.5)
+
+datos =data.frame(grupo_A, grupo_B, grupo_C)
+datos
+apply(datos, 2,mean)
+```
+
+<br/><br/>
 
 
+```{r}
+datos <- c(grupo_A, grupo_B, grupo_C)
+grupos <- factor(rep(c("A", "B", "C"), each = 5))
 
-p-value = 0.308 , indica que no se rechaza Ho, es decir que la distribución en el uso de los porta-objetos es uniforme
+kruskal.test(datos, grupos)
+```
 
+<br/><br/>
 
+Como  el valor obtenido es pequeño, se rechaza la hipótesis nula, se acepta como verdadera la hipótesis alterna, es decir, existe por lo menos una media diferente. 
 
+En este caso es necesario realizar las pruebas de comparaciones múltiples que permita establecer cual o cuales son las medias diferentes
 
+En este caso se utiliza la prueba de Dumm
 
+```{r}
+library(dunn.test)
+posthoc <- dunn.test(datos, grupos, method = "bonferroni")
 
+```
+
+<pre>
+grupo_C      grupo_A      grupo_B 
+9.00         10.88        14.08     
+--------------------
+---------------------
+--------                 --------   
+</pre>
+
+Este diagrama indica que existen diferencias solo entre los grupos B y C
 
 

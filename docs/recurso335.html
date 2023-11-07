@@ -324,6 +324,9 @@ $(document).ready(function () {
     <li>
       <a href="recurso337.html">La significancia estadística</a>
     </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
   </ul>
 </li>
 <li class="dropdown">
@@ -380,73 +383,226 @@ una y dos poblaciones.</p>
 <p><br/><br/></p>
 <div id="prueba-de-hipótesis-para-una-media" class="section level2">
 <h2><strong>Prueba de hipótesis para una media</strong></h2>
-<p>Se requiere establecer si la media de las edades de las personas
-accidentadas durante el presenta año son menores de 35 años. Se plantea
-la siguienes hipotesis estadísticas relacionadas :</p>
-<p><span class="math inline">\(Ho : \mu \geq 35\)</span></p>
-<p><span class="math inline">\(Ha : \mu &lt; 35\)</span></p>
-<p>Antes de proceder a realizar la prueba de hipótesis para la media, es
-necesario validar si la variables es normal o no. Para ello se aplica
-una prueba de Shapiro-Wilks</p>
-<pre class="r"><code>shapiro.test(datos$Edad)</code></pre>
-<pre><code>
-    Shapiro-Wilk normality test
+<div id="ejemplo" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se está investigando el nivel de contaminación de plomo en el agua de
+una fuente en una zona industrial y se desea probar si el nivel promedio
+de plomo supera el límite de seguridad de <span
+class="math inline">\(10\)</span> microgramos por litro (µg/L). Por
+investigaciones anteriores se sabe que esta variables tiene una
+distribución aproximadamente normal</p>
+<p><span class="math display">\[Ho : \mu \leq 10\]</span></p>
+<p><span class="math display">\[Ha : \mu &gt; 10\]</span></p>
+<pre class="r"><code>x &lt;- c(11.2, 9.8, 10.5, 10.1, 11.5, 12.0, 9.6, 9.9, 10.3, 10.7)
 
-data:  datos$Edad
-W = 0.99671, p-value = 0.4032</code></pre>
-<p>El resultado indica que se asume que los datos proceden de una
-distribución normal. Por tal razón se aplica una prueba paramétrica para
-una media. En este caso una prueba t-Studen debido a que no se conoce la
-varianza.</p>
-<pre class="r"><code>t.test(datos$Edad, mu =35, alternative = &quot;less&quot;)</code></pre>
+t.test(x,
+       alternative = &quot;greater&quot;,
+       mu = 10, 
+       # paired = FALSE, 
+       # var.equal = FALSE,
+       conf.level = 0.95)</code></pre>
 <pre><code>
     One Sample t-test
 
-data:  datos$Edad
-t = 0.50014, df = 499, p-value = 0.6914
-alternative hypothesis: true mean is less than 35
+data:  x
+t = 2.2442, df = 9, p-value = 0.02574
+alternative hypothesis: true mean is greater than 10
 95 percent confidence interval:
-     -Inf 35.45955
+ 10.10258      Inf
 sample estimates:
 mean of x 
-   35.107 </code></pre>
+    10.56 </code></pre>
+<p>El resultado indica que se rechaza la hipótesis nula, se acepta la
+hipotesis alterna. Por tal razón se puede afirmar que el contenido
+promedio de plomo supera los límites de seguridad establecidos en <span
+class="math inline">\(10\)</span> microgramos por litro (µg/L)</p>
 <p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-de-hipótesis-para-una-proporción"
 class="section level2">
 <h2><strong>Prueba de hipótesis para una proporción</strong></h2>
+<div id="ejemplo-1" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se estudia si la proporción de muertes por accidentes de transito
+causadas embriagez de conductores de autos supera 30% de las causas
+principales en la ciudad</p>
+<p>Para validar esta hipótesis se realizó una busqueda de la
+inforamación contenida en los medios de comunicación durante los últimos
+30 dias, arrojando la siguiente información:</p>
+<p><span class="math display">\[Ho: p \leq 0.30\]</span> <span
+class="math display">\[p &gt; 0.30\]</span></p>
+<pre><code>numéro de accidentes ocurridos último mes    : 135 </code></pre>
+<pre><code>número de accidentes con resultados nefastos : 52 </code></pre>
+<p><span class="math inline">\(Ho: p \leq 0.30\)</span></p>
+<p><span class="math inline">\(Ha: p &gt; 0.30\)</span></p>
+<pre class="r"><code>prop.test(x,n, p=0.30, alternative = &quot;greater&quot;)</code></pre>
+<pre><code>
+    1-sample proportions test with continuity correction
+
+data:  x out of n, null probability 0.3
+X-squared = 4.2681, df = 1, p-value = 0.01942
+alternative hypothesis: true p is greater than 0.3
+95 percent confidence interval:
+ 0.3156832 1.0000000
+sample estimates:
+        p 
+0.3851852 </code></pre>
+<p>Como el valor-p arrojado por la prueba es menor al nivel de
+significancia del 5%, se rechaza la hipótesis nula, se acepta la
+hipótesis alterna como verdad. Se puede afirmar que la proporción de
+accidentes de transito en donde muere el conductor supera el 30% de los
+casos de accidentes de transito en la ciudad.</p>
 <p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-de-hipótesis-para-una-varianza" class="section level2">
 <h2><strong>Prueba de hipótesis para una varianza</strong></h2>
+</div>
+<div id="ejemplo-2" class="section level2">
+<h2><strong>Ejemplo</strong></h2>
+<p>Supongamos que estás calibrando un espectrofotómetro en un
+laboratorio y deseas probar si la varianza de las mediciones realizadas
+por el espectrofotómetro cumple con las especificaciones del fabricante,
+que establecen que la varianza no debe superar 0.01 absorbancia.</p>
+<p>Ho: La varianza de las mediciones del espectrofotómetro es igual o
+mayor a 0.01. <br/> Ha: La varianza de las mediciones del
+espectrofotómetro es menor 0.01.</p>
+<pre class="r"><code># Requiere la instalcion del paqute stests contenido en el repositorio fgernanb
+# if (!require(&#39;devtools&#39;)) install.packages(&#39;devtools&#39;)
+#devtools::install_github(&#39;fhernanb/stests&#39;, force=TRUE)
+
+x &lt;- c(0.02, 0.03, 0.02, 0.01, 0.03, 0.02, 0.01, 0.02, 0.03, 0.02)
+
+stests::var.test(x, alternative=&#39;less&#39;,
+                 null.value=0.01, conf.level=0.95)</code></pre>
+<pre><code>
+    X-squared test for variance
+
+data:  x
+X-squared = 0.049, df = 9, p-value = 1.056e-09
+alternative hypothesis: true variance is less than 0.01
+95 percent confidence interval:
+ 2.896156e-05          Inf
+sample estimates:
+variance of x 
+ 5.444444e-05 </code></pre>
+<p>Como el valor-p (1.056e-09) es pequeño, se rechaza la hipótesis nula,
+se acepta la hipótesis alterna como verdadera. Se concluye que la
+varianza es menor a 0.01</p>
 <p><br/><br/></p>
 </div>
 </div>
 <div id="dos-poblaciones" class="section level1">
 <h1><strong>Dos poblaciones</strong></h1>
 <p><br/><br/></p>
-<div id="prueba-de-hipótesis-para-diferencia-de-medias"
+<div id="prueba-de-hipótesis-para-diferencia-de-medias---gupos-pareados"
 class="section level2">
-<h2><strong>Prueba de hipótesis para diferencia de medias</strong></h2>
-<p><br/><br/></p>
+<h2><strong>Prueba de hipótesis para diferencia de medias - gupos
+pareados</strong></h2>
+<div id="ejemplo-3" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se requiere determinar si exisne diferencias en los contenidos
+obtenidos por dos métodos diferentes. Se procesaron 8 muestras bajo los
+dos métodos. Los resultados obtenidos son:</p>
+<pre class="r"><code>Metodo1 = c(7.2, 6.1, 5.2, 5.9, 9.0, 8.5, 6.6, 4.4)
+Metodo2 = c(7.6, 6.8, 4.6, 5.7, 9.7, 8.7, 7.0, 4.7)
+
+cat(&quot;Método1 :Valoración con AEDT               &quot;, Metodo1, &quot;\n&quot;)</code></pre>
+<pre><code>Método1 :Valoración con AEDT                7.2 6.1 5.2 5.9 9 8.5 6.6 4.4 </code></pre>
+<pre class="r"><code>cat(&quot;Método2: Valoración Esoectrometría atómica &quot;, Metodo2, &quot;\n&quot;)</code></pre>
+<pre><code>Método2: Valoración Esoectrometría atómica  7.6 6.8 4.6 5.7 9.7 8.7 7 4.7 </code></pre>
+<p><span class="math display">\[Ho: \mu_1 = \mu_2\]</span> <span
+class="math display">\[Ha: \mu_1 \neq \mu_2\]</span></p>
+<pre class="r"><code>t.test(Metodo1, Metodo2, alternative = &quot;two.sided&quot;, mu =0, paired = TRUE)</code></pre>
+<pre><code>
+    Paired t-test
+
+data:  Metodo1 and Metodo2
+t = -1.5136, df = 7, p-value = 0.1739
+alternative hypothesis: true mean difference is not equal to 0
+95 percent confidence interval:
+ -0.6085316  0.1335316
+sample estimates:
+mean difference 
+        -0.2375 </code></pre>
+<p>El resultado arroja un valor-p (0.1739) grande, lo que indica que no
+se rechaza la hipótesis nula de que las medias son iguales
+<br/><br/></p>
+</div>
 </div>
 <div id="prueba-de-hipótesis-para-diferencia-de-proporciones"
 class="section level2">
 <h2><strong>Prueba de hipótesis para diferencia de
 proporciones</strong></h2>
+<div id="ejemplo-4" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se estudia si existen diferencias en la proporción de muertes por
+accidentes de transito causadas embriagez de conductores de autos y la
+proporción de muertes causados por accidentes en las que se involucran
+conductores de motocicletas en estado de embriaguez.</p>
+<p>Para validar esta hipótesis se realizó una busqueda de la
+inforamación contenida en los medios de comunicación durante los últimos
+30 dias, arrojando la siguiente información:</p>
+<ul>
+<li>Conductores de autos en estado de embriaguez: 15 muertes</li>
+<li>Conductores de motocicletas en estado de embriaguez: 8 muertes</li>
+<li>Conductores sobrios de autos: 320 muertes</li>
+<li>Conductores sobrios de motocicletas: 100 muertes</li>
+</ul>
+<p><span class="math display">\[Ho: p_1 = p_2\]</span><br />
+<span class="math display">\[Ha: p_1 \neq p_2\]</span></p>
+<pre class="r"><code>prop.test(c(15,8), c(320,100))</code></pre>
+<pre><code>
+    2-sample test for equality of proportions with continuity correction
+
+data:  c(15, 8) out of c(320, 100)
+X-squared = 1.0385, df = 1, p-value = 0.3082
+alternative hypothesis: two.sided
+95 percent confidence interval:
+ -0.09768448  0.03143448
+sample estimates:
+  prop 1   prop 2 
+0.046875 0.080000 </code></pre>
 <p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-de-hipótesis-para-razón-de-varianzas"
 class="section level2">
 <h2><strong>Prueba de hipótesis para razón de varianzas</strong></h2>
+<div id="ejemplo-5" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Se desea validar si el contenido de alcohol en una marcas de cerveza
+con 4.0 º alcohol, de acuerdo con su etiquete, presenta un coeficiente
+de variación inferior al 10%. Para se recoge una muestra de n= botellas
+y mide la densidad para luego transformarla en porcentaje de
+alcohol.</p>
+<p>Sabemos que <span class="math inline">\(CV = s/ \bar{x}
+=0.10\)</span>, con esta igualdad podemos encontrar el limite de la
+desviación estandar o su valor máximo.</p>
+<p><span class="math inline">\(s = 0.1 \times 4.0 = 0.40\)</span></p>
+<p>En este caso se deben constrastar las hipótesis:</p>
+<p><span class="math inline">\(Ho: \sigma^{2} \geq 0.4\)</span></p>
+<p><span class="math inline">\(Ha: \sigma^{2} &lt; 0.4\)</span></p>
+<p>Los resultados obtendidos con .</p>
+<pre class="r"><code>set.seed(123)
+mx  &lt;- 4.0  
+sx &lt;- 0.2  
+x &lt;- round(rnorm(20, mean = mx, sd = sx),1)
+x</code></pre>
+<pre><code> [1] 3.9 4.0 4.3 4.0 4.0 4.3 4.1 3.7 3.9 3.9 4.2 4.1 4.1 4.0 3.9 4.4 4.1 3.6 4.1
+[20] 3.9</code></pre>
 <p><br/><br/></p>
+</div>
 </div>
 <div id="prueba-para-mas-de-dos-medias" class="section level2">
 <h2><strong>Prueba para mas de dos medias</strong></h2>
+<div id="ejemplo-6" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
 <p>ANÁLISIS DE VARIANZA - ANOVA</p>
-<p><span class="math inline">\(Ho: \mu_1 = \mu_2 = \mu_3\)</span></p>
-<p><span class="math inline">\(Ha:\)</span> alguna de las medias es
-diferente</p>
+<p><span class="math display">\[Ho: \mu_1 = \mu_2 = \mu_3\]</span> <span
+class="math display">\[Ha: \text{alguna de las medias es
+diferente}\]</span></p>
 <pre class="r"><code># Cargar los paquetes necesarios
 library(stats)
 library(agricolae)
@@ -467,7 +623,7 @@ data &lt;- data.frame(
 )
 
 boxplot(grupos)</code></pre>
-<p><img src="recurso335_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><img src="recurso335_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 <pre class="r"><code># Realizar un ANOVA
 modelo_anova &lt;- aov(Niveles_Benzodiazepina ~ Grupo, data = data)
 
@@ -496,6 +652,7 @@ $Grupo
 <pre class="r"><code>apply(grupos, 2, mean)</code></pre>
 <pre><code>grupo1 grupo2 grupo3 
 0.1150 0.0440 0.0885 </code></pre>
+</div>
 </div>
 </div>
 

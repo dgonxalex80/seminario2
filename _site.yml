@@ -43,6 +43,10 @@ navbar:
           href: recurso336.html              
         - text: "La significancia estadística"
           href: recurso337.html
+        - text: "Modelo de regresión y curvas de calibración"
+          href: recurso338.html          
+          
+          
     - text: "Unidad 4"
       menu: 
         - text: "Análisis de resultados científicos"
