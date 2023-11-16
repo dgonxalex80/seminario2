@@ -1,0 +1,115 @@
+---
+title: "**Creando cartas de control**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+<br/><br/>
+
+
+# **Cartas de control**
+
+<br/>
+
+La función básica del gráfico de control es determinar si un proceso es estable o no. 
+
+Los límites de control superior e inferior (es decir, UCL y LCL) reflejan los valores máximos y mínimos aceptables. Los límites de control se definen utilizando principios y cálculos estadísticos estándar para eventualmente establecer medios accesibles para un proceso sólido. 
+
+Básicamente, los límites de control ayudan a identificar los puntos en los que se deben tomar medidas correctivas para evitar un desempeño extraño e inusual. Un proceso se clasifica como fuera de control cuando un punto de datos excede un límite de control o, alternativamente, siete puntos consecutivos del gráfico están por encima o por debajo de la media.
+
+<br/><br/>
+
+### **Leer la base de datos**
+
+A continuación, se lee desde R, el archivo que contiene la información. Se utiliza un pequeño conjunto de datos que consta de veinte observaciones para trazar un gráfico de barras $x$ básico cuando $n=1$ como una sola columna en una tabla para los fines de este ejercicio.
+
+<br/>
+
+```{r}
+library(readxl)
+Ejemplo <- read_excel("data/Ejemplo2.xlsx")
+summary(Ejemplo)
+plot(Ejemplo)
+plot(Ejemplo, type = "b")
+```
+
+
+<br/><br/><br/>
+
+### **Parte 1: Usando el paquete qcc**
+
+<br/>
+
+```{r}
+library(qcc)
+
+```
+
+<br/><br/>
+
+```{r}
+qcc(data = Ejemplo$Temperatura,
+type = "xbar.one",
+plot = TRUE)
+```
+
+<br/><br/>
+
+Como se mostró, **qcc** produjo un gráfico que incluía otra información, como límites de control. El valor inaceptable está codificado por colores y se muestra en rojo.
+
+<br/><br/>
+
+### **Referencias**
+
+* https://www.r-bloggers.com/producing-a-control-chart-in-r-an-application-in-analytical-chemistry/
+* http://blog.yhat.com/posts/quality-control-in-r.html
+* J. Marriott, How to make Schewhart control charts in R, Jan 2017 ```
+
+<br/><br/><br/>
+
+###  **Parte 2: Usando el paquete qicharts**
+
+<br/>
+
+```{r}
+library(qicharts)
+        
+```
+
+<br/>
+
+```{r}
+CartaTemperatura<-qic(y=Ejemplo$Temperatura)
+summary(CartaTemperatura)
+```
+
+<br/>
+
+```{r}
+Carta<-qic(y = Ejemplo$Temperatura, x = Ejemplo$Dia, chart = 'i')
+```
+
+<br/>
+
+```{r}
+Carta<-qic(y = Ejemplo$Temperatura, x = Ejemplo$Dia, chart = 'i')
+m=mean(Ejemplo$Temperatura)
+s=sd(Ejemplo$Temperatura)
+abline(h=m+s,col = "red")
+abline(h=m-s,col = "red")
+
+abline(h=m+2*s,col = "blue")
+abline(h=m-2*s,col = "blue") 
+
+abline(h=m+3*s,col = "green")
+abline(h=m-3*s,col = "green")
+```
+
+<br/><br/>

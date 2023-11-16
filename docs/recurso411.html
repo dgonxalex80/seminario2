@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Datos análisis de tendencias</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso111.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso211.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso221.html">Conceptos básicos - ejemplos</a>
+    </li>
+    <li>
+      <a href="recurso231.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso241.html">Cartas de control</a>
+    </li>
+    <li>
+      <a href="recurso251.html">Creando cartas de control</a>
+    </li>
+    <li>
+      <a href="recurso261.html">Carta de control 1</a>
+    </li>
+    <li>
+      <a href="recurso271.html">Ejemplo 2</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso411.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso421.html">Datos análisis de tendencias</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Datos análisis de
+tendencias</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<div id="datos-análisis-de-tendencias" class="section level2">
+<h2><strong>Datos análisis de tendencias</strong></h2>
+<p>A continuación, cargamos los datos del archivo suministrado. El
+archivo está en formato de Excel y por tanto lo cargamos con la
+siguiente instrucción.</p>
+<pre class="r"><code>library(readxl)
+analisiscurva&lt;- read_excel(&quot;data/tendencia_ultima curva.xlsx&quot;)</code></pre>
+<pre><code>New names:
+• `` -&gt; `...9`
+• `` -&gt; `...10`
+• `` -&gt; `...11`</code></pre>
+<pre class="r"><code>#View(analisiscurva)
+is.data.frame(analisiscurva)</code></pre>
+<pre><code>[1] TRUE</code></pre>
+<pre class="r"><code>head(analisiscurva[,c(1:8)])</code></pre>
+<pre><code># A tibble: 6 × 8
+  FECHA               `EXPERTO TECNICO` `C1 METANOL` `C3 METANOL` `C1 ETANOL`
+  &lt;dttm&gt;              &lt;chr&gt;                    &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;
+1 2023-08-01 00:00:00 BIBIANA                   50.2         151.        40.0
+2 2023-08-01 00:00:00 BIBIANA                   49.2         150.        39.1
+3 2023-08-01 00:00:00 BIBIANA                   49.2         142.        38.8
+4 2023-08-01 00:00:00 BIBIANA                   47.3         149.        38.5
+5 2023-08-01 00:00:00 BIBIANA                   47.5         151.        38.4
+6 2023-08-01 00:00:00 GREY                      48.6         148.        39.1
+# ℹ 3 more variables: `C2 ETANOL` &lt;dbl&gt;, `C3 ETANOL` &lt;dbl&gt;, `C4 ETANOL` &lt;dbl&gt;</code></pre>
+<p><br/><br/></p>
+<p>Veamos como es la estructura de la base de datos, qué tipos de
+variables tiene.</p>
+<pre class="r"><code>str(analisiscurva)</code></pre>
+<pre><code>tibble [220 × 11] (S3: tbl_df/tbl/data.frame)
+ $ FECHA          : POSIXct[1:220], format: &quot;2023-08-01&quot; &quot;2023-08-01&quot; ...
+ $ EXPERTO TECNICO: chr [1:220] &quot;BIBIANA&quot; &quot;BIBIANA&quot; &quot;BIBIANA&quot; &quot;BIBIANA&quot; ...
+ $ C1 METANOL     : num [1:220] 50.2 49.2 49.2 47.3 47.5 ...
+ $ C3 METANOL     : num [1:220] 151 150 142 149 151 ...
+ $ C1 ETANOL      : num [1:220] 40 39.1 38.8 38.5 38.4 ...
+ $ C2 ETANOL      : num [1:220] 97.2 96.3 99.2 97.4 96.9 ...
+ $ C3 ETANOL      : num [1:220] 152 149 146 148 150 ...
+ $ C4 ETANOL      : num [1:220] 297 289 391 293 296 ...
+ $ ...9           : logi [1:220] NA NA NA NA NA NA ...
+ $ ...10          : logi [1:220] NA NA NA NA NA NA ...
+ $ ...11          : chr [1:220] &quot;OBSERVACIONES&quot; &quot;LOS CONTROLES SE PREPARAN A PARTIR DE SOLUCIONES GRADO REACTIVO&quot; &quot;LA SOLUCION CONTROL 1 TIENE ETANOL A 40 MG/100 ML Y EL METANOL A 50 MG/100 ML. SE PREPARA EN UNA MISMA SOLUCION&quot;| __truncated__ &quot;LA SOLUCION CONTROL 3 TIENE ETANOL Y METANOL A 150 MG/100 ML RESPECTIVAMENTE. SE PREPARA EN UNA MISMA SOLUCION,&quot;| __truncated__ ...</code></pre>
+<p><br/><br/></p>
+<p>Reescribiremos algunos nombres de la base de datos, para un manejo
+más adecuado.</p>
+<pre class="r"><code>tecnico&lt;-analisiscurva$`EXPERTO TECNICO`
+metanol1&lt;-analisiscurva$`C1 METANOL`
+metanol2&lt;-analisiscurva$`C3 METANOL`
+etanol1&lt;-analisiscurva$`C1 ETANOL`
+etanol2&lt;-analisiscurva$`C2 ETANOL`
+etanol3&lt;-analisiscurva$`C3 ETANOL`
+etanol4&lt;-analisiscurva$`C4 ETANOL`
+fecha&lt;-analisiscurva$FECHA</code></pre>
+<p><br/><br/></p>
+<p>Gráfico inicial comparativo, con base en Técnicos, acá no se busca
+evaluar si existen o no diferencias, ya que no hubo condiciones
+similares para los mismos. Esto sólo es una visualización de la variable
+metanol1.</p>
+<pre class="r"><code>boxplot(metanol1 ~ tecnico, data = analisiscurva, col = c(&quot;darkblue&quot;, &quot;blue&quot;, &quot;lightblue&quot;, &quot;blue1&quot;,&quot;blueviolet&quot;))</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>library(ggplot2)
+ggplot(analisiscurva, aes(x = fecha, y=tecnico)) +
+  geom_line() +
+  geom_point()</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>my_blue &lt;- &quot;4ABEFF&quot;
+ggplot(analisiscurva, aes(factor(tecnico), metanol1)) +
+  geom_point(color = my_blue, alpha = 0.8)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>ggplot(analisiscurva, aes(metanol1, fill = factor(tecnico))) +
+  geom_histogram(binwidth = 1)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>grafico1&lt;-ggplot(analisiscurva, aes(fecha, metanol1, colour =tecnico))+
+  geom_point() +
+  geom_smooth() +
+  xlab(&quot;Fecha&quot;) +
+  ylab(&quot;Metanol1&quot;) 
+grafico1</code></pre>
+<pre><code>`geom_smooth()` using method = &#39;loess&#39; and formula = &#39;y ~ x&#39;</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>grafico2&lt;-ggplot(analisiscurva, aes(fecha, metanol1, colour =tecnico )) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;, formula = y ~ x, se = TRUE)+
+  xlab(&quot;Fecha&quot;) +
+  ylab(&quot;Metanol1&quot;)
+grafico2</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><br/><br/></p>
+</div>
+<div id="libreria-para-cartas-de-control" class="section level2">
+<h2><strong>Libreria para cartas de control</strong></h2>
+<p>Como lo indicamos en unidades anteriores, esta libreria nos permite
+generar las cartas de control estadistico de la calidad con un objeto de
+clase “qcc” el cual puede ser graficado. Así se analizan importantes
+gráficas como las curvas caracteristicas operartivas OC, Carta
+Schewhart, indices de capacidad del proceso y más.</p>
+<p><br/><br/></p>
+<pre class="r"><code>library(qcc)</code></pre>
+<p><br/><br/></p>
+</div>
+<div id="observaciones-individuales-metanol-1" class="section level2">
+<h2><strong>Observaciones individuales: Metanol 1</strong></h2>
+<pre class="r"><code>Individuales &lt;- qcc(data = metanol1, type=&quot;xbar.one&quot;)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>Individuales$violations</code></pre>
+<pre><code>$beyond.limits
+[1]  30 147 149 154 177 207  67  79 190
+
+$violating.runs
+ [1] 171 172 173 174 175 176 177 178  95  96 104 105 189 190 191 192</code></pre>
+<pre class="r"><code>Individuales$limits</code></pre>
+<pre><code>      LCL      UCL
+ 44.77651 52.26554</code></pre>
+<pre class="r"><code>Individuales$center</code></pre>
+<pre><code>[1] 48.52102</code></pre>
+<pre class="r"><code>summary(Individuales)</code></pre>
+<pre><code>
+Call:
+qcc(data = metanol1, type = &quot;xbar.one&quot;)
+
+xbar.one chart for metanol1 
+
+Summary of group statistics:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+31.71800 47.52853 48.44674 48.52102 49.42209 55.08097 
+
+Group sample size:  1
+Number of groups:  220
+Center of group statistics:  48.52102
+Standard deviation:  1.248173 
+
+Control limits:
+      LCL      UCL
+ 44.77651 52.26554</code></pre>
+<p><br/><br/></p>
+</div>
+<div id="capacidad-del-proceso-metanol-1" class="section level2">
+<h2><strong>Capacidad del proceso Metanol 1</strong></h2>
+<pre class="r"><code>process.capability(object = Individuales, spec.limits = c(31.71800, 55.08097 ), confidence.level = 0.95)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+<pre><code>
+Process Capability Analysis
+
+Call:
+process.capability(object = Individuales, spec.limits = c(31.718,     55.08097), confidence.level = 0.95)
+
+Number of obs = 220          Target = 43.4
+       Center = 48.52           LSL = 31.72
+       StdDev = 1.248           USL = 55.08
+
+Capability indices:
+
+       Value    2.5%   97.5%
+Cp    3.1196  2.8275  3.4114
+Cp_l  4.4874  4.1328  4.8420
+Cp_u  1.7519  1.6093  1.8944
+Cp_k  1.7519  1.5820  1.9218
+Cpm   0.7387  0.6425  0.8347
+
+Exp&lt;LSL 0%   Obs&lt;LSL 0%
+Exp&gt;USL 0%   Obs&gt;USL 0%</code></pre>
+<p><br/><br/></p>
+</div>
+<div id="monitoreo" class="section level2">
+<h2><strong>Monitoreo</strong></h2>
+<pre class="r"><code>monMedias&lt;-qcc(analisiscurva[1:125,3:4], type=&quot;xbar&quot;, newdata=analisiscurva[126:220,3:4], nsigmas=2)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>monRangos&lt;-qcc(analisiscurva[1:125,3:4], type=&quot;R&quot;, newdata=analisiscurva[126:220,3:4], nsigmas=2)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>monDesviaciones&lt;-qcc(analisiscurva[1:125,3:4], type=&quot;S&quot;, newdata=analisiscurva[126:220,3:4], nsigmas=2)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-16-1.png" width="672" /></p>
+<p><br/><br/></p>
+<pre class="r"><code>monIndividuales&lt;-qcc(analisiscurva[1:125,3], type=&quot;xbar.one&quot;, newdata=analisiscurva[126:220,3], nsigmas=2)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
+<p><br/><br/></p>
+<p>Recordemos que se debe tener una estructra de corridas, para efectuar
+las cartas vistas en las unidades anteriores. Por ejemplo, a
+continuación, se observa un resultado pero no adecuado, dado que se usan
+dos variables con condiciones muy distintas.</p>
+<p><br/><br/></p>
+</div>
+<div id="tendencia-media" class="section level2">
+<h2><strong>Tendencia Media</strong></h2>
+<p><br/></p>
+</div>
+<div id="gráfica-de-control-para-medias" class="section level2">
+<h2><strong>Gráfica de control para medias</strong></h2>
+<p><br/></p>
+<pre class="r"><code>Medias &lt;- qcc(data = analisiscurva[3:4], type = &quot;xbar&quot;)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-18-1.png" width="672" /></p>
+<p><br/><br/></p>
+<p>La carta xbar nos permite monitoreorear la media y la variación de un
+proceso cuando se tienen datos continuos.</p>
+<p><br/><br/></p>
+<pre class="r"><code>Medias$violations</code></pre>
+<pre><code>$beyond.limits
+integer(0)
+
+$violating.runs
+ [1] 142 143 144 165 166 167 168 169 170 171 172 173 174  80  81  82  94 104 105
+[20] 130 131 132 133 189 190 191 192 214</code></pre>
+<pre class="r"><code>Medias$limits</code></pre>
+<pre><code>       LCL      UCL
+ -90.15913 287.6501</code></pre>
+<pre class="r"><code>Medias$center</code></pre>
+<pre><code>[1] 98.74551</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>summary(Medias)</code></pre>
+<pre><code>
+Call:
+qcc(data = analisiscurva[3:4], type = &quot;xbar&quot;)
+
+xbar chart for analisiscurva[3:4] 
+
+Summary of group statistics:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+ 89.45400  96.68269  98.40561  98.74551 100.46601 115.47156 
+
+Group sample size:  2
+Number of groups:  220
+Center of group statistics:  98.74551
+Standard deviation:  89.0505 
+
+Control limits:
+       LCL      UCL
+ -90.15913 287.6501</code></pre>
+<p><br/><br/></p>
+</div>
+<div id="variabilidad" class="section level2">
+<h2><strong>Variabilidad</strong></h2>
+<p><br/></p>
+</div>
+<div id="gráfica-de-control-para-rangos" class="section level2">
+<h2><strong>Gráfica de control para rangos</strong></h2>
+<p><br/></p>
+<pre class="r"><code>Rangos &lt;- qcc(data = analisiscurva[3:4], type = &quot;R&quot;)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-21-1.png" width="672" /></p>
+<p><br/><br/></p>
+<p>La carta R nos permite identificar el rango, con esta carta se
+detectarán cambios en la amplitud o magnitud de la variación del
+proceso.</p>
+<p><br/><br/></p>
+<pre class="r"><code>Rangos$violations</code></pre>
+<pre><code>$beyond.limits
+integer(0)
+
+$violating.runs
+ [1]  17  73 165  80  81  82 189 190 191 192 217 218</code></pre>
+<pre class="r"><code>Rangos$limits</code></pre>
+<pre><code> LCL      UCL
+   0 328.1965</code></pre>
+<pre class="r"><code>Rangos$center</code></pre>
+<pre><code>[1] 100.449</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>summary(Rangos)</code></pre>
+<pre><code>
+Call:
+qcc(data = analisiscurva[3:4], type = &quot;R&quot;)
+
+R chart for analisiscurva[3:4] 
+
+Summary of group statistics:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+ 88.75136  97.89485 100.00608 100.44896 102.86603 132.52767 
+
+Group sample size:  2
+Number of groups:  220
+Center of group statistics:  100.449
+Standard deviation:  89.0505 
+
+Control limits:
+ LCL      UCL
+   0 328.1965</code></pre>
+<p><br/><br/></p>
+</div>
+<div id="gráfica-de-control-para-desviaciones" class="section level2">
+<h2><strong>Gráfica de control para desviaciones</strong></h2>
+<p><br/></p>
+<pre class="r"><code>Desviaciones &lt;- qcc(data = analisiscurva[3:4], type = &quot;S&quot;)</code></pre>
+<p><img src="recurso411_files/figure-html/unnamed-chunk-24-1.png" width="672" /></p>
+<p><br/><br/></p>
+<p>La carta S nos permite monitorear la desviación de un proceso.</p>
+<p><br/><br/></p>
+<pre class="r"><code>Desviaciones$violations</code></pre>
+<pre><code>$beyond.limits
+integer(0)
+
+$violating.runs
+ [1]  17  73 165  80  81  82 189 190 191 192 217 218</code></pre>
+<pre class="r"><code>Desviaciones$limits</code></pre>
+<pre><code> LCL      UCL
+   0 232.0157</code></pre>
+<pre class="r"><code>Desviaciones$center</code></pre>
+<pre><code>[1] 71.02814</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>summary(Desviaciones)</code></pre>
+<pre><code>
+Call:
+qcc(data = analisiscurva[3:4], type = &quot;S&quot;)
+
+S chart for analisiscurva[3:4] 
+
+Summary of group statistics:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+62.75669 69.22211 70.71498 71.02814 72.73727 93.71121 
+
+Group sample size:  2
+Number of groups:  220
+Center of group statistics:  71.02814
+Standard deviation:  89.02058 
+
+Control limits:
+ LCL      UCL
+   0 232.0157</code></pre>
+<p><br/><br/></p>
+<p>Observe que se corroboran los puntos dados en la carta de Rangos. Sin
+emabrgo, no olvidar, que se debe tener una estructira específica, y no
+simplemente variables no comparables.</p>
+<p><br/><br/></p>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

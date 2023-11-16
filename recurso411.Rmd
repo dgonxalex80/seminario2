@@ -1,0 +1,272 @@
+---
+title: "**Datos análisis de tendencias**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+<br/><br/>
+
+## **Datos análisis de tendencias**
+
+A continuación, cargamos los datos del archivo suministrado. El archivo está en formato de Excel y por tanto lo cargamos con la siguiente instrucción.
+
+```{r}
+library(readxl)
+analisiscurva<- read_excel("data/tendencia_ultima curva.xlsx")
+#View(analisiscurva)
+is.data.frame(analisiscurva)
+
+head(analisiscurva[,c(1:8)])
+```
+
+<br/><br/>
+
+Veamos como es la estructura de la base de datos, qué tipos de variables tiene.
+
+```{r}
+str(analisiscurva)
+```
+
+<br/><br/>
+
+Reescribiremos algunos nombres de la base de datos, para un manejo más adecuado.
+
+```{r}
+tecnico<-analisiscurva$`EXPERTO TECNICO`
+metanol1<-analisiscurva$`C1 METANOL`
+metanol2<-analisiscurva$`C3 METANOL`
+etanol1<-analisiscurva$`C1 ETANOL`
+etanol2<-analisiscurva$`C2 ETANOL`
+etanol3<-analisiscurva$`C3 ETANOL`
+etanol4<-analisiscurva$`C4 ETANOL`
+fecha<-analisiscurva$FECHA
+
+```
+
+<br/><br/>
+
+Gráfico inicial comparativo, con base en Técnicos, acá no se busca evaluar si existen o no diferencias, ya que no hubo condiciones similares para los mismos. Esto sólo es una visualización de la variable metanol1.
+
+```{r}
+boxplot(metanol1 ~ tecnico, data = analisiscurva, col = c("darkblue", "blue", "lightblue", "blue1","blueviolet"))
+```
+
+<br/><br/>
+
+```{r}
+library(ggplot2)
+ggplot(analisiscurva, aes(x = fecha, y=tecnico)) +
+  geom_line() +
+  geom_point()
+```
+
+<br/><br/>
+
+```{r}
+my_blue <- "4ABEFF"
+ggplot(analisiscurva, aes(factor(tecnico), metanol1)) +
+  geom_point(color = my_blue, alpha = 0.8)
+```
+
+<br/><br/>
+
+```{r}
+ggplot(analisiscurva, aes(metanol1, fill = factor(tecnico))) +
+  geom_histogram(binwidth = 1)
+```
+
+<br/><br/>
+
+```{r, warning=FALSE}
+grafico1<-ggplot(analisiscurva, aes(fecha, metanol1, colour =tecnico))+
+  geom_point() +
+  geom_smooth() +
+  xlab("Fecha") +
+  ylab("Metanol1") 
+grafico1
+```
+
+<br/><br/>
+
+```{r, warning=FALSE}
+grafico2<-ggplot(analisiscurva, aes(fecha, metanol1, colour =tecnico )) +
+  geom_point() +
+  geom_smooth(method = "lm", formula = y ~ x, se = TRUE)+
+  xlab("Fecha") +
+  ylab("Metanol1")
+grafico2
+```
+
+<br/><br/>
+
+## **Libreria para cartas de control**
+
+Como lo indicamos en unidades anteriores, esta libreria nos permite generar las cartas de control estadistico de la calidad con un objeto de clase “qcc” el cual puede ser graficado. Así se analizan importantes gráficas como las curvas caracteristicas operartivas OC, Carta Schewhart, indices de capacidad del proceso y más.
+
+<br/><br/>
+
+```{r}
+library(qcc)
+```
+
+<br/><br/>
+
+## **Observaciones individuales: Metanol 1**
+
+```{r}
+Individuales <- qcc(data = metanol1, type="xbar.one")
+```
+
+<br/><br/>
+
+```{r}
+Individuales$violations
+Individuales$limits
+Individuales$center
+summary(Individuales)
+```
+
+<br/><br/>
+
+## **Capacidad del proceso Metanol 1**
+
+```{r}
+process.capability(object = Individuales, spec.limits = c(31.71800, 55.08097 ), confidence.level = 0.95)
+```
+
+<br/><br/>
+
+## **Monitoreo** 
+
+```{r}
+monMedias<-qcc(analisiscurva[1:125,3:4], type="xbar", newdata=analisiscurva[126:220,3:4], nsigmas=2)
+```
+
+<br/><br/>
+
+```{r}
+monRangos<-qcc(analisiscurva[1:125,3:4], type="R", newdata=analisiscurva[126:220,3:4], nsigmas=2)
+```
+
+<br/><br/>
+
+```{r}
+monDesviaciones<-qcc(analisiscurva[1:125,3:4], type="S", newdata=analisiscurva[126:220,3:4], nsigmas=2)
+```
+
+<br/><br/>
+
+
+```{r}
+monIndividuales<-qcc(analisiscurva[1:125,3], type="xbar.one", newdata=analisiscurva[126:220,3], nsigmas=2)
+```
+
+<br/><br/>
+
+
+Recordemos que se debe tener una estructra de corridas, para efectuar las cartas vistas en las unidades anteriores. Por ejemplo, a continuación, se observa un resultado pero no adecuado, dado que se usan dos variables con condiciones muy distintas.
+
+<br/><br/>
+
+## **Tendencia Media**
+
+<br/>
+
+## **Gráfica de control para medias**
+
+<br/>
+
+```{r}
+Medias <- qcc(data = analisiscurva[3:4], type = "xbar")
+```
+
+<br/><br/>
+
+La carta xbar nos permite monitoreorear la media y la variación de un proceso cuando se tienen datos continuos.
+
+<br/><br/>
+
+```{r}
+Medias$violations
+Medias$limits
+Medias$center
+```
+
+<br/><br/>
+
+```{r}
+summary(Medias)
+```
+
+<br/><br/>
+
+## **Variabilidad**
+
+<br/>
+
+## **Gráfica de control para rangos**
+
+<br/>
+
+```{r}
+Rangos <- qcc(data = analisiscurva[3:4], type = "R")
+```
+
+<br/><br/>
+
+La carta R nos permite identificar el rango, con esta carta se detectarán cambios en la amplitud o magnitud de la variación del proceso.
+
+<br/><br/>
+
+```{r}
+Rangos$violations
+Rangos$limits
+Rangos$center
+```
+
+<br/><br/>
+
+```{r}
+summary(Rangos)
+```
+
+<br/><br/>
+
+## **Gráfica de control para desviaciones**
+
+<br/>
+
+```{r}
+Desviaciones <- qcc(data = analisiscurva[3:4], type = "S")
+```
+
+<br/><br/>
+
+La carta S nos permite monitorear la desviación de un proceso.
+
+<br/><br/>
+
+```{r}
+Desviaciones$violations
+Desviaciones$limits
+Desviaciones$center
+```
+
+<br/><br/>
+
+```{r}
+summary(Desviaciones)
+```
+
+<br/><br/>
+
+Observe que se corroboran los puntos dados en la carta de Rangos.  Sin emabrgo, no olvidar, que se debe tener una estructira específica, y no simplemente variables no comparables.
+
+<br/><br/>

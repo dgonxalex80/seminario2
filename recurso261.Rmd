@@ -1,0 +1,48 @@
+---
+title: "**Carta 1**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+<br/><br/>
+
+```{r}
+library(readxl)
+Carta1 <- read_excel("data/Carta 1.xlsx")
+plot(Carta1)
+summary(Carta1)
+```
+
+```{r}
+library(qcc)
+```
+
+
+```{r}
+Rangos <- qcc(data = Carta1, type = "R")
+```
+
+```{r}
+Medias <- qcc(data = Carta1, type = "xbar")
+```
+```{r}
+xdes<-qcc(data=Carta1, type="S")
+```
+
+
+```{r}
+Individuales<-qcc(Carta1$x1, type="xbar.one",std.dev = "MR")
+summary(Individuales)
+plot(Individuales)
+```
+
+```{r}
+qcc(Carta1$x1, type="xbar.one", std.dev = "SD")
+```

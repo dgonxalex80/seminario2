@@ -1,0 +1,177 @@
+---
+title: "**Capacidad de proceso**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+<br/><br/>
+
+Es la forma de medir qué tanto se ajusta nuestro proceso a las expectativas, y por lo tanto muestra la variabilidad inherente de un proceso en ausencia de cualquier causa especial indeseable, lo que implica que la variabilidad del mismo es debida exclusivamente a causas comunes. La capacidad del proceso se utiliza de acuerdo a la norma ISO vigente y  trata de las bases del management y de la definición de procesos en una organización.
+
+<br/>
+
+La capacidad del proceso puede subdividirse en:
+
+* Medición la variabilidad del proceso.
+* Contrastar la variabilidad medida con una tolerancia o especificación predefinida.
+
+<br/><br/>
+
+## **¿Cómo evaluar la capacidad de un proceso?**
+
+Mientras los procesos no sufran modificaciones o reajustes, para evaluar su capacidad suele recurrirse a algunas de las siete herramientas de la calidad, tales como:
+
+* Histogramas
+* Gráficos de control
+* Planillas de inspección
+
+<br/>
+
+Cuando el proceso se ve modificado, por ejemplo con la implementación de una nueva máquina, o con un reajuste de métodos, debe efectuarse un estudio de índices de capacidad.
+
+<br/><br/>
+
+## **Requisitos para efectuar un estudio de índices de capacidad**
+
+El principal requerimiento para iniciar con un estudio de aptitud del proceso consiste en que éste se encuentre estadísticamente estable. Además se precisa que:
+
+<br/>
+
+* Las mediciones individuales del proceso se comporten siguiendo una distribución normal.
+* Las especificaciones de ingeniería representen con exactitud los requerimientos de los clientes.
+
+<br/><br/>
+
+## **Clasificación de los índices de capacidad**
+
+Los índices de capacidad se pueden clasificar según su posición y alcance temporal en:
+
+<br/>
+
+Respecto a su posición :
+
+* Índices centrados con respecto a los límites
+* Índices descentrados con respecto a los límites
+* Sólo con límite superior
+* Sólo con límite inferior
+
+<br/>
+
+Respecto a su alcance temporal
+
+* A corto plazo: Capacidad potencial
+* A largo plazo: Capacidad global
+
+<br/>
+
+Sí una vez determinadas las capacidades se encuentra una diferencia significativa entre los índices de corto y largo plazo, es un síntoma de inconsistencias en el proceso, y de que éste es susceptible de aplicar mejoras.
+
+<br/><br/>
+
+## **Índices de capacidad a corto plazo** $C_p$ **y** $C_{pk}$
+
+<br/>
+
+### **Índice Cp**
+
+Para considerar que un procedimiento sea de calidad, las mediciones de sus características deben ser iguales a su valor ideal, sin embargo al conocer que la variabilidad es una característica ínsita de todo proceso estas mediciones deben al menos estar dentro de cierta especificación inferior y/o superior. La medida de la capacidad potencial del proceso para cumplir con tales especificaciones de calidad nos la proporciona el índice de capacidad del proceso ($C_p$).
+
+<br/>
+
+Cuando se han identificado desviaciones en el comportamiento estadístico de las mediciones de alguna característica de calidad, la evaluación de la capacidad del proceso inicia después de que en las gráficas de control las causas especiales han sido identificadas, analizadas y corregidas, por ende, las gráficas actuales de control muestran un proceso dentro de control estadístico.
+
+<br/>
+
+El $C_p$ compara el ancho de las especificaciones (tolerancia) con la amplitud de la variación (dispersión natural) del proceso. 
+Sí la variación del proceso es mayor que la amplitud de las especificaciones, entonces el $C_p$ es menor que 1, lo que sería evidencia de que no se está cumpliendo con las especificaciones. 
+
+<br/>
+
+Sí el $C_p$ es mayor que $1$ es una evidencia de que el proceso es potencialmente capaz de cumplir con las especificaciones.
+
+<br/>
+El $C_p$ se utiliza para conocer y tomar decisiones sobre el proceso dependiendo de su valor, es el tipo de proceso y la decisión que debe de tomarse. La siguiente tabla nos muestra la interpretación cualitativa del índice $C_p$.
+
+Suponiendo una característica de calidad cuya variable de respuesta sigue una distribución normal, es posible afirmar que dicha curva representa lo que está ocurriendo, efectivamente, en el proceso, es decir, es la “realidad del proceso”; de otro lado, los límites de especificación definen lo que se considerará una falla y, por en consecuencia, representan la “necesidad del cliente” e indica lo que debería ocurrir.
+
+<br/><br/>
+
+## **Índice de capacidad potencial del proceso** ($C_p$)
+
+<br/>
+
+De entre los más utilizados, el $C_p$ mide la capacidad potencial de un proceso, pues, evalúa si el proceso es potencialmente capaz de cumplir con las especificaciones del cliente o no, y para ello compara la variación tolerada con la variación real:
+
+$$C_p=\frac{Vaciación tolerada}{Varicación real}\\=\frac{USL−LSL}{6\sigma}$$
+
+<br/>
+
+Y en este sentido es posible interpretar que lo deseable es que los procesos tengan un índice $C_p$ mayor a $1$ y, por el contrario, si fuese menor a $1$ , sería evidencia suficiente de que el proceso no será capaz de cumplir con las especificaciones. 
+Además, el analisis de capacidad de proceso nos provee una matriz de índices de capacidad y los límites de confianza correspondientes.
+
+<br/><br/>
+
+```
+| C_p            | Categoría del proceso| Descripción
+                                          del proceso| 
+|----------------|----------------------|------------|
+| C_p > 2        |Word class| Seis sigma             |
+| 1.33 < C_p < 2 | 1 | Adecuado                      |
+| 1 < C_p < 1.33 | 2 | Requiere control estricto     |
+| 0.67 < C_p < 1 | 3 | Requiere modificaciones serias|
+| C_p < 0.67     | 4 | No adecuado                   |  
+```
+<br/><br/>
+
+## **Índice de capacidad real del proceso** ($C_{pk}$)
+
+<br/>
+
+Para evaluar la capacidad de procesos no centrados, se utilizan dos índices complementarios: $C_{p_i}$ y $C_{p_s}$. Estos evalúan al proceso contra cada uno de sus límites, es decir, $C_{p_i}$ mide la capacidad del proceso de cumplir con la especificación inferior mientras que $C_{p_s}$ lo hace con la especificación superior.
+
+<br/>
+
+$$C_{p_i}=\frac{Vaciación tolerada superior}{Varicación real superior}\\
+=\frac{Target−LSL}{3\sigma}$$
+
+<br/>
+
+$$C_{p_s}=\frac{\text{Vaciación tolerada inferior}}{\text{Varicación real inferior}}\\=\frac{USL−Target}{3\sigma}$$
+
+<br/>
+
+Sin embargo, para expresar la capacidad global del proceso, consideramos el caso menos favorable: aquel en el cual la media (Target $\mu$) se encuentra más cerca del límite de especificación. Es decir: el menor valor entre $C_{p_i}$ y $C_{p_s}$. A este valor lo denominamos $C_{pk}$:
+
+<br/>
+
+$$C_{p_k}=\min(C_{p_i},C_{p_u})$$
+<br/>
+
+A fin de apoyar la interpretación del mismo, podemos identificar algunas consideraciones:
+
+* $C_p$ es siempre positivo
+* Si el proceso está centrado $C_{p_k} = C_p$
+* $C_{p_k}$ puede ser positivo, cero o negativo
+* Si $C_{p_k}$ es cero, el $50\%$ del procedimiento está fuera de especificación
+* Si $C_{p_k} es negativo, más del $50\%$ del procedimiento está fuera de especificación
+
+<br/><br/>
+
+## **¿Qué es Seis Sigma?**
+
+<br/>
+
+Si nos adentramos un poco más en la medición de capacidad de los procesos, podremos observar que estos tienen fluctuaciones según el marco temporal en que lo midamos. Hay estudios que indican que, en el largo plazo, la media del proceso suele desplazarse hasta $1.5\sigma$ respecto a la medida turno a turno o día a día.
+
+<br/>
+
+En términos generales, Seis Sigma dejó de ser una medida netamente estadística y se convirtió en el nombre propio de la estrategia para mejorar la calidad de los procesos, mediante la identificación y eliminación de los defectos, así como la minimización de la variabilidad en las salidas del proceso.
+
+<br/><br/>

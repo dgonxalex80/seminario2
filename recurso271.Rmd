@@ -1,0 +1,51 @@
+---
+title: "**Ejemplo 2**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+<br/><br/>
+
+```{r}
+library(readxl)
+Ejemplo <- read_excel("data/Ejemplo2.xlsx")
+summary(Ejemplo)
+plot(Ejemplo)
+```
+
+<br/><br/>
+
+```{r}
+library(qcc)
+```
+
+<br/><br/>
+
+
+```{r}
+Rangos <- qcc(data = Ejemplo, type = "R")
+```
+
+<br/><br/>
+
+```{r}
+Desviaciones<-qcc(data=Ejemplo, type="S")
+```
+
+<br/><br/>
+
+```{r}
+Medias <- qcc(data = Ejemplo, type = "xbar",confidence.level=0.99)
+```
+
+<br/><br/><br/><br/>
+
+
+
