@@ -109,7 +109,8 @@ Suponiendo una característica de calidad cuya variable de respuesta sigue una d
 
 De entre los más utilizados, el $C_p$ mide la capacidad potencial de un proceso, pues, evalúa si el proceso es potencialmente capaz de cumplir con las especificaciones del cliente o no, y para ello compara la variación tolerada con la variación real:
 
-$$C_p=\frac{Vaciación tolerada}{Varicación real}\\=\frac{USL−LSL}{6\sigma}$$
+$$C_p=\frac{\text{Vaciación tolerada}}{\text{Varicación real}}\\ 
+=\frac{USL−LSL}{6\sigma}$$
 
 <br/>
 

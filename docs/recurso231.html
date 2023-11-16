@@ -454,7 +454,7 @@ dbinom(1,n,p)# Función de masa</code></pre>
 <pre class="r"><code>qbinom(0.5,n,p) # Cuantiles</code></pre>
 <pre><code>[1] 5</code></pre>
 <pre class="r"><code>rbinom(10,n,p) #Números aleatorios</code></pre>
-<pre><code> [1] 4 7 5 4 6 6 6 6 8 7</code></pre>
+<pre><code> [1] 6 5 7 7 4 4 5 6 5 7</code></pre>
 <p><br/><br/></p>
 <pre class="r"><code>par(mfrow=c(2,2))
 plot(1:10,dbinom(1:10,n,p),pch=19,panel.first=grid(),main=&quot;Distribución binomial con p=0.5&quot;)
@@ -586,8 +586,8 @@ dnorm(1,mu,sigma)# Función de densidad</code></pre>
 <pre class="r"><code>qnorm(0.5,mu,sigma) # Cuantiles</code></pre>
 <pre><code>[1] 10</code></pre>
 <pre class="r"><code>rnorm(10,mu,sigma) #Números aleatorios</code></pre>
-<pre><code> [1] 10.304658 10.468928 10.139588 10.302896 10.027847 10.290429  9.485101
- [8]  9.418410  9.375392  9.798256</code></pre>
+<pre><code> [1]  9.676763  9.670944 10.565769 10.449762 10.005021  9.952201  9.792522
+ [8]  9.619278 10.210888  9.734903</code></pre>
 <p><br/><br/></p>
 <pre class="r"><code># Gráfico función de densidad con diferente media
 curve(dnorm(x,mu,sigma),xlim=c(0,20),ylab=&quot;Density&quot;)
