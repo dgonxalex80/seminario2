@@ -277,13 +277,16 @@ $(document).ready(function () {
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="recurso000.html">Conceptos básicos indicadores estadísticos</a>
+      <a href="recurso211.html">Conceptos básicos indicadores estadísticos</a>
     </li>
     <li>
-      <a href="recurso000.html">Modelos de probabilidad</a>
+      <a href="recurso221.html">Conceptos básicos - ejemplos</a>
     </li>
     <li>
-      <a href="recurso000.html">Introducción al control de calidad</a>
+      <a href="recurso231.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso241.html">Cartas de control</a>
     </li>
     <li>
       <a href="recurso000.html">Análisis de ensayos</a>
@@ -605,8 +608,13 @@ class="math display">\[Ha: \text{alguna de las medias es
 diferente}\]</span></p>
 <pre class="r"><code># Cargar los paquetes necesarios
 library(stats)
-library(agricolae)
-library(TukeyC)
+library(agricolae)</code></pre>
+<pre><code>
+Attaching package: &#39;agricolae&#39;</code></pre>
+<pre><code>The following objects are masked from &#39;package:moments&#39;:
+
+    kurtosis, skewness</code></pre>
+<pre class="r"><code>library(TukeyC)
 
 grupo1 &lt;- c(0.08, 0.12, 0.10, 0.14, 0.09, 0.11, 0.13, 0.15, 0.10, 0.09, 0.11, 0.12, 0.13, 0.14, 0.08, 0.12, 0.10, 0.15, 0.11, 0.13)
 grupo2 &lt;- c(0.05, 0.03, 0.04, 0.06, 0.03, 0.05, 0.04, 0.06, 0.04, 0.05, 0.03, 0.04, 0.05, 0.06, 0.04, 0.03, 0.05, 0.06, 0.04, 0.03)

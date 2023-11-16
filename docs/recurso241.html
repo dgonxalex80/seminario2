@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Cartas de control</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso111.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso211.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso221.html">Conceptos básicos - ejemplos</a>
+    </li>
+    <li>
+      <a href="recurso231.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso241.html">Cartas de control</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Cartas de control</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/></p>
+<div id="conceptos-previos" class="section level2">
+<h2><strong>Conceptos previos</strong></h2>
+<p style = 'text-align:center;'>
+<img src="img/datos.png" />
+<p>
+</div>
+<div id="límites-de-control" class="section level2">
+<h2><strong>Límites de control</strong></h2>
+<p>La ubicación de los límites de control en una carta es crucial, ya
+que influye en la capacidad de detectar cambios en un proceso. Si los
+límites están muy alejados de la línea central, se dificulta la
+detección de cambios, mientras que si están demasiado estrechos, se
+aumenta la probabilidad de cometer errores tipo 1 (declarar un cambio
+cuando no lo hay).</p>
+<p><br/></p>
+<p>Para calcular los límites de control, se busca que el estadístico
+graficado en la carta tenga una alta probabilidad de caer dentro de
+estos límites bajo condiciones de control estadístico.</p>
+<p>Se pueden utilizar límites de probabilidad, donde se determinan los
+límites de manera que un alto porcentaje de la distribución de
+probabilidad del estadístico esté dentro de ellos.</p>
+<p><br/></p>
+<p>Una forma simple es basarse en la relación entre la media (<span
+class="math inline">\(\mu\)</span>) y la desviación estándar (<span
+class="math inline">\(\sigma\)</span>) de una variable. En condiciones
+de control estadístico, se establece que entre <span
+class="math inline">\(\mu-3\sigma\)</span> y <span
+class="math inline">\(\mu+3\sigma\)</span> se encuentran el <span
+class="math inline">\(99.73\%\)</span> de los posibles valores de la
+variable, lo que permite detectar desviaciones significativas del
+proceso.</p>
+<p><br/><br/></p>
+<p>Si la distribución de la variable no es normal pero es unimodal y se
+asemeja a la normal, se pueden aplicar reglas empíricas o el teorema de
+Chebyshev. Los límites de control inferior (LCI), la línea central y el
+límite de control superior (LCS) se calculan de acuerdo con esta
+relación:</p>
+<p><span class="math display">\[LCI=\mu_w - 3\sigma_w\]</span></p>
+<p><span class="math display">\[Línea\; Central = \mu_w\]</span></p>
+<p><span class="math display">\[LCS = \mu_w + 3\sigma_w\]</span></p>
+<p>donde <span class="math inline">\(w\)</span> es el estadístico que se
+va a graficar en la carta superior.</p>
+<p>Estos límites se utilizan para determinar si los valores del
+estadístico <span class="math inline">\(w\)</span> están dentro de ellos
+bajo condiciones de control estadístico. Si <span
+class="math inline">\(w\)</span> sigue una distribución normal, se
+espera que solo el <span class="math inline">\(0.27\%\)</span> de los
+puntos caigan fuera de los límites, lo que significa que la mayoría de
+las observaciones deben estar dentro de los límites. Estos tipos de
+cartas de control, conocidos como cartas de <strong>control tipo
+Shewhart</strong>.</p>
+<p><br/><br/></p>
+</div>
+<div id="tipos-de-cartas-de-control" class="section level2">
+<h2><strong>Tipos de cartas de control</strong></h2>
+<p><br/></p>
+<p>Las <strong>cartas de control para variables</strong> se aplican a
+características de calidad que son de tipo continuo y requieren una
+medición con un instrumento. Los tipos más comunes de cartas de control
+para variables tipo Shewhart incluyen cartas a - <span
+class="math inline">\(\bar{X}\)</span> (para medias) - <span
+class="math inline">\(R\)</span> (para rangos), cartas a - <span
+class="math inline">\(S\)</span> (para desviaciones estándar) - <span
+class="math inline">\(X\)</span> (para medidas individuales).</p>
+<p>Estos corresponden al estadístico que se representa en la carta y se
+utilizan para analizar características importantes en productos o
+procesos.</p>
+<p><br/></p>
+<p>Por otro lado, existen características de calidad que no se evalúan
+en una escala continua o numérica, sino que se determinan por la
+presencia o ausencia de ciertos atributos (como conformidad o no
+conformidad) o se cuentan el número de defectos o no conformidades.</p>
+<p>Estas características se monitorean a través de las <strong>cartas de
+control para atributos</strong>. Los tipos comunes de cartas de control
+para atributos incluyen cartas a</p>
+<ul>
+<li><span class="math inline">\(p\)</span> (para proporción o fracción
+de artículos defectuosos)</li>
+<li><span class="math inline">\(np\)</span> (para el número de unidades
+defectuosas)</li>
+<li><span class="math inline">\(c\)</span> (para el número de
+defectos)</li>
+<li><span class="math inline">\(u\)</span> (para el número promedio de
+defectos por unidad).</li>
+</ul>
+<p><br/><br/></p>
+<div id="carta-de-control-barx-r" class="section level3">
+<h3><strong>Carta de control</strong> <span
+class="math inline">\(\bar{X}-R\)</span></h3>
+<p>Existen procesos que son “masivos”, es decir, que producen una gran
+cantidad de artículos, partes o componentes en un corto período de
+tiempo. Estos procesos pueden realizar desde miles hasta decenas o
+centenas de operaciones por día.</p>
+<p>En el contexto de procesos masivos donde las variables de salida son
+de tipo continuo, las cartas de control <span
+class="math inline">\(\bar{X}-R\)</span> son ideales.</p>
+<p><strong>Idea:</strong> A medida que los productos salen del proceso,
+se toma un pequeño número de ellos en intervalos regulares o por lotes
+(subgrupos), y se realiza una medición de una o más características de
+calidad en cada subgrupo. Con estas mediciones, se calcula la media y el
+rango del subgrupo. A lo largo del tiempo, se obtiene una media y un
+rango muestral que proporcionan información sobre la tendencia central y
+la variabilidad del proceso, respectivamente. <br/></p>
+<ul>
+<li>La carta <span class="math inline">\(\bar{X}\)</span> se utiliza
+para analizar la variación entre las medias de los subgrupos, lo que
+permite detectar cambios en la media del proceso.</li>
+<li>La carta <span class="math inline">\(R\)</span>, por otro lado, se
+utiliza para analizar la variación entre los rangos de los subgrupos, lo
+que permite detectar alteraciones en la amplitud o magnitud de la
+variación del proceso.</li>
+</ul>
+<p><br/><br/></p>
+<div class="float">
+<img src="img/figura1.png" alt="Figura 1:Cartas de control \bar{X}-R" />
+<div class="figcaption"><strong>Figura 1:</strong>Cartas de control
+<span class="math inline">\(\bar{X}-R\)</span></div>
+</div>
+<p><br/><br/></p>
+</div>
+<div id="límites-de-control-de-la-carta-barx" class="section level3">
+<h3><strong>Límites de control de la carta</strong> <span
+class="math inline">\(\bar{X}\)</span></h3>
+<p>En el caso de la carta de medias el estadístico <span
+class="math inline">\(w\)</span> es la media de los subgrupos, <span
+class="math inline">\(\bar{X}\)</span>, por lo que los límites están
+dados por:</p>
+<p><span class="math display">\[\mu_{\bar{X}} \pm
+3\sigma_{\bar{X}}\]</span></p>
+<p>donde <span class="math inline">\(\mu_{\bar{x}}\)</span> significa la
+media de las medias, y <span
+class="math inline">\(\sigma_{\bar{X}}\)</span> la desviación estándar
+de las medias, que en un estudio inicial se estiman de la siguiente
+manera: <span class="math display">\[\mu_{\bar{x}} = \bar{x} \text{ y  }
+\sigma_{\bar{X}} = \frac{\sigma}{\sqrt{n}}\]</span></p>
+<p>donde <span class="math inline">\(\bar{X}\)</span> es la media de las
+medias de los subgrupos, <span class="math inline">\(\sigma\)</span> la
+desviación estándar del proceso, que indica qué tan variables son las
+mediciones individuales, y <span class="math inline">\(n\)</span> es el
+tamaño de subgrupo.</p>
+<p>Cuando se conoce la media <span class="math inline">\(\mu\)</span> y
+la desviación estandar del proceso <span
+class="math inline">\(\sigma\)</span>, los límites estan dados por:</p>
+<p><span class="math inline">\(LCS = \mu +
+3\frac{\sigma}{\sqrt{n}}\)</span></p>
+<p>Línea central = <span class="math inline">\(\mu\)</span></p>
+<p><span class="math inline">\(LCS = \mu +
+3\frac{\sigma}{\sqrt{n}}\)</span></p>
+<p><br/><br/></p>
+</div>
+<div id="interpretación-de-los-límites-de-control-en-una-carta-barx"
+class="section level3">
+<h3><strong>Interpretación de los límites de control en una
+carta</strong> <span class="math inline">\(\bar{X}\)</span></h3>
+<p>Estos límites reflejan la variación esperada para las medias
+muestrales de tamaño <span class="math inline">\(n\)</span>, mientras el
+proceso no tenga cambios importantes. Los límites se utilizan para
+detectar cambios en la media del proceso y para evaluar su
+estabilidad.</p>
+<p>Los límites de control en una carta de medias tampoco son igual a los
+límites reales o naturales del proceso, ya que reflejan la variación
+esperada para las mediciones individuales y no para la media de <span
+class="math inline">\(n\)</span>.</p>
+<p>La interpretación correcta de los límites de control es de especial
+relevancia para una adecuada aplicación de la carta <span
+class="math inline">\(\bar{X}\)</span>, ya que de lo contrario se caerá
+en el error de confundir los límites de control con las especificaciones
+o con los límites reales. Estos errores generalmente traen como
+consecuencia que se trate de utilizar la carta para evaluar capacidad,
+cuando se debe usar para analizar estabilidad y detectar cambios en la
+media del proceso de manera oportuna.</p>
+<p>Por último, aunque los límites de control de una carta <span
+class="math inline">\(\bar{X}\)</span> se deducen a partir del supuesto
+de normalidad, si la característica de calidad tiene desviaciones
+moderadas de la normalidad, la carta <span
+class="math inline">\(\bar{X}\)</span> se puede seguir aplicando, esto
+debido al teorema central del límite.</p>
+<p><br/><br/><br/></p>
+</div>
+</div>
+<div id="carta-de-control-r" class="section level2">
+<h2><strong>Carta de control</strong> <span
+class="math inline">\(R\)</span></h2>
+<p>Con la <strong>carta</strong> <span class="math inline">\(R\)</span>
+se detectan cambios en la amplitud o magnitud de la variación del
+proceso, como se ilustra en la Figura 1.</p>
+<p><br/><br/></p>
+<div id="límites-de-control-de-la-carta-r" class="section level3">
+<h3><strong>Límites de control de la carta</strong> <span
+class="math inline">\(R\)</span></h3>
+<p>Se determinan a partir de la media y la desviación estándar de los
+rangos de los subgrupos, ya que en este caso es el estadístico <span
+class="math inline">\(w\)</span> que se grafica. Por ello, los límites
+se obtienen con la expresión:</p>
+<p><span class="math display">\[\mu_R = \pm 3\sigma_R\]</span></p>
+<p>donde <span class="math inline">\(\mu_R\)</span> significa la media
+de los rangos, y <span class="math inline">\(\sigma_R\)</span> la
+desviación estándar de los rangos, que se estiman de la siguiente
+manera:</p>
+<p><span class="math display">\[\mu_R= \bar{R} \text{ y }\sigma_R =
+d_3\sigma \approx \left(d_3\frac{\bar{R}}{d_2}\right)\]</span> donde
+<span class="math inline">\(\bar{R}\)</span> es la media de los rangos
+de los subgrupos, <span class="math inline">\(s\)</span> la desviación
+estándar del proceso, <span class="math inline">\(d_3\)</span> es una
+constante que depende del tamaño del subgrupo. Como por lo general no se
+conoce <span class="math inline">\(\sigma\)</span>, que se estima como
+<span class="math inline">\(\bar{R}/d_2\)</span>. Los límites de la
+carta <span class="math inline">\(R\)</span> se estiman de la siguiente
+manera:</p>
+<p><span class="math display">\[LCI = \bar{R} -
+3d_3\left(\frac{\bar{R}}{d_2}\right) =
+\left(1-3\frac{d_3}{d_2}\right)\bar{R} = D_3\bar{R}\]</span> Línea
+central = <span class="math inline">\(\bar{R}\)</span></p>
+<p><span class="math display">\[LCI = \bar{R} +
+3d_3\left(\frac{\bar{R}}{d_2}\right) =
+\left(1+3\frac{d_3}{d_2}\right)\bar{R} = D_4\bar{R}\]</span></p>
+<p>donde <span class="math inline">\(D_3\)</span> y <span
+class="math inline">\(D_4\)</span> se usan para simplificar los
+cálculos.</p>
+<p><br/><br/></p>
+</div>
+<div id="interpretación-de-los-límites-de-control"
+class="section level3">
+<h3><strong>Interpretación de los límites de control</strong></h3>
+<p>Los límites en una carta <span class="math inline">\(R\)</span>
+indican la variación esperada para los rangos muestrales de tamaño <span
+class="math inline">\(n\)</span>, mientras el proceso no tenga un cambio
+significativo. Estos límites se utilizan para detectar cambios en la
+amplitud o magnitud de la variación del proceso y para ver qué tan
+estable permanece a lo largo del tiempo, pero por ningún motivo se deben
+emplear para evaluar la capacidad.</p>
+<p><br/><br/></p>
+</div>
+<div id="estado-del-proceso-en-cuanto-a-capacidad-y-estabilidad"
+class="section level3">
+<h3><strong>Estado del proceso en cuanto a capacidad y
+estabilidad</strong></h3>
+<p>En la interpretación de los límites de la carta <span
+class="math inline">\(\bar{X}\)</span>, sus límites de control no son
+equivalentes a las especificaciones o tolerancia de la característica de
+calidad. Por ello, dos asuntos diferentes de un proceso son su
+estabilidad, que se evalúa con las cartas de control, y su capacidad
+para cumplir especificaciones, que se evalúa con los índices de
+capacidad.</p>
+<p><br/><br/></p>
+</div>
+<div id="límites-de-control-de-la-carta-barx--r-y-su-revisión-futura"
+class="section level3">
+<h3><strong>Límites de control de la carta</strong> <span
+class="math inline">\(\bar{X}- R\)</span> <strong>y su revisión
+futura</strong></h3>
+<p>Se debe realizar un estudio inicial durante un período
+suficientemente representativo, dependiendo de la velocidad del proceso
+y el tipo de carta de control. Este período debe ser lo bastante largo
+para captar los cambios cotidianos en el proceso.</p>
+<p>Una vez que se recopilan los datos, se calculan los límites
+preliminares para la carta de medias y la carta de rangos utilizando
+fórmulas específicas. Si los datos indican que el proceso está bajo
+control estadístico tanto en términos de variabilidad como de tendencia
+central, se utilizan estos límites para monitorear el proceso en tiempo
+real.</p>
+<p>Si en el estudio inicial se observan pocos puntos fuera de los
+límites de control, se investiga la causa de estos puntos y, si se
+identifica, se excluyen los datos correspondientes antes de recalcular
+los límites. Si no se encuentra una causa clara, es recomendable
+conservar los datos y trabajar con los límites iniciales.</p>
+<p>En casos donde muchos puntos se salen de los límites en el estudio
+inicial, excluirlos puede no ser apropiado ni práctico. En su lugar, se
+analiza el patrón formado por estos puntos en la carta para mejorar el
+proceso y lograr una mayor estabilidad.</p>
+<p>Una vez que se establecen límites de control definitivos, solo se
+cambian si el proceso experimenta cambios significativos, como una
+reducción significativa de la variabilidad o una mejora en la tendencia
+central. En algunos casos, se revisan periódicamente los límites, pero
+esto debe hacerse con precaución, ya que intervalos muy cortos pueden no
+detectar ciertos cambios o tendencias en el proceso.</p>
+<p><br/><br/></p>
+</div>
+<div
+id="interpretación-de-las-cartas-de-control-y-las-causas-de-inestabilidad"
+class="section level3">
+<h3><strong>Interpretación de las cartas de control y las causas de
+inestabilidad</strong></h3>
+<p>Una señal de la presencia de causas especiales ocurre cuando un punto
+se encuentra fuera de los límites de control o cuando los puntos
+muestran un patrón no aleatorio en la carta. Para facilitar la
+identificación de estos patrones, la carta se divide en seis zonas o
+bandas iguales, cada una con una amplitud similar a una desviación
+estándar del estadístico <span class="math inline">\(w\)</span>.</p>
+<p>Los patrones ayudan a determinar cuándo un proceso es inestable y qué
+tipo de causas están contribuyendo a esa inestabilidad. Un proceso muy
+inestable suele estar mal estandarizado y puede experimentar cambios
+continuos o una alta variación.</p>
+<p>Para identificar estos patrones no aleatorios, se utilizan pruebas
+estadísticas que se basan en supuestos de normalidad e independencia
+entre y dentro de los subgrupos de datos. Si estos supuestos no se
+cumplen, las pruebas deben interpretarse con precaución.</p>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="patrón-1." class="section level2">
+<h2><strong>Patrón 1.</strong></h2>
+<div id="desplazamiento-o-cambios-en-el-nivel-de-proceso"
+class="section level3">
+<h3><strong>Desplazamiento o cambios en el nivel de
+proceso</strong></h3>
+<p>Este patrón ocurre cuando uno o más puntos se salen de los límites de
+control o cuando hay una tendencia larga y clara a que los puntos
+consecutivos caigan de un solo lado de la línea central como lo muestra
+la Figura 2.</p>
+<div class="float">
+<img src="img/figura2.png"
+alt="Figura 2: Zonas de una carta de control y dos patrones no aleatorios que indican cuando algo especial está ocurriendo en el proceso." />
+<div class="figcaption"><strong>Figura 2:</strong> Zonas de una carta de
+control y dos patrones no aleatorios que indican cuando algo especial
+está ocurriendo en el proceso.</div>
+</div>
+<p><br/><br/></p>
+<p>Estos cambios especiales pueden ser por:</p>
+<ul>
+<li>La introducción de nuevos trabajadores, máquinas, materiales o
+métodos.</li>
+<li>Cambios en los métodos de inspección.</li>
+<li>Una mayor o menor atención de los trabajadores. - Un proceso mejor
+(o peor).</li>
+</ul>
+<p>Cuando este patrón ocurre en las cartas <span
+class="math inline">\(\bar{X}, p, np, u\)</span> o <span
+class="math inline">\(c\)</span>, se dice que hubo un cambio en el nivel
+promedio del proceso. En la carta <span class="math inline">\(R\)</span>
+un cambio de nivel significa que la variabilidad aumentó o disminuyó,
+aunque por la falta de simetría de la distribución de <span
+class="math inline">\(R\)</span>, el patrón del lado inferior de estas
+cartas se debe ver con más reservas y esperar a acumular más puntos por
+abajo de la línea central para declarar que hay un cambio significativo
+(disminución de la variabilidad).</p>
+<p>Los criterios usuales para ver si este patrón se ha presentado
+son:</p>
+<ul>
+<li>Un punto fuera de los límites de control.</li>
+<li>Una tendencia clara y larga a que los puntos consecutivos caigan de
+un solo lado de la línea central (ver Figura 2b). Tres pruebas concretas
+para este patrón son: ocho o más puntos consecutivos de un solo lado de
+la línea central; al menos 10 de 11 puntos consecutivos caen de un mismo
+lado de la línea central; y por lo menos 12 de 14 puntos consecutivos
+ocurren por un mismo lado de la línea central.</li>
+</ul>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="patrón-2." class="section level2">
+<h2><strong>Patrón 2.</strong></h2>
+<div id="tendencias-en-el-nivel-del-proceso" class="section level3">
+<h3><strong>Tendencias en el nivel del proceso</strong></h3>
+<p>Este patrón consiste en una tendencia a incrementarse (o disminuirse)
+los valores de los puntos en la carta, como se aprecia en la Figura 2c).
+Una tendencia ascendente o descendente bien definida y larga se puede
+deber a algunas de lo siguientes:</p>
+<ul>
+<li>El deterioro o desajuste gradual del equipo de producción.</li>
+<li>Desgaste de las herramientas de corte.</li>
+<li>Acumulación de productos de desperdicio en las tuberías.</li>
+<li>Calentamiento de máquinas.</li>
+<li>Cambios graduales en las condiciones del medio ambiente.</li>
+</ul>
+<p>Estas causas se reflejan prácticamente en todas las cartas excepto en
+la <span class="math inline">\(R\)</span>, cuyas tendencias son raras,
+pero cuando se dan, puede deberse a la mejora o decrecimiento de la
+habilidad de un operario, a su fatiga (la tendencia se repetirá en cada
+turno) o al cambio gradual en la homogeneidad de la materia prima. Para
+determinar si existe una tendencia en el proceso, se siguen estos
+criterios:</p>
+<ul>
+<li>Seis o más puntos consecutivos ascendentes (o descendentes).</li>
+<li>Un movimiento de muchos puntos hacia arriba (o hacia abajo) de la
+carta de control, aunque no todos los puntos vayan en ascenso (o
+descenso). En la Figura 2c) se muestra una tendencia creciente de los
+puntos, que es demasiado larga para considerarse que es ocasionada por
+variaciones aleatorias, por lo que más bien es señal de que algo
+especial (desplazamiento) está ocurriendo en el proceso correspondiente.
+En ocasiones pueden presentarse aparentes tendencias causadas por
+variaciones naturales y del muestreo del proceso, por eso la tendencia
+debe ser larga para considerarla especial. Cuando se presente una
+tendencia y se dude si es especial, hay que estar alerta para ver si
+efectivamente está ocurriendo algo inusual en el proceso.</li>
+</ul>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="patrón-3." class="section level2">
+<h2><strong>Patrón 3.</strong></h2>
+<div id="ciclos-recurrrentes-periodicidad" class="section level3">
+<h3><strong>Ciclos recurrrentes (periodicidad)</strong></h3>
+<div class="float">
+<img src="img/figura3.png"
+alt="Figura 3: Otros patrones no aleatorios." />
+<div class="figcaption"><strong>Figura 3:</strong> Otros patrones no
+aleatorios.</div>
+</div>
+<p>Otro movimiento no aleatorio que pueden presentar los puntos en las
+cartas es un <strong>comportamiento cíclico de los puntos</strong>, como
+se muestra en Figura 3. Cuando un comportamiento cíclico se presenta en
+a carta <span class="math inline">\(\bar{X}\)</span>, las posibles
+causas son:</p>
+<ul>
+<li>Cambios periódicos en el ambiente.</li>
+<li>Diferencias en los dispositivos de medición o de prueba que se
+utilizan en cierto orden.</li>
+<li>Rotación regular de máquinas u operarios.</li>
+<li>Efecto sistemático producido por dos máquinas, operarios o
+materiales que se usan alternadamente.</li>
+</ul>
+<p>Si el comportamiento cíclico se presenta en la carta <span
+class="math inline">\(R\)</span>, entonces algunas de las posibles
+causas son mantenimiento preventivo programado o fatiga de trabajadores
+o secretarias. Las cartas <span class="math inline">\(p, np, c\)</span>
+y <span class="math inline">\(u\)</span> se ven afectadas por las mismas
+causas que las cartas de medias y rangos.</p>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="patrón-4." class="section level2">
+<h2><strong>Patrón 4.</strong></h2>
+<div id="mucha-variabilidad" class="section level3">
+<h3><strong>Mucha variabilidad</strong></h3>
+<p>Se manifiesta mediante la alta proporción de puntos cerca de los
+límites de control, a ambos lados de la línea central, y pocos o ningún
+punto en la parte central de la carta. En estos casos se dice que hay
+mucha variabilidad (ver en la Figura 3b). Algunas causas que pueden
+afectar a la carta de esta manera son:</p>
+<ul>
+<li>Sobrecontrol o ajustes innecesarios en el proceso.</li>
+<li>Diferencias sistemáticas en la calidad del material o en los métodos
+de prueba.</li>
+<li>Control de dos o más procesos en la misma carta con diferentes
+promedios.</li>
+</ul>
+<p>Las cartas <span class="math inline">\(R\)</span>, se pueden ver
+afectadas por la mezcla de materiales de calidades bastante diferentes,
+diversos trabajadores utilizando la misma carta <span
+class="math inline">\(R\)</span> y datos de procesos operando bajo
+distintas condiciones graficados en la misma carta. Los criterios para
+detectar la alta proporción de puntos cerca o fuera de los límites son
+Ocho puntos consecutivos a ambos lados de la línea central con ninguno
+en la zona C (una imagen similar a la mostrada en la Figura 3b).</p>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="patrón-5." class="section level2">
+<h2><strong>Patrón 5.</strong></h2>
+</div>
+<div id="falta-de-variabilidad-estratificación" class="section level2">
+<h2><strong>Falta de variabilidad (estratificación)</strong></h2>
+<p>Cuando la mayoría de los puntos en una carta de control se agrupan en
+la parte central, indicando poca variabilidad o estatificación en los
+datos. Esto puede deberse a varias causas, como errores en el cálculo de
+los límites de control, combinación de datos con medias muy diferentes
+en una misma muestra, inconsistencias en la recopilación de resultados o
+el uso de una carta de control inadecuada para el estadístico en
+cuestión.</p>
+<p>Para detectar la falta de variabilidad en un proceso, se establecen
+criterios, como la presencia de quince puntos consecutivos en la zona
+central de la carta o un patrón similar de agrupamiento de puntos.</p>
+<p>Cuando se observa cualquiera de estos patrones en una carta de
+control, indica que el proceso está experimentando una situación
+especial, es decir, está fuera de control estadístico. Esto no significa
+necesariamente que la producción deba detenerse, pero sí que el proceso
+está sujeto a variaciones debido a causas específicas, como materiales
+heterogéneos, cambios de operadores o diferencias entre máquinas. En
+estos casos, es fundamental investigar y comprender las causas
+subyacentes para tomar medidas correctivas y preventivas.</p>
+<p><br/><br/></p>
+<div id="ejemplo-control-de-la-temperatura-de-un-proceso"
+class="section level3">
+<h3><strong>Ejemplo Control de la temperatura de un
+proceso</strong></h3>
+<p>En una empresa se hacen impresiones en láminas de acero, que
+posteriormente se convierten en recipientes de productos de otras
+empresas. Un aspecto importante a vigilar en dicha impresión es la
+temperatura de “horneada” que, entre otras cosas, adhiere y seca la
+pintura una vez que se imprimió. En una fase particular de la horneada
+se tiene que la temperatura de cierto horno debe ser 125°C, con una
+tolerancia de 65°C. Si no se cumple con tal rango de temperatura,
+entonces se presentan problemas en la calidad final de la impresión.</p>
+<p>Para controlar de manera adecuada tal característica de proceso se
+usa una carta de control, y evidentemente aquí no tiene sentido tomar
+una muestra de tamaño cuatro, ya que si se miden las temperaturas del
+horno de manera consecutiva, entonces estas serán prácticamente las
+mismas; y si las mediciones no se hacen de manera consecutiva y se
+hacen, por ejemplo, cada hora, entonces habrá que esperar cuatro horas
+para graficar un punto en la carta de control y así analizar el proceso.
+De este modo resulta más práctico hacer, periódicamente, una medición de
+la temperatura en el horno, y en cuanto se obtiene el dato graficarlo en
+la carta. Es decir, resulta más práctico llevar una carta de control
+para individuales.</p>
+<p><br/><br/></p>
+<p><strong>Tabla 1:</strong> Datos Control de la temperatura de un
+proceso</p>
+<table>
+<colgroup>
+<col width="15%" />
+<col width="18%" />
+<col width="15%" />
+<col width="15%" />
+<col width="18%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Muestra</th>
+<th>Temperatura en el horno</th>
+<th>Rango móvil</th>
+<th>Muestra</th>
+<th>Temperatura en el horno</th>
+<th>Rango móvil</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td>125.1</td>
+<td>13</td>
+<td>13</td>
+<td>126.4</td>
+<td>1.6</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td>127.5</td>
+<td>2.4</td>
+<td>14</td>
+<td>128.3</td>
+<td>1.9</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td>122.7</td>
+<td>4.8</td>
+<td>15</td>
+<td>129.5</td>
+<td>1.2</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td>126.4</td>
+<td>3.7</td>
+<td>16</td>
+<td>128.1</td>
+<td>1.4</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td>125.5</td>
+<td>0.9</td>
+<td>17</td>
+<td>125.1</td>
+<td>3.0</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td>130.5</td>
+<td>5.0</td>
+<td>18</td>
+<td>128.5</td>
+<td>3.4</td>
+</tr>
+<tr class="odd">
+<td>7</td>
+<td>127.3</td>
+<td>3.2</td>
+<td>19</td>
+<td>125.0</td>
+<td>3.5</td>
+</tr>
+<tr class="even">
+<td>8</td>
+<td>127.5</td>
+<td>0.2</td>
+<td>20</td>
+<td>126.3</td>
+<td>1.3</td>
+</tr>
+<tr class="odd">
+<td>9</td>
+<td>127.3</td>
+<td>0.2</td>
+<td>21</td>
+<td>126.5</td>
+<td>0.2</td>
+</tr>
+<tr class="even">
+<td>10</td>
+<td>123.0</td>
+<td>4.3</td>
+<td>22</td>
+<td>127.9</td>
+<td>1.4</td>
+</tr>
+<tr class="odd">
+<td>11</td>
+<td>123.5</td>
+<td>0.5</td>
+<td>23</td>
+<td>129.5</td>
+<td>1.6</td>
+</tr>
+<tr class="even">
+<td>12</td>
+<td>128.0</td>
+<td>4.5</td>
+<td>24</td>
+<td>131.9</td>
+<td>2.4</td>
+</tr>
+<tr class="odd">
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><span class="math inline">\(\bar{X} = 126.97\)</span></td>
+<td><span class="math inline">\(\bar{R} = 2.287\)</span></td>
+</tr>
+</tbody>
+</table>
+<p><br/><br/></p>
+<p>En la Tabla 1 se muestran las temperaturas obtenidas en tres días,
+midiendo la temperatura en el horno cada hora.</p>
+<p>La segunda columna en dicha tabla representa los rangos entre
+temperaturas consecutivas.</p>
+<p>Los límites de control para la carta de individuales son los
+siguientes:</p>
+<p><span class="math inline">\(LCS\)</span> = 126.97 + (3x2.287/1.128) =
+133.05</p>
+<p>Línea central = 126.97</p>
+<p><span class="math inline">\(LCI\)</span> = 126.97 - (3x2.287/1.128) =
+120.97</p>
+<p>La carta de control obtenida se muestra en la Figura 4, en la cual,
+no hay puntos fuera de los límites de control.</p>
+<p>Sin embargo, en las últimas mediciones de temperatura aparece una
+tendencia, ya que hay seis puntos consecutivos de manera ascendente. De
+esta forma, alguna causa especial provocó una tendencia a que la
+temperatura se incrementara en el último día, por lo que se debe actuar
+de inmediato para identificarla, lo cual permite prevenir problemas más
+graves en la impresión de las láminas de acero.</p>
+<p><br/></p>
+<p>Los responsables del proceso identificaron tal tendencia como una
+señal de que ya era necesario el mantenimiento periódico que se le da al
+horno. También en la misma carta se aprecia que el proceso estuvo
+ligeramente descentrado, ya que la temperatura promedio fue de 126.97°C,
+y no de 125° como se desea; esto también pudo ser causa de la necesidad
+de mantenimiento. La decisión que se tomó fue dar mantenimiento al horno
+y volver a tomar datos para establecer los nuevos límites de
+control.</p>
+<p><br/><br/></p>
+<div class="float">
+<img src="img/figura4.png"
+alt="Figura 4: Carta de individuales para la temperatura en el horno." />
+<div class="figcaption"><strong>Figura 4:</strong> Carta de individuales
+para la temperatura en el horno.</div>
+</div>
+<p><br/><br/></p>
+</div>
+<div id="carta-de-individuales" class="section level3">
+<h3><strong>Carta de individuales</strong></h3>
+<p>Se aplica a procesos lentos en los cuales para obtener una medición
+de la variable bajo análisis se requieren periodos relativamente
+largos.</p>
+<p>La mejor alternativa a es usar una carta de individuales, en la que
+cada medición particular de la variable que se quiere analizar se
+registra en una carta.</p>
+<p>Para determinar los límites de control se usa la estimación de la
+media y la desviación estándar del estadístico <span
+class="math inline">\(w\)</span> que se grafica en la carta, que en este
+caso es directamente la medición individual de la variable X. Por ello,
+los límites se obtienen con la expresión <span
+class="math inline">\(\mu_x = \bar{X} \pm 3\sigma_x\)</span>. Donde
+<span class="math inline">\(\mu_x\)</span> y <span
+class="math inline">\(\sigma_x\)</span> son la media y la desviación
+estándar del proceso, respectivamente. Es decir, los límites de control
+en este caso coinciden por definición con los límites reales.</p>
+<p>En un estudio inicial, estos parámetros se estiman de la siguiente
+manera:</p>
+<p><span class="math display">\[\mu_x = \bar{X} \text{ y }\sigma_x =
+\frac{\bar{R}}{d_2}=\frac{\bar{R}}{1.128}\]</span></p>
+<p>donde <span class="math inline">\(\bar{X}\)</span> es la media de las
+mediciones de los subgrupos y <span
+class="math inline">\(\bar{R}\)</span> es la media de los rangos móviles
+de orden dos (rango entre dos observaciones sucesivas en el proceso del
+ejemplo anterior). Al dividir el rango promedio entre la constante <span
+class="math inline">\(d_2\)</span> se obtiene una estimación de la
+desviación estándar del proceso, <span
+class="math inline">\(\sigma\)</span>. Además, como en este caso, el
+rango móvil es de orden dos, entonces el valor de <span
+class="math inline">\(n\)</span> para determinar <span
+class="math inline">\(d_2\)</span> será <span
+class="math inline">\(n=2\)</span>; por lo tanto, cuando <span
+class="math inline">\(n=2\)</span>, <span
+class="math inline">\(d_2=1.128\)</span>. De lo anterior se concluye que
+los límites de control para una carta de individuales están dados
+por:</p>
+<p><span class="math display">\[\bar{X}= \pm
+3\left(\frac{\bar{R}}{1.128}\right)\]</span></p>
+<p><br/><br/></p>
+</div>
+<div id="carta-de-rangos-móviles" class="section level3">
+<h3><strong>Carta de rangos móviles</strong></h3>
+<p>La <strong>carta de rangos móviles</strong> se ha usado como
+complemento a la carta de individuales y grafica el rango móvil de orden
+dos para detectar cambios en la dispersión del proceso. Por ello, hay
+una tendencia a solo utilizar la carta de individuales. La Figura 5
+muestra se muestra un ejemplo con los datos del ejemplo anterior. Los
+límites de control se obtienen de la misma forma que una carta de
+rangos, solo que en este caso las constantes <span
+class="math inline">\(D_3\)</span> y <span
+class="math inline">\(D_4\)</span> se obtienen usando el tamaño de
+subgrupo <span class="math inline">\(n=2\)</span>. Por lo tanto, de
+acuerdo con los datos de la Tabla 1, los límites de esta carta están
+dados por:</p>
+<p>Límite de control inferior = <span
+class="math inline">\(D_3\bar{R}=0x2.287=0\)</span></p>
+<p>Línea central = <span class="math inline">\(\bar{R} =
+2.287\)</span></p>
+<p>Límite de control superior = <span
+class="math inline">\(D_4\bar{R}=3.26886x2.287=7.475\)</span></p>
+<p><br/></p>
+<p>Por lo que se espera que las diferencias (rangos) entre dos
+mediciones consecutivas de la temperatura del horno varíen entre cero y
+7.475, con un promedio de 2.287. Además de la carta de rangos como se
+muestra en la Figura 5, se observa que no hay ningún punto fuera de los
+límites de control ni algún patrón especial. Por lo que se puede
+concluir que el proceso está en control estadístico en cuanto a
+variabilidad. No así en cuanto a tendencia central, como ya se vio en la
+carta de la Figura 4.</p>
+<p><br/><br/></p>
+<div class="float">
+<img src="img/figura5.png"
+alt="Figura 5: Carta de rangos móviles para la temperatura." />
+<div class="figcaption"><strong>Figura 5:</strong> Carta de rangos
+móviles para la temperatura.</div>
+</div>
+<p>Por otra parte, en cuanto a la aplicación de las pruebas para
+detectar causas especiales de variación la variable que se grafica en la
+carta de individuales debe tener una distribución similar a la normal.
+En caso de no ser así y si no se verifican las probabilidades
+específicas de falsas alarmas, entonces las pruebas que se deben aplicar
+con cuidado y reservas son las de cambio de nivel.</p>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="gracias" class="section level1">
+<h1><strong>Gracias!</strong></h1>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

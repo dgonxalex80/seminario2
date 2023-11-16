@@ -1,0 +1,209 @@
+---
+title: "**Modelos de probabilidad**"
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+<br/><br/>
+
+## **Distribución Binomial**
+
+<br/>
+
+La distribución binomial es un modelo de probabilidad discreta que **cuantifica las posibilidades** de obtener uno de dos resultados en un conjunto de **pruebas repetidas**. Cada resultado tiene una probabilidad que no supera 1 y no es negativa. 
+
+Estas pruebas se caracterizan por tener solo dos resultados posibles, como esaber si un objeto es defectuoso, si nuestro interés radica en observar saber si es defectuoso o no, etc. De aquí la noción de éxito o fracaso.
+
+<br/>
+
+Cada experimento es independiente y no afecta las probabilidades futuras; en cada intento, la probabilidad de obtener uno de los dos resultados es constante. Por ejemplo, si arrojamos un dado equilibrado, la probabilidad de obtener un número par (2, 4 u 6) o impar (1, 3 u 5) es del 50\%, y esta probabilidad se mantiene constante en cada lanzamiento.
+
+<br/><br/>
+
+
+En la distribución binomial, se emplean tres parámetros:
+
+<br/>
+
+* $n$ representa el número de veces que se realiza el experimento.
+* $p$ es la probabilidad de obtener uno de los dos resultados, que llamamos "éxito."
+* $q$ es la probabilidad del otro resultado, que llamamos "fracaso." Dado que solo hay dos posibilidades, $p + q$ debe ser igual a $1$, lo que implica que $p = 1 - q$.
+
+
+<br/><br/>
+
+
+Para utilizar este modelo, primero debemos definir $p$.  Por ejemplo, en el caso del dado, podríamos definir "éxito" como obtener un número par y, en consecuencia, $q$ sería obtener un número impar.
+
+<br/>
+
+Otro ejemplo: Supongamos que deseamos calcular la probabilidad de encontrar un taxi libre al apresurarnos por la calle en un día lluvioso, donde es probable que estén ocupados. 
+
+<br/>
+
+Asignamos una probabilidad del $15\%$ ($0.15$) a que el taxi esté libre, lo que significa que $p$ es $0.15$ y, por lo tanto, $q$ (la probabilidad de estar ocupado) es $1 - 0.15$, es decir, $0.85$ o $85\%$ en términos porcentuales.
+
+<br/>
+
+De esta manera, podemos utilizar estos porcentajes para determinar la probabilidad de que un resultado específico ocurra un número determinado de veces en nuestras pruebas repetidas.
+
+<br/>
+
+
+<br/><br/>
+
+La función de masa 
+
+$$P(X=x)= \binom{n}{k}=p^n(q)^{n-x}$$
+
+<br/>
+
+Sus momentos son
+
+<br/>
+
+$$E[X]=np, \quad Var[X]=npq$$
+
+<br/><br/>
+
+
+
+```{r,warning=F,message=F}
+# En R podemomos obtener esta distribución de la siguiente manera
+n<- 10 #Tamaño de muestra
+p<- 0.5 #Probabilidad de éxito
+dbinom(1,n,p)# Función de masa
+pbinom(2,n,p)#Probabilidad acumualada hasta un punto
+qbinom(0.5,n,p) # Cuantiles
+rbinom(10,n,p) #Números aleatorios
+```
+
+<br/><br/>
+
+```{r,warning=F,message=F}
+par(mfrow=c(2,2))
+plot(1:10,dbinom(1:10,n,p),pch=19,panel.first=grid(),main="Distribución binomial con p=0.5")
+plot(1:10,dbinom(1:10,n,0.1),pch=19,panel.first=grid(),main="Distribución binomial con p=0.1")
+plot(1:10,dbinom(1:10,n,0.9),pch=19,panel.first=grid(),main="Distribución binomial con p=0.9")
+plot(1:10,dbinom(1:10,n,0.7),pch=19,panel.first=grid(),main="Distribución binomial con p=0.7")
+```
+
+<br/><br/>
+
+## **Distribución Poisson**
+
+<br/>
+
+La distribución de Poisson es una distribución de probabilidad discreta que se aplica a las **ocurrencias** de algún evento **durante un período** determinado. 
+
+<br/>
+
+Es decir, es una distribución de probabilidad discreta en la que sólo es necesario conocer los eventos y cuál es su frecuencia media de ocurrencia para poder conocer la probabilidad de que ocurran.
+
+<br/>
+
+Una distribución es discreta cuando se toma un número de valor finito, mientras que las continuas usan un número infinito de valores.
+
+<br/><br/>
+
+
+
+## **Situaciones**
+
+<br/>
+
+* Esta distribución se puede hacer derivar de un proceso experimental de observación en el que tengamos las siguientes características.
+
+<br/>
+
+* Se observa la realización de hechos de cierto tipo durante un cierto periodo de tiempo o a lo largo de un espacio de observación.
+*  Los hechos a observar tienen naturaleza aleatoria; pueden producirse o no de una manera no determinística.
+* La probabilidad de que se produzcan un número $x$ de éxitos en un intervalo de amplitud t no depende del origen del intervalo (aunque, sí de su amplitud).
+* La probabilidad de que ocurra un hecho en un intervalo infinitésimo es prácticamente proporcional a la amplitud del intervalo.
+* La probabilidad de que se produzcan $2$ o más hechos en un intervalo infinitésimo es un infinitésimo de orden superior a dos.
+
+<br/><br/>
+
+
+La función de masa
+
+$$P(X=x)=\frac{e^{-\lambda}\lambda^x}{x!}$$
+Su esperanza y varianza son iguales, esto es 
+
+$$E[X]=Var[X]=\lambda$$
+
+<br/><br/><br/>
+
+## **Distribución Normal**
+
+La distribución normal también conocida como la distribución gaussiana o campana de Gauss, es una de las distribuciones de probabilidad más importantes y ampliamente utilizadas en estadísticas y matemáticas. 
+
+Es una distribución continua que se caracteriza por su forma de campana, simétrica alrededor de su media, y está completamente determinada por dos parámetros: la media $\mu$ y la desviación estándar $\sigma$.
+
+<br/><br/>
+
+La función de densidad de probabilidad (PDF) de una distribución normal se representa mediante la siguiente fórmula:
+
+$$f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(x-\mu)^2}{2\sigma^2}}$$
+donde
+
+<br/>
+
+* $f(x)$ es la probabilidad de que una variable aleatoria tome el valor $x$
+* $\mu$ es la media de la distribución, que indica el valor esperado o promedio de la variable aleatoria.
+* $\sigma$ es la desviación estándar, que mide la dispersión o la variabilidad de la variable aleatoria.
+
+<br/><br/>
+
+Algunas propiedades importantes de la distribución normal son las siguientes:
+
+<br/>
+
+* **Simetría**: La distribución es simétrica alrededor de su media, lo que significa que la probabilidad de obtener un valor por encima de la media es igual a la probabilidad de obtener un valor por debajo de la media.
+
+<br/>
+
+* La mayoría de los valores se concentran cerca de la media: La mayor densidad de probabilidad se encuentra cerca de la media, y a medida que nos alejamos de la media, la densidad de probabilidad disminuye gradualmente.
+
+<br/>
+
+* **Regla Empírica**: Según la Regla Empírica (o la regla 68-95-99.7), aproximadamente el $68\%$ de los datos caen dentro de una desviación estándar de la media, el $95\%$ caen dentro de dos desviaciones estándar de la media, y el $99.7\%$ caen dentro de tres desviaciones estándar de la media.
+
+<br/>
+
+* La distribución normal es fundamental en estadísticas y se utiliza en una amplia variedad de aplicaciones en ciencia, ingeniería, economía y muchas otras disciplinas.  Es especialmente importante en inferencia estadística y pruebas de hipótesis, donde se asume a menudo que los datos siguen una distribución normal para realizar análisis y tomar decisiones basadas en muestras de datos.
+
+<br/><br/>
+
+```{r,warning=FALSE,message=FALSE}
+# En r podemos trabajar con la función normal de la siguiente manera
+mu<- 10 #Tamaño de muestra
+sigma<- 0.5 #Probabilidad de éxito
+dnorm(1,mu,sigma)# Función de densidad
+pnorm(2,mu,sigma)#Probabilidad acumualada hasta un punto
+qnorm(0.5,mu,sigma) # Cuantiles
+rnorm(10,mu,sigma) #Números aleatorios
+```
+
+<br/><br/>
+
+```{r,warning=FALSE,message=FALSE}
+# Gráfico función de densidad con diferente media
+curve(dnorm(x,mu,sigma),xlim=c(0,20),ylab="Density")
+curve(dnorm(x,15,sigma),xlim=c(0,20),add=T,col="red")
+curve(dnorm(x,5,sigma),xlim=c(0,20),add=T,col="aquamarine4")
+legend("topright",legend=c(paste0(expression(mu),"=","10"),paste0(expression(mu),"=","15"),paste0(expression(mu),"=","5")),col=c("black","red","aquamarine4"),lty=1)
+
+```
+
+<br/><br/>
+
+
+# **Gracias!**

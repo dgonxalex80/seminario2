@@ -1,8 +1,10 @@
 ---
-title: "resucurso111"
-author: "Daniel Gonzalez"
-date: "2023-10-30"
-output: html_document
+title: "  "
+author: "Seminario"
+date: " "
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}

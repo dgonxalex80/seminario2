@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Modelos de probabilidad</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso111.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso211.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso221.html">Conceptos básicos - ejemplos</a>
+    </li>
+    <li>
+      <a href="recurso231.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso241.html">Cartas de control</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Modelos de
+probabilidad</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<div id="distribución-binomial" class="section level2">
+<h2><strong>Distribución Binomial</strong></h2>
+<p><br/></p>
+<p>La distribución binomial es un modelo de probabilidad discreta que
+<strong>cuantifica las posibilidades</strong> de obtener uno de dos
+resultados en un conjunto de <strong>pruebas repetidas</strong>. Cada
+resultado tiene una probabilidad que no supera 1 y no es negativa.</p>
+<p>Estas pruebas se caracterizan por tener solo dos resultados posibles,
+como esaber si un objeto es defectuoso, si nuestro interés radica en
+observar saber si es defectuoso o no, etc. De aquí la noción de éxito o
+fracaso.</p>
+<p><br/></p>
+<p>Cada experimento es independiente y no afecta las probabilidades
+futuras; en cada intento, la probabilidad de obtener uno de los dos
+resultados es constante. Por ejemplo, si arrojamos un dado equilibrado,
+la probabilidad de obtener un número par (2, 4 u 6) o impar (1, 3 u 5)
+es del 50%, y esta probabilidad se mantiene constante en cada
+lanzamiento.</p>
+<p><br/><br/></p>
+<p>En la distribución binomial, se emplean tres parámetros:</p>
+<p><br/></p>
+<ul>
+<li><span class="math inline">\(n\)</span> representa el número de veces
+que se realiza el experimento.</li>
+<li><span class="math inline">\(p\)</span> es la probabilidad de obtener
+uno de los dos resultados, que llamamos “éxito.”</li>
+<li><span class="math inline">\(q\)</span> es la probabilidad del otro
+resultado, que llamamos “fracaso.” Dado que solo hay dos posibilidades,
+<span class="math inline">\(p + q\)</span> debe ser igual a <span
+class="math inline">\(1\)</span>, lo que implica que <span
+class="math inline">\(p = 1 - q\)</span>.</li>
+</ul>
+<p><br/><br/></p>
+<p>Para utilizar este modelo, primero debemos definir <span
+class="math inline">\(p\)</span>. Por ejemplo, en el caso del dado,
+podríamos definir “éxito” como obtener un número par y, en consecuencia,
+<span class="math inline">\(q\)</span> sería obtener un número
+impar.</p>
+<p><br/></p>
+<p>Otro ejemplo: Supongamos que deseamos calcular la probabilidad de
+encontrar un taxi libre al apresurarnos por la calle en un día lluvioso,
+donde es probable que estén ocupados.</p>
+<p><br/></p>
+<p>Asignamos una probabilidad del <span
+class="math inline">\(15\%\)</span> (<span
+class="math inline">\(0.15\)</span>) a que el taxi esté libre, lo que
+significa que <span class="math inline">\(p\)</span> es <span
+class="math inline">\(0.15\)</span> y, por lo tanto, <span
+class="math inline">\(q\)</span> (la probabilidad de estar ocupado) es
+<span class="math inline">\(1 - 0.15\)</span>, es decir, <span
+class="math inline">\(0.85\)</span> o <span
+class="math inline">\(85\%\)</span> en términos porcentuales.</p>
+<p><br/></p>
+<p>De esta manera, podemos utilizar estos porcentajes para determinar la
+probabilidad de que un resultado específico ocurra un número determinado
+de veces en nuestras pruebas repetidas.</p>
+<p><br/></p>
+<p><br/><br/></p>
+<p>La función de masa</p>
+<p><span class="math display">\[P(X=x)=
+\binom{n}{k}=p^n(q)^{n-x}\]</span></p>
+<p><br/></p>
+<p>Sus momentos son</p>
+<p><br/></p>
+<p><span class="math display">\[E[X]=np, \quad Var[X]=npq\]</span></p>
+<p><br/><br/></p>
+<pre class="r"><code># En R podemomos obtener esta distribución de la siguiente manera
+n&lt;- 10 #Tamaño de muestra
+p&lt;- 0.5 #Probabilidad de éxito
+dbinom(1,n,p)# Función de masa</code></pre>
+<pre><code>[1] 0.009765625</code></pre>
+<pre class="r"><code>pbinom(2,n,p)#Probabilidad acumualada hasta un punto</code></pre>
+<pre><code>[1] 0.0546875</code></pre>
+<pre class="r"><code>qbinom(0.5,n,p) # Cuantiles</code></pre>
+<pre><code>[1] 5</code></pre>
+<pre class="r"><code>rbinom(10,n,p) #Números aleatorios</code></pre>
+<pre><code> [1] 6 5 7 9 3 4 6 5 3 5</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>par(mfrow=c(2,2))
+plot(1:10,dbinom(1:10,n,p),pch=19,panel.first=grid(),main=&quot;Distribución binomial con p=0.5&quot;)
+plot(1:10,dbinom(1:10,n,0.1),pch=19,panel.first=grid(),main=&quot;Distribución binomial con p=0.1&quot;)
+plot(1:10,dbinom(1:10,n,0.9),pch=19,panel.first=grid(),main=&quot;Distribución binomial con p=0.9&quot;)
+plot(1:10,dbinom(1:10,n,0.7),pch=19,panel.first=grid(),main=&quot;Distribución binomial con p=0.7&quot;)</code></pre>
+<p><img src="recurso231_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<p><br/><br/></p>
+</div>
+<div id="distribución-poisson" class="section level2">
+<h2><strong>Distribución Poisson</strong></h2>
+<p><br/></p>
+<p>La distribución de Poisson es una distribución de probabilidad
+discreta que se aplica a las <strong>ocurrencias</strong> de algún
+evento <strong>durante un período</strong> determinado.</p>
+<p><br/></p>
+<p>Es decir, es una distribución de probabilidad discreta en la que sólo
+es necesario conocer los eventos y cuál es su frecuencia media de
+ocurrencia para poder conocer la probabilidad de que ocurran.</p>
+<p><br/></p>
+<p>Una distribución es discreta cuando se toma un número de valor
+finito, mientras que las continuas usan un número infinito de
+valores.</p>
+<p><br/><br/></p>
+</div>
+<div id="situaciones" class="section level2">
+<h2><strong>Situaciones</strong></h2>
+<p><br/></p>
+<ul>
+<li>Esta distribución se puede hacer derivar de un proceso experimental
+de observación en el que tengamos las siguientes características.</li>
+</ul>
+<p><br/></p>
+<ul>
+<li>Se observa la realización de hechos de cierto tipo durante un cierto
+periodo de tiempo o a lo largo de un espacio de observación.</li>
+<li>Los hechos a observar tienen naturaleza aleatoria; pueden producirse
+o no de una manera no determinística.</li>
+<li>La probabilidad de que se produzcan un número <span
+class="math inline">\(x\)</span> de éxitos en un intervalo de amplitud t
+no depende del origen del intervalo (aunque, sí de su amplitud).</li>
+<li>La probabilidad de que ocurra un hecho en un intervalo infinitésimo
+es prácticamente proporcional a la amplitud del intervalo.</li>
+<li>La probabilidad de que se produzcan <span
+class="math inline">\(2\)</span> o más hechos en un intervalo
+infinitésimo es un infinitésimo de orden superior a dos.</li>
+</ul>
+<p><br/><br/></p>
+<p>La función de masa</p>
+<p><span
+class="math display">\[P(X=x)=\frac{e^{-\lambda}\lambda^x}{x!}\]</span>
+Su esperanza y varianza son iguales, esto es</p>
+<p><span class="math display">\[E[X]=Var[X]=\lambda\]</span></p>
+<p><br/><br/><br/></p>
+</div>
+<div id="distribución-normal" class="section level2">
+<h2><strong>Distribución Normal</strong></h2>
+<p>La distribución normal también conocida como la distribución
+gaussiana o campana de Gauss, es una de las distribuciones de
+probabilidad más importantes y ampliamente utilizadas en estadísticas y
+matemáticas.</p>
+<p>Es una distribución continua que se caracteriza por su forma de
+campana, simétrica alrededor de su media, y está completamente
+determinada por dos parámetros: la media <span
+class="math inline">\(\mu\)</span> y la desviación estándar <span
+class="math inline">\(\sigma\)</span>.</p>
+<p><br/><br/></p>
+<p>La función de densidad de probabilidad (PDF) de una distribución
+normal se representa mediante la siguiente fórmula:</p>
+<p><span
+class="math display">\[f(x)=\frac{1}{\sigma\sqrt{2\pi}}e^{\frac{-(x-\mu)^2}{2\sigma^2}}\]</span>
+donde</p>
+<p><br/></p>
+<ul>
+<li><span class="math inline">\(f(x)\)</span> es la probabilidad de que
+una variable aleatoria tome el valor <span
+class="math inline">\(x\)</span></li>
+<li><span class="math inline">\(\mu\)</span> es la media de la
+distribución, que indica el valor esperado o promedio de la variable
+aleatoria.</li>
+<li><span class="math inline">\(\sigma\)</span> es la desviación
+estándar, que mide la dispersión o la variabilidad de la variable
+aleatoria.</li>
+</ul>
+<p><br/><br/></p>
+<p>Algunas propiedades importantes de la distribución normal son las
+siguientes:</p>
+<p><br/></p>
+<ul>
+<li><strong>Simetría</strong>: La distribución es simétrica alrededor de
+su media, lo que significa que la probabilidad de obtener un valor por
+encima de la media es igual a la probabilidad de obtener un valor por
+debajo de la media.</li>
+</ul>
+<p><br/></p>
+<ul>
+<li>La mayoría de los valores se concentran cerca de la media: La mayor
+densidad de probabilidad se encuentra cerca de la media, y a medida que
+nos alejamos de la media, la densidad de probabilidad disminuye
+gradualmente.</li>
+</ul>
+<p><br/></p>
+<ul>
+<li><strong>Regla Empírica</strong>: Según la Regla Empírica (o la regla
+68-95-99.7), aproximadamente el <span
+class="math inline">\(68\%\)</span> de los datos caen dentro de una
+desviación estándar de la media, el <span
+class="math inline">\(95\%\)</span> caen dentro de dos desviaciones
+estándar de la media, y el <span class="math inline">\(99.7\%\)</span>
+caen dentro de tres desviaciones estándar de la media.</li>
+</ul>
+<p><br/></p>
+<ul>
+<li>La distribución normal es fundamental en estadísticas y se utiliza
+en una amplia variedad de aplicaciones en ciencia, ingeniería, economía
+y muchas otras disciplinas. Es especialmente importante en inferencia
+estadística y pruebas de hipótesis, donde se asume a menudo que los
+datos siguen una distribución normal para realizar análisis y tomar
+decisiones basadas en muestras de datos.</li>
+</ul>
+<p><br/><br/></p>
+<pre class="r"><code># En r podemos trabajar con la función normal de la siguiente manera
+mu&lt;- 10 #Tamaño de muestra
+sigma&lt;- 0.5 #Probabilidad de éxito
+dnorm(1,mu,sigma)# Función de densidad</code></pre>
+<pre><code>[1] 3.517499e-71</code></pre>
+<pre class="r"><code>pnorm(2,mu,sigma)#Probabilidad acumualada hasta un punto</code></pre>
+<pre><code>[1] 6.388754e-58</code></pre>
+<pre class="r"><code>qnorm(0.5,mu,sigma) # Cuantiles</code></pre>
+<pre><code>[1] 10</code></pre>
+<pre class="r"><code>rnorm(10,mu,sigma) #Números aleatorios</code></pre>
+<pre><code> [1]  9.602069  9.911788 10.544397  9.981940 10.916595  9.444510  9.564603
+ [8]  9.929232 10.144485 10.653336</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code># Gráfico función de densidad con diferente media
+curve(dnorm(x,mu,sigma),xlim=c(0,20),ylab=&quot;Density&quot;)
+curve(dnorm(x,15,sigma),xlim=c(0,20),add=T,col=&quot;red&quot;)
+curve(dnorm(x,5,sigma),xlim=c(0,20),add=T,col=&quot;aquamarine4&quot;)
+legend(&quot;topright&quot;,legend=c(paste0(expression(mu),&quot;=&quot;,&quot;10&quot;),paste0(expression(mu),&quot;=&quot;,&quot;15&quot;),paste0(expression(mu),&quot;=&quot;,&quot;5&quot;)),col=c(&quot;black&quot;,&quot;red&quot;,&quot;aquamarine4&quot;),lty=1)</code></pre>
+<p><img src="recurso231_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br/><br/></p>
+</div>
+<div id="gracias" class="section level1">
+<h1><strong>Gracias!</strong></h1>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

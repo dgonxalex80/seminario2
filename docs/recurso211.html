@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+<meta name="author" content="Seminario" />
+
+
+<title>Conceptos básicos indicadores estadísticos</title>
+
+<script src="site_libs/header-attrs-2.25/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+<style type="text/css">code{white-space: pre;}</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Seminario </a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad1
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso111.html">Introducción a la calidad de la información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Fuentes de información</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Variables cualitativas y cuantitativas</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Identificación de errores</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 2
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso211.html">Conceptos básicos indicadores estadísticos</a>
+    </li>
+    <li>
+      <a href="recurso221.html">Conceptos básicos - ejemplos</a>
+    </li>
+    <li>
+      <a href="recurso231.html">Modelos de probabilidad</a>
+    </li>
+    <li>
+      <a href="recurso241.html">Cartas de control</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de ensayos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Control interno</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Análisis de control binario</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 3
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso331.html">Estimación -conceptos básicos </a>
+    </li>
+    <li>
+      <a href="recurso332.html">Intervalos de confianza - paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso333.html">Intervalos de confianza - no paramétricos</a>
+    </li>
+    <li>
+      <a href="recurso334.html">Pruebas de hipótesis - conceptos básicos</a>
+    </li>
+    <li>
+      <a href="recurso335.html">Pruebas de hipótesis - paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso336.html">Pruebas de hipótesis - no paramétricas</a>
+    </li>
+    <li>
+      <a href="recurso337.html">La significancia estadística</a>
+    </li>
+    <li>
+      <a href="recurso338.html">Modelo de regresión y curvas de calibración</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Unidad 4
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="recurso000.html">Análisis de resultados científicos</a>
+    </li>
+    <li>
+      <a href="recurso000.html">Aplicacón de los conceptos</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+<div class="btn-group pull-right float-right">
+<button type="button" class="btn btn-default btn-xs btn-secondary btn-sm dropdown-toggle" data-toggle="dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu dropdown-menu-right" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+<h1 class="title toc-ignore"><strong>Conceptos básicos indicadores
+estadísticos</strong></h1>
+<h4 class="author">Seminario</h4>
+
+</div>
+
+
+<p><br/><br/></p>
+<div id="conceptos-básicos" class="section level2">
+<h2><strong>Conceptos básicos</strong></h2>
+<p><br/></p>
+<ul>
+<li>indicadores de :
+<ul>
+<li>posición,</li>
+<li>centro,</li>
+<li>dispersión</li>
+<li>forma</li>
+</ul></li>
+</ul>
+<p><br/></p>
+<ul>
+<li>Media muestral,</li>
+<li>proporción muestral</li>
+<li>varianza muestral</li>
+</ul>
+<p><br/><br/></p>
+</div>
+<div id="conceptos-previos" class="section level2">
+<h2><strong>Conceptos previos</strong></h2>
+<p style = 'text-align:center;'>
+<img src="img/datos.png" />
+<p>
+<p><br/><br/></p>
+</div>
+<div id="estadística-descriptiva" class="section level1">
+<h1><strong>Estadística descriptiva</strong></h1>
+<p><br/></p>
+<div id="la-calidad-y-la-variabilidad" class="section level3">
+<h3><strong>La calidad y la variabilidad</strong></h3>
+<p><br/></p>
+<p>Los sistemas de gestión de calidad ISO-9000 establecen como uno de
+los principios un enfoque basado en hechos para la toma de decisiones,
+en particular se basan en el análisis de los datos y de la
+información.</p>
+<p><br/></p>
+<p>En esta sesión, revisaremos algunos elementos principales de la
+estadística descriptiva y cómo se aplica para analizar la calidad y
+variablidad de un proceso, enfatizando la toma de decisiones con base en
+datos.</p>
+<p><br/></p>
+<p>En un proceso, tenemos variables de entrada y de salida:</p>
+<ul>
+<li><p><strong>Entrada</strong> - también llamadas variables
+independientes (las <span class="math inline">\(X\)</span>), por lo
+general son variables de control del proceso: temperatura, velocidad,
+presión, cantidad y/o características de algún insumo o material.
+Además, son las que influyen en los resultados del proceso como la
+humedad en el ambiente, la habilidad de un operario, el método de
+trtabajo, etc.</p></li>
+<li><p><strong>Salida</strong> - también llamadas variables dependientes
+o de respuesta (las <span class="math inline">\(Y\)</span>) reflejan los
+resultados de un proceso</p></li>
+</ul>
+<p><br/><br/></p>
+<p>Los valores que toman las <strong>variables de salida</strong>
+evalúan el desempeño del proceso. Por lo general, estas tienen
+especificaciones o límites de tolerancia, porque los valores que deben
+tener están especificados.</p>
+<p><br/></p>
+<p>Por ejemplo, un proceso que produce piezas metálicas que se van a
+ensamblar, las dimensiones de estas deben caer dentro de cierto rango o
+de lo contrario no se podrán usar. Cuando se cumplen estos
+requerimientos se dice que el proceso cumple con las especificaciones de
+calidad.</p>
+<p><br/></p>
+<p>Existen tres tipos de variables de salida o características de
+calidad, de acuerdo con el tipo de especificaciones que deben
+cumplir:</p>
+<p><br/></p>
+<ul>
+<li>Cuanto más pequeño mejor</li>
+<li>Cuanto más grande mejor</li>
+<li>El valor nominal es el mejor</li>
+</ul>
+<p><br/></p>
+<p>Dado que en el control de calidad, es una tarea primordial es conocer
+qué tanto los valores de una variable de salida de un proceso son
+satisfactorios, y saber de esa manera si el proceso es capaz de cumplir
+con las especificaciones de esa variable es indispensable tomar datos de
+esa variable y analizarlos adecuadamente.</p>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="frecuencias" class="section level1">
+<h1><strong>Frecuencias</strong></h1>
+<p><br/></p>
+<div id="frecuencia-absoluta-fa" class="section level3">
+<h3><strong>Frecuencia Absoluta (FA)</strong>:</h3>
+<p>La frecuencia absoluta de un valor en un conjunto de datos es
+simplemente el número de veces que ese valor aparece en el conjunto.</p>
+<p><br/></p>
+</div>
+<div id="ejemplo" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Supongamos que tenemos el siguiente conjunto de datos representando
+las edades de un grupo de personas:</p>
+<pre>
+25, 30, 25, 35, 40, 25, 30
+</pre>
+<p>La frecuencia absoluta de la edad 25 es 3, ya que aparece tres veces
+en el conjunto.</p>
+<p><br/><br/></p>
+</div>
+<div id="frecuencia-relativa-fr" class="section level3">
+<h3><strong>Frecuencia Relativa (FR)</strong>:</h3>
+<p>La frecuencia relativa de un valor es la proporción o el porcentaje
+del número de veces que aparece ese valor en relación con el tamaño
+total del conjunto de datos.</p>
+<p><br/></p>
+</div>
+<div id="ejemplo-1" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Continuando con el conjunto de datos de edades, la frecuencia
+relativa de la edad 25 se calcula dividiendo la frecuencia absoluta (3)
+entre el tamaño total del conjunto (7):</p>
+<p><br/></p>
+<p>Frecuencia Relativa (25) = 3 / 7 ≈ 0.4286 (redondeado a cuatro
+decimales)</p>
+<p><br/></p>
+<p>Esto significa que el 42.86% de las edades en el conjunto son iguales
+a 25.</p>
+<p><br/></p>
+<p><br/><br/></p>
+</div>
+<div id="frecuencia-acumulada-fac" class="section level3">
+<h3><strong>Frecuencia Acumulada (FAc)</strong>:</h3>
+<p>La frecuencia acumulada de un valor es la suma de las frecuencias
+absolutas de todos los valores iguales o menores que ese valor en el
+conjunto de datos.</p>
+<p><br/></p>
+</div>
+<div id="ejemplo-2" class="section level3">
+<h3><strong>Ejemplo</strong></h3>
+<p>Usando el mismo conjunto de datos de edades, si queremos calcular la
+frecuencia acumulada de 30, sumamos las frecuencias absolutas de 25 (3
+veces) y 30 (2 veces):</p>
+<p><br/></p>
+<p>Frecuencia Acumulada (30) = Frecuencia Absoluta (25) + Frecuencia
+Absoluta (30) = 3 + 2 = 5</p>
+<p><br/></p>
+<p>Esto significa que hay un total de 5 personas cuyas edades son
+iguales o menores a 30 en el conjunto.</p>
+<p><br/><br/></p>
+</div>
+<div id="frecuencia-relativa-acumulada-frac" class="section level3">
+<h3><strong>Frecuencia Relativa Acumulada (FRac)</strong>:</h3>
+<p>La frecuencia relativa acumulada de un valor es la suma de las
+frecuencias relativas de todos los valores iguales o menores que ese
+valor en el conjunto de datos.</p>
+<p><br/></p>
+</div>
+<div id="ejemplo-3" class="section level3">
+<h3><strong>Ejemplo</strong>:</h3>
+<p>Siguiendo con el conjunto de datos de edades, si deseamos calcular la
+frecuencia relativa acumulada de 30, primero calculamos las frecuencias
+relativas de 25 y 30 como lo hicimos antes:</p>
+<p><br/></p>
+<p>Frecuencia Relativa (25) = 0.4286, Frecuencia Relativa (30) =
+0.2857</p>
+<p><br/></p>
+<p>Luego, sumamos estas frecuencias relativas:</p>
+<p><br/></p>
+<p>Frecuencia Relativa Acumulada (30) = Frecuencia Relativa (25) +
+Frecuencia Relativa (30) = 0.4286 + 0.2857 = 0.7143</p>
+<p><br/></p>
+<p>Esto significa que el 71.43% de las edades en el conjunto son iguales
+o menores a 30.</p>
+<p><br/><br/></p>
+<p>A partir de los anteriores conceptos podemos construir una <em>Tabla
+de Frecuencias</em> la cual es una herramienta utilizada en estadística
+descriptiva para resumir y presentar de manera organizada la información
+sobre la frecuencia de ocurrencia de diferentes valores en un conjunto
+de datos. Esto junto con lo anterior se puede ilustrar en el software
+Estadístico R de la siguiente manera.</p>
+<pre class="r"><code>#El ejercicio realizado previamente puede ilustrarse en R de la siguiente manera:
+x&lt;- c(25, 30, 25, 35, 40, 25, 30) #Inicializó un vector con los datos
+Tabla&lt;- table(Edad=x); Tabla #Frecuencias Absolutas</code></pre>
+<pre><code>Edad
+25 30 35 40 
+ 3  2  1  1 </code></pre>
+<pre class="r"><code>Tabla_prop&lt;- prop.table(Tabla);Tabla_prop #Frecuencias Relativas</code></pre>
+<pre><code>Edad
+       25        30        35        40 
+0.4285714 0.2857143 0.1428571 0.1428571 </code></pre>
+<pre class="r"><code>Tabla_acumulada&lt;- cumsum(Tabla);Tabla_acumulada #Frecuencias Absolutas acumuladas</code></pre>
+<pre><code>25 30 35 40 
+ 3  5  6  7 </code></pre>
+<pre class="r"><code>Tabla_prop_acum&lt;- cumsum(Tabla_prop);Tabla_prop_acum</code></pre>
+<pre><code>       25        30        35        40 
+0.4285714 0.7142857 0.8571429 1.0000000 </code></pre>
+<pre class="r"><code>TablaFrecuencias&lt;- cbind(Tabla,Tabla_prop,Tabla_acumulada,Tabla_prop_acum) #Agrupar las tablas para crear una sola tabla resumen
+
+colnames(TablaFrecuencias)&lt;- c(&quot;  Frec.Abs&quot;,&quot;  Frec.Rel&quot;,&quot;  Frec.Abs.Acum&quot;,&quot;  Frec.Rel.Acum&quot;) #Cambiar nombre de las columnas
+round(TablaFrecuencias,2) #Aproximar a 2 decimales</code></pre>
+<pre><code>     Frec.Abs   Frec.Rel   Frec.Abs.Acum   Frec.Rel.Acum
+25          3       0.43               3            0.43
+30          2       0.29               5            0.71
+35          1       0.14               6            0.86
+40          1       0.14               7            1.00</code></pre>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="medidas-de-posición-centro-dispersión-y-forma"
+class="section level1">
+<h1><strong>Medidas de posición, centro, dispersión y
+forma</strong></h1>
+<p><br/></p>
+<p>Antes de empezar a definir cada concepto pensemos inicialmente en una
+variable para identificar cada una de ellas.</p>
+<p>Supongamos que un laboratorio químico está analizando la
+concentración de un compuesto en muestras de agua tomadas de diferentes
+fuentes naturales.</p>
+<p>Se han recopilado los siguientes datos de concentraciones (en mg/L)
+para 15 muestras de agua:</p>
+<p><br/></p>
+<pre>
+35, 42, 50, 55, 58, 62, 65, 70, 75, 80, 85, 90, 95, 98, 100
+</pre>
+<p><br/></p>
+<pre class="r"><code>#Inializaremos estos datos en R, para trabajar con ellos:
+Concentracion&lt;-c(35, 42, 50, 55, 58, 62, 65, 70, 75, 80, 85, 90, 95, 98, 100)</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>#Gráfiquemos un histograma de estos mismos
+hist(Concentracion,xlab=&quot;Concentracion en Mg/L&quot;,ylab=&quot;Frecuencia Absoluta&quot;,panel.first=grid(),col=&quot;white&quot;,border=&quot;red4&quot;,lwd=2,main=&quot;&quot;)</code></pre>
+<p><img src="recurso211_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<p><br/><br/></p>
+<p>##<strong>Medidas de posición</strong></p>
+<p>Las medidas de posición hacen enfásis a una estructura de los datos
+ordenada e identificar cual es el valor que nos describe que hasta ese
+punto se encuentra el “x”% de valores.</p>
+Es decir, hasta una concentración de 50 Mg/L que porcentaje de valores
+se encuentran ubicados. También se pueden entender como subdivisiones de
+los datos, esto es cuales son esos valores que me generan una división
+en 2,4,100 grupos.<br />
+
+<div>
+
+<p><br/><br/></p>
+<div id="mediana" class="section level3">
+<h3><strong>Mediana</strong></h3>
+<p><br/></p>
+<p>La mediana es el valor que divide un conjunto de datos en dos partes
+iguales, de manera que el 50% de los datos están por encima de la
+mediana y el 50% están por debajo. Para calcularla, primero se ordenan
+los datos y se encuentra el valor central si el número de datos es
+impar, o el promedio de los dos valores centrales si el número de datos
+es par.</p>
+<p><br/><br/></p>
+</div>
+<div id="percentiles" class="section level3">
+<h3><strong>Percentiles</strong></h3>
+<p><br/></p>
+<p>Los percentiles dividen un conjunto de datos en cien partes
+iguales.</p>
+<p>El percentil P representa el valor por debajo del cual se encuentra
+P% de los datos. Por ejemplo, el percentil 25 (P25) es el valor por
+debajo del cual se encuentra el 25% de los datos.</p>
+<p><br/><br/></p>
+</div>
+<div id="cuartiles" class="section level3">
+<h3><strong>Cuartiles</strong></h3>
+<p><br/></p>
+Los cuartiles son percentiles específicos que dividen un conjunto de
+datos en cuatro partes iguales. Los cuartiles más utilizados son el
+primer cuartil (Q1, equivalente al percentil 25), el segundo cuartil
+(Q2, equivalente a la mediana o percentil 50) y el tercer cuartil (Q3,
+equivalente al percentil 75).
+<div>
+
+<p><br/></p>
+<p>El <strong>rango intercuartil</strong> es la diferencia entre el
+tercer cuartil (Q3) y el primer cuartil (Q1). Es una medida de
+dispersión que indica cuánto se extienden los valores en el rango
+central del conjunto de datos.</p>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="en-r-sería" class="section level1">
+<h1><strong>En R sería… </strong></h1>
+<pre class="r"><code>#Podemos obtener todas estas medidas de una manera sencilla a través de las siguientes funciones
+quantile(Concentracion,c(0.10,0.25,0.5,0.75,0.9)) </code></pre>
+<pre><code> 10%  25%  50%  75%  90% 
+45.2 56.5 70.0 87.5 96.8 </code></pre>
+<pre class="r"><code>#Debemos reemplazar como argumento inicial nuestro vector con valores, seguido de los percentiles de interés. En este caso obtenemos el percentil 10, o primer decil, primer cuartil, mediana, tercer cuartil y percentil 90% respectivamente.</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>#Gráfiquemoslo en el histograma
+hist(Concentracion,xlab=&quot;Concentracion en Mg/L&quot;,ylab=&quot;Frecuencia Absoluta&quot;,panel.first=grid(),col=&quot;purple4&quot;,lwd=2,main=&quot;&quot;,ylim=c(0,5))
+Percentiles&lt;-quantile(Concentracion,c(0.10,0.25,0.5,0.75,0.9))
+abline(v=Percentiles,lwd=2,col=c(1,2,3,4,5))
+legend(&quot;topleft&quot;,legend=c(&quot;10%&quot;,&quot;25%&quot;,&quot;50%&quot;,&quot;75%&quot;,&quot;90%&quot;),col=c(1,2,3,4,5),
+       lwd=2,cex=0.8)</code></pre>
+<p><img src="recurso211_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><br/><br/></p>
+</div>
+<div id="medidas-de-tendencia-central" class="section level1">
+<h1><strong>Medidas de tendencia central</strong></h1>
+<p><br/></p>
+<p>Las medidas de tendencia central, también conocidas como medidas de
+centralización, sirven representar la ubicación central o típica de un
+conjunto de datos. Estas medidas proporcionan información sobre dónde se
+agrupan o concentran los valores en un conjunto de datos.</p>
+<p><br/><br/></p>
+<div id="media-aritmética" class="section level2">
+<h2><strong>Media Aritmética</strong></h2>
+La media aritmética es el promedio de todos los valores en un conjunto
+de datos. Se calcula sumando todos los valores y dividiendo la suma por
+el número total de valores. La media se denota como:
+<div>
+<span
+class="math display">\[\bar{x}=\frac{\sum_{i}^{n}x_{i}}{n}\]</span>
+<div>
+
+<p><br/><br/></p>
+</div>
+<div id="mediana-1" class="section level2">
+<h2><strong>Mediana</strong></h2>
+<p>La mediana es el valor que se encuentra en el punto medio de un
+conjunto de datos cuando los valores están ordenados de menor a mayor (o
+viceversa). Si hay un número impar de valores, la mediana es el valor
+central. Si hay un número par de valores, la mediana es el promedio de
+los dos valores centrales.</p>
+<p><br/><br/></p>
+</div>
+<div id="moda" class="section level2">
+<h2><strong>Moda</strong></h2>
+<p>La moda es el valor que aparece con mayor frecuencia en un conjunto
+de datos. Puede tenerse una moda (un valor que se repite con más
+frecuencia) o múltiples modas si varios valores tienen la misma
+frecuencia máxima.</p>
+<p><br/><br/></p>
+<pre class="r"><code>#Podemos obtener estos indicadores de la siguiente manera 
+mode &lt;- function(x) {
+   return(as.numeric(names(which.max(table(x)))))
+} #Creando una función para la moda
+
+cat(&quot;Media   :&quot;, mean(Concentracion), &quot;\n&quot;)</code></pre>
+<pre><code>Media   : 70.66667 </code></pre>
+<pre class="r"><code>cat(&quot;Mediana :&quot;, median(Concentracion), &quot;\n&quot;)</code></pre>
+<pre><code>Mediana : 70 </code></pre>
+<pre class="r"><code>cat(&quot;Moda    :&quot;, mode(Concentracion), &quot;\n&quot;)</code></pre>
+<pre><code>Moda    : 35 </code></pre>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="medidas-de-dispersión" class="section level1">
+<h1><strong>Medidas de dispersión </strong></h1>
+Las medidas de dispersión son estadísticas que proporcionan información
+sobre la variabilidad o dispersión de un conjunto de datos. Ayudan a
+entender cuánto se extienden los valores alrededor de una medida central
+(como la media) en el conjunto de datos.
+<div>
+
+<p><br/><br/></p>
+<div id="rango" class="section level2">
+<h2><strong>Rango</strong></h2>
+<p>El rango es la diferencia entre el valor máximo y el valor mínimo en
+un conjunto de datos. Es la medida de dispersión más simple y fácil de
+calcular.</p>
+<p><br/><br/></p>
+</div>
+<div id="desviación-estándar-sd" class="section level2">
+<h2><strong>Desviación Estándar (sd)</strong></h2>
+<p>La desviación estándar mide la dispersión de los valores con respecto
+a la media. Una desviación estándar más grande indica una mayor
+dispersión. Se calcula como la raíz cuadrada de la varianza.</p>
+<p><br/><br/></p>
+</div>
+<div id="varianza" class="section level2">
+<h2><strong>Varianza</strong></h2>
+La varianza es una medida de la dispersión que calcula la media de los
+cuadrados de las diferencias entre cada valor y la media. Una varianza
+más grande indica una mayor dispersión. La varianza poblacional se
+denota como <span class="math inline">\(\sigma^2\)</span>, y la muestral
+se denota como <span class="math inline">\(s^2\)</span>, tiene como
+expresión:
+<div>
+
+<p><span
+class="math display">\[\sigma^2=\frac{\sum_{i}^{n}({x_{i}-\bar{x}})}{n},\quad
+s^2=\frac{\sum_{i}^{n}({x_{i}-\bar{x}})}{n-1}\]</span></p>
+<p><br/><br/></p>
+</div>
+<div id="rango-intercuartil-ric" class="section level2">
+<h2><strong>Rango Intercuartil (RIC)</strong></h2>
+<p>El rango intercuartil es la diferencia entre el tercer cuartil (Q3) y
+el primer cuartil (Q1). Se utiliza para medir la dispersión en la parte
+central de un conjunto de datos, ignorando los valores extremos.</p>
+<p><br/><br/></p>
+</div>
+<div id="coeficiente-de-variación-cv" class="section level2">
+<h2><strong>Coeficiente de Variación (CV)</strong></h2>
+<p>El coeficiente de variación es una medida relativa de la dispersión
+que compara la desviación estándar con la media. Se expresa como un
+porcentaje y se utiliza para comparar la dispersión en diferentes
+conjuntos de datos. Su expresión es: <span
+class="math display">\[CV=\frac{SD}{|\bar{x}|}*100\]</span></p>
+<pre class="r"><code>cat(&quot;Varianza :&quot;, var(Concentracion))</code></pre>
+<pre><code>Varianza : 422.8095</code></pre>
+<p><br/><br/></p>
+<pre class="r"><code>cat(&quot;Desviación Estandar        : &quot;, sd(Concentracion), &quot;\n&quot;)</code></pre>
+<pre><code>Desviación Estandar        :  20.56233 </code></pre>
+<pre class="r"><code>cat(&quot;Coeficiente de variación   : &quot;, sd(Concentracion)/abs(mean(Concentracion)), &quot;\n&quot;)</code></pre>
+<pre><code>Coeficiente de variación   :  0.2909764 </code></pre>
+<pre class="r"><code>cat(&quot;Rango                      : &quot;, max(Concentracion)-min(Concentracion), &quot;\n&quot;)</code></pre>
+<pre><code>Rango                      :  65 </code></pre>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="medidas-de-forma" class="section level1">
+<h1><strong>Medidas de forma</strong></h1>
+<p>Las medidas de forma, a veces llamadas medidas de asimetría y
+curtosis, proporcionan información adicional sobre la distribución de
+los datos más allá de las medidas de tendencia central y dispersión.
+Ayudan a caracterizar la simetría, la concentración y la forma de la
+distribución.</p>
+<p><br/><br/></p>
+<div id="asimetría-skewness" class="section level2">
+<h2><strong>Asimetría (Skewness)</strong></h2>
+<p>La asimetría mide la falta de simetría en la distribución de los
+datos. Indica si los datos están sesgados hacia la izquierda (negativo),
+hacia la derecha (positivo) o si tienen una distribución simétrica
+(cero). Un valor de asimetría igual a cero indica simetría perfecta.</p>
+<p><br/><br/></p>
+<p>##<strong>Asimetría positiva (derecha)</strong></p>
+<p>La ‘cola’ de la distribución se extiende más hacia la derecha y la
+mayoría de los datos se concentran en valores más bajos que la
+media.</p>
+<p><br/><br/></p>
+<p>##<strong>Asimetría negativa (izquierda)</strong></p>
+La ‘cola’ de la distribución se extiende más hacia la izquierda y la
+mayoría de los datos se concentran en valores más altos que la media.
+<div>
+
+<p><br/><br/></p>
+<p>##<strong>Curtosis (Kurtosis)</strong></p>
+<p>La curtosis mide la concentración de los datos alrededor de la media
+y la forma de las colas de la distribución. Indica si los datos tienen
+colas pesadas (mayor concentración en los valores extremos) o colas
+ligeras (menos concentración en los valores extremos).</p>
+<p><br/><br/></p>
+<p>##<strong>Curtosis positiva (leptocúrtica)</strong></p>
+<p>Indica una mayor concentración de datos alrededor de la media con
+colas pesadas. Esto puede indicar una distribución más puntiaguda en el
+centro.</p>
+<p><br/><br/></p>
+<p>##<strong>Curtosis negativa (platicúrtica)</strong></p>
+<p>Indica una menor concentración de datos alrededor de la media con
+colas ligeras. Esto puede indicar una distribución más aplanada en el
+centro.</p>
+<p><br/><br/></p>
+</div>
+<div id="curtosis-igual-a-cero-mesocúrtica" class="section level2">
+<h2><strong>Curtosis igual a cero (mesocúrtica)</strong></h2>
+<p>Indica una distribución normal con colas moderadas.</p>
+<p><br/></p>
+<pre class="r"><code>#Medidas de forma en R
+library(moments)
+cat(&quot;Asimetría   : &quot;,skewness(Concentracion), &quot;\n&quot;)</code></pre>
+<pre><code>Asimetría   :  -0.1133882 </code></pre>
+<pre class="r"><code>cat(&quot;Curtosis     : &quot;,kurtosis(Concentracion)) </code></pre>
+<pre><code>Curtosis     :  1.886922</code></pre>
+<p><br/><br/></p>
+</div>
+</div>
+<div id="gracias" class="section level1">
+<h1><strong>Gracias!</strong></h1>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

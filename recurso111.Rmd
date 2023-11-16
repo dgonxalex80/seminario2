@@ -2,7 +2,9 @@
 title: "**Introducción a la calidad de la información**"
 author: "Seminario"
 date: " "
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -77,7 +79,7 @@ Es necesario conocer que es lo que hacemos para determinar si los datos cumplen 
 <br/><br/>
 
 
-```{r, echo=FALSE, out.width="40%", fig.align='center'}
+```{r, echo=FALSE, out.width="30%", fig.align='center'}
 knitr::include_graphics("img/ciclo1.png")
 ```
 
@@ -488,7 +490,7 @@ paquete estadístico. Entre los más usados están:
 * SAS
 * Statgraphics
 * Eviews
-* R/Rstudio
+* **R/Rstudio**
 
 
 <br/><br/>

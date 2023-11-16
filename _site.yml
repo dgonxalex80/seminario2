@@ -16,11 +16,13 @@ navbar:
     - text: "Unidad 2"
       menu:
         - text: "Conceptos básicos indicadores estadísticos"
-          href: recurso000.html
+          href: recurso211.html
+        - text: "Conceptos básicos - ejemplos"
+          href: recurso221.html          
         - text: "Modelos de probabilidad"
-          href: recurso000.html
-        - text: "Introducción al control de calidad"
-          href: recurso000.html
+          href: recurso231.html
+        - text: "Cartas de control"
+          href: recurso241.html
         - text: "Análisis de ensayos"
           href: recurso000.html
         - text: "Control interno"
